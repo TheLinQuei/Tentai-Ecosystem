@@ -1,0 +1,38 @@
+{
+  "default": {
+    "primary": "openai:gpt-5",
+    "fallback": "anthropic:claude-3.5-sonnet",
+    "limits": {
+      "max_output_tokens": 3000,
+      "rate_per_user_per_minute": 60
+    },
+    "tools": {
+      "allow": ["echo_test", "web_search", "code_interpreter"],
+      "deny": []
+    }
+  },
+  "cost_sensitive": {
+    "primary": "google:gemini-2.5-flash",
+    "fallback": "mistral:large-3",
+    "limits": {
+      "max_output_tokens": 2000,
+      "rate_per_user_per_minute": 120
+    },
+    "tools": {
+      "allow": ["echo_test"],
+      "deny": ["web_search"]
+    }
+  },
+  "on_prem": {
+    "primary": "meta:llama-4-maverick",
+    "fallback": "deepseek:v3.2",
+    "limits": {
+      "max_output_tokens": 1500,
+      "rate_per_user_per_minute": 90
+    },
+    "tools": {
+      "allow": ["echo_test"],
+      "deny": ["web_search"]
+    }
+  }
+}

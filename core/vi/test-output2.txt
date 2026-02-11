@@ -1,0 +1,1880 @@
+npm warn Unknown cli config "--run". This will stop working in the next major version of npm.
+
+> @tentai/vi-core@0.1.0 test
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Tentai Ecosystem/core/vi[39m
+
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (14) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+
+ [32mΓ£ô[39m tests/integration/phase-3.1-evaluation.test.ts [2m ([22m[2m39 tests[22m[2m)[22m[90m 199[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/phase-3.3-console-integration.test.ts [2m ([22m[2m23 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32mΓ£ô[39m tests/presence.luxury.voice.e2e.test.ts [2m ([22m[2m61 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/phase-2.2-verification.test.ts [2m ([22m[2m23 tests[22m[2m)[22m[33m 309[2mms[22m[39m
+ [33mΓ¥»[39m tests/preferences.persist.cross-session.e2e.test.ts [2m ([22m[2m17 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/phase-2.1-task-queue.test.ts [2m ([22m[2m25 tests[22m[2m)[22m[90m 139[2mms[22m[39m
+ [32mΓ£ô[39m tests/astralis.canon.enforcement.e2e.test.ts [2m ([22m[2m34 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32mΓ£ô[39m tests/MissionMemory.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/phase-3.2-basic-evaluator.test.ts [2m ([22m[2m25 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mMemoryResolver Basics[2m > [22m[2mshould resolve from memory when canon missing[22m[39m
+Found 2 memory citations for query: "Tell me about Akima"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mMemoryResolver Basics[2m > [22m[2mshould respect minRelevance threshold[22m[39m
+No memory found for query: "Any memories"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mMemoryResolver Basics[2m > [22m[2mshould query different memory dimensions[22m[39m
+Found 2 memory citations for query: "query"
+Found 1 memory citations for query: "query"
+Found 1 memory citations for query: "query"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mMemoryResolver Basics[2m > [22m[2mshould return empty for non-existent user memory[22m[39m
+No memory found for query: "query"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mCanon-First Fallback Strategy[2m > [22m[2mshould use canon when available[22m[39m
+Found canon entity: Era3
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mCanon-First Fallback Strategy[2m > [22m[2mshould fall back to memory when canon missing[22m[39m
+Found 2 memory citations for query: "Akima is important"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mCanon-First Fallback Strategy[2m > [22m[2mshould prefer canon over memory[22m[39m
+Found canon entity: Era3
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mIntegrated Grounding with Memory[2m > [22m[2mshould validate response using memory when canon missing[22m[39m
+Extracted 1 claims from response
+Found 2 memory citations for query: "Akima is a character that appears in the books"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mIntegrated Grounding with Memory[2m > [22m[2mshould ground mixed canon and memory claims[22m[39m
+Extracted 1 claims from response
+Found 2 memory citations for query: "Era 3 is important, and Akima is a main character"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mIntegrated Grounding with Memory[2m > [22m[2mshould handle memory with varying confidence levels[22m[39m
+Extracted 1 claims from response
+Found 2 memory citations for query: "According to user memories, Akima recovered from poison"
+
+ [32mΓ£ô[39m tests/integration/phase-2.2-memory-integration.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle memory repository errors gracefully[22m[39m
+No memory found for query: "test"
+
+stderr | tests/integration/phase-2.2-memory-integration.test.ts > Phase 2.2: Memory Integration > Error Handling > should handle memory repository errors gracefully
+Failed to search memory {
+  error: Error: Database error
+      at Object.mockMemoryRepository.getLongTermByUserId (E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.2-memory-integration.test.ts:371:15)
+      at MemoryResolver.searchMemory (E:\Tentai Ecosystem\core\vi\src\brain\grounding\MemoryResolver.ts:83:49)
+      at MemoryResolver.resolveFromMemory (E:\Tentai Ecosystem\core\vi\src\brain\grounding\MemoryResolver.ts:47:35)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.2-memory-integration.test.ts:375:55
+      at file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:135:14
+      at file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:60:26
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:17)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15),
+  userId: 'user-123'
+}
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle null/undefined memory gracefully[22m[39m
+No memory found for query: "test"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mIntegration Scenarios[2m > [22m[2mshould handle realistic user query with memory grounding[22m[39m
+Extracted 3 claims from response
+Found 2 memory citations for query: "Based on our previous conversations, Akima is your favorite character"
+Found 2 memory citations for query: "She appears in Era 3 timeline and is known for strategic thinking"
+Found 2 memory citations for query: "Valeric was also mentioned as a warrior during that period"
+
+[90mstdout[2m | tests/integration/phase-2.2-memory-integration.test.ts[2m > [22m[2mPhase 2.2: Memory Integration[2m > [22m[2mIntegration Scenarios[2m > [22m[2mshould differentiate between well-grounded and ungrounded mixed claims[22m[39m
+Extracted 1 claims from response
+Found 2 memory citations for query: "Era 3 is when Akima made her greatest achievements"
+Extracted 1 claims from response
+Found 2 memory citations for query: "Era 3 had sentient robots and advanced AI (not in canon or memory)"
+
+ [33mΓ¥»[39m tests/behavior-rules.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33mΓ¥»[39m tests/clients.cross-consistency.e2e.test.ts [2m ([22m[2m25 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mBasic Pipeline Processing[2m > [22m[2mshould process input and return output with recordId[22m[39m
+Extracted 2 claims from response
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mBasic Pipeline Processing[2m > [22m[2mshould include citations in result[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Basic Pipeline Processing > should process input and return output with recordId
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:58:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mBasic Pipeline Processing[2m > [22m[2mshould set recordId from run record store[22m[39m
+Extracted 2 claims from response
+
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Basic Pipeline Processing > should include citations in result
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:66:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mGrounding Integration[2m > [22m[2mshould extract claims from response[22m[39m
+Extracted 2 claims from response
+
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Basic Pipeline Processing > should set recordId from run record store
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:73:22
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mGrounding Integration[2m > [22m[2mshould generate citations with confidence scores[22m[39m
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+Extracted 2 claims from response
+
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Grounding Integration > should extract claims from response
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:82:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Grounding Integration > should generate citations with confidence scores
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:95:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mGrounding Integration[2m > [22m[2mshould attach citations even if grounding partially fails[22m[39m
+Extracted 2 claims from response
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Grounding Integration > should attach citations even if grounding partially fails
+
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:114:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mIntent Classification[2m > [22m[2mshould call intent classifier from LLM gateway[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Intent Classification > should call intent classifier from LLM gateway
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:130:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mIntent Classification[2m > [22m[2mshould pass context to intent classifier[22m[39m
+Extracted 2 claims from response
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mResponse Generation[2m > [22m[2mshould call LLM gateway to generate response[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Intent Classification > should pass context to intent classifier
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:138:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Response Generation > should call LLM gateway to generate response
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:147:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mResponse Generation[2m > [22m[2mshould include thought state in LLM call[22m[39m
+Extracted 2 claims from response
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mResponse Generation[2m > [22m[2mshould return generated response text[22m[39m
+Extracted 1 claims from response
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mMemory Integration[2m > [22m[2mshould retrieve memories before response generation[22m[39m
+Extracted 2 claims from response
+
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Response Generation > should include thought state in LLM call
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:153:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Response Generation > should return generated response text
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:164:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Memory Integration > should retrieve memories before response generation
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:172:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mMemory Integration[2m > [22m[2mshould handle memory retrieval failures gracefully[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Memory Integration > should handle memory retrieval failures gracefully
+Failed to retrieve memories: Error: Memory error
+    at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:182:50
+    at file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mMemory Integration[2m > [22m[2mshould pass retrieved memories to thought context[22m[39m
+Extracted 2 claims from response
+
+    at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///E:/Tentai%20Ecosystem/core/vi/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:184:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Memory Integration > should pass retrieved memories to thought context
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mContext Passing[2m > [22m[2mshould pass user context through pipeline[22m[39m
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+Extracted 2 claims from response
+
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:196:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Context Passing > should pass user context through pipeline
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:210:7
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mContext Passing[2m > [22m[2mshould build thought state with userId and sessionId[22m[39m
+Extracted 2 claims from response
+
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Context Passing > should build thought state with userId and sessionId
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:220:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mRun Record Persistence[2m > [22m[2mshould save run record with assistant output[22m[39m
+Extracted 1 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Run Record Persistence > should save run record with assistant output
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:233:7
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mRun Record Persistence[2m > [22m[2mshould include execution metadata in run record[22m[39m
+Extracted 2 claims from response
+
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Run Record Persistence > should include execution metadata in run record
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:243:7
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle run record save errors gracefully[22m[39m
+Extracted 2 claims from response
+
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Error Handling > should handle run record save errors gracefully
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:271:9
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould not block on grounding check failures[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Error Handling > should not block on grounding check failures
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:279:7
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mCitation Attachment[2m > [22m[2mshould attach citations to result if available[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Citation Attachment > should attach citations to result if available
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:288:22
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mCitation Attachment[2m > [22m[2mshould not include citations if response has no claims[22m[39m
+Extracted 1 claims from response
+
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Citation Attachment > should not include citations if response has no claims
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mCitation Attachment[2m > [22m[2mshould format citations with required fields[22m[39m
+Extracted 2 claims from response
+
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:328:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Citation Attachment > should format citations with required fields
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:335:22
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mFull Processing Flow[2m > [22m[2mshould complete full pipeline cycle[22m[39m
+Extracted 2 claims from response
+
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Full Processing Flow > should complete full pipeline cycle
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:355:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+ [32mΓ£ô[39m tests/integration/phase-2.3-pipeline-integration.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 39[2mms[22m[39m
+[90mstdout[2m | tests/integration/phase-2.3-pipeline-integration.test.ts[2m > [22m[2mPhase 2.3: Pipeline Integration[2m > [22m[2mFull Processing Flow[2m > [22m[2mshould handle extended context with all fields[22m[39m
+Extracted 2 claims from response
+
+stderr | tests/integration/phase-2.3-pipeline-integration.test.ts > Phase 2.3: Pipeline Integration > Full Processing Flow > should handle extended context with all fields
+Error in grounding validation {
+  error: TypeError: this.memoryResolver.resolveFromMemory is not a function
+      at GroundingGate.findSourcesForClaim (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:187:57)
+      at GroundingGate.validateResponse (E:\Tentai Ecosystem\core\vi\src\brain\grounding\GroundingGate.ts:65:32)
+      at E:\Tentai Ecosystem\core\vi\src\brain\pipeline.ts:278:24
+      at Module.traceOperation (E:\Tentai Ecosystem\core\vi\src\telemetry\tracing.ts:90:20)
+      at E:\Tentai Ecosystem\core\vi\tests\integration\phase-2.3-pipeline-integration.test.ts:386:22
+      at runTest (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:781:11)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runSuite (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:909:15)
+      at runFiles (file:///E:/Tentai%20Ecosystem/core/vi/node_modules/@vitest/runner/dist/index.js:958:5)
+}
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mCitation Finding[2m > [22m[2mshould find citations for canon entities[22m[39m
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mResponse Validation[2m > [22m[2mshould mark fully grounded responses as passed[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mResponse Validation[2m > [22m[2mshould block responses with too many ungrounded claims (strict mode)[22m[39m
+Extracted 4 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mResponse Validation[2m > [22m[2mshould warn on low confidence[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mResponse Validation[2m > [22m[2mshould handle uncertainty statements appropriately[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mCanonResolver[2m > [22m[2mshould resolve canon entities with high confidence[22m[39m
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mCitation Deduplication[2m > [22m[2mshould deduplicate identical citations[22m[39m
+Extracted 2 claims from response
+Found canon entity: Akima
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mGrounded Response Creation[2m > [22m[2mshould create grounded response with citations[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mGrounded Response Creation[2m > [22m[2mshould mark uncertain responses appropriately[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mGrounded Response Creation[2m > [22m[2mshould include warnings for ungrounded claims[22m[39m
+Extracted 2 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle empty response text[22m[39m
+Extracted 0 claims from response
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle null/undefined context gracefully[22m[39m
+Extracted 0 claims from response
+
+ [32mΓ£ô[39m tests/integration/phase-2.1-grounding-gate.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle very long responses[22m[39m
+Extracted 1000 claims from response
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mIntegration Tests[2m > [22m[2mshould validate a realistic chat response[22m[39m
+Extracted 5 claims from response
+Found canon entity: Akima
+
+[90mstdout[2m | tests/integration/phase-2.1-grounding-gate.test.ts[2m > [22m[2mPhase 2.1: Grounding Gate[2m > [22m[2mIntegration Tests[2m > [22m[2mshould differentiate between fully grounded and partially grounded responses[22m[39m
+Extracted 1 claims from response
+Found canon entity: Akima
+Extracted 1 claims from response
+Found canon entity: Akima
+
+ [33mΓ¥»[39m tests/integration/phase-1.2-admin-endpoints.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33mΓ¥»[39m tests/MemoryOrchestrator.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32mΓ£ô[39m tests/integration/phase-0.1-event-integrity.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 132[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/tools.test.ts [2m ([22m[2m23 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/phase-1.1-memory-injection.test.ts [2m ([22m[2m17 tests[22m[2m)[22m[33m 5092[2mms[22m[39m
+ [33mΓ¥»[39m tests/77ez-acceptance.test.ts [2m ([22m[2m10 tests[22m [2m|[22m [31m10 failed[39m[2m)[22m[90m 13[2mms[22m[39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 1: Identity Spine[2m > [22mshould resolve provider identity to vi_user_id[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 1: Identity Spine[2m > [22mshould link provider identity to vi_user_id[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/identity/link failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 1: Identity Spine[2m > [22mshould retrieve all linked identities for a vi_user_id[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/identity/map/00000000-0000-0000-0000-000000000001 failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 2: Memory System[2m > [22mshould build continuity pack with memory layers[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 2: Memory System[2m > [22mshould persist preferences across sessions[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 3: Relationship Model[2m > [22mshould differentiate owner vs public behavior[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 3: Relationship Model[2m > [22mshould NOT exhibit cringe behaviors[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 7: Client Adapters[2m > [22mshould accept identity headers from all clients[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mPhase 7: Client Adapters[2m > [22mshould produce consistent outputs for same user across clients[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+[31m   [33mΓ¥»[31m tests/77ez-acceptance.test.ts[2m > [22mIntegration: Cross-Client Memory Share[2m > [22mshould share memory across Discord and Sovereign for same user[39m
+[31m     ΓåÆ request to http://localhost:3000/v1/chat failed, reason: [39m
+ [32mΓ£ô[39m tests/CanonInjector.test.ts [2m ([22m[2m19 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [33mΓ¥»[39m tests/identity.cross-client.e2e.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/reflection.test.ts [2m ([22m[2m9 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+
+ [33mΓ¥»[39m tests/integration/chat.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+
+ [33mΓ¥»[39m tests/integration/auth.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+
+ [32mΓ£ô[39m tests/integration/codex.service.test.ts [2m ([22m[2m3 tests[22m[2m)[22m[90m 154[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+[90mstdout[2m | tests/integration/tool.grounding.e2e.test.ts[2m > [22m[2mTool Grounding[2m > [22m[2mshould include tool output in final response when tool is invoked[22m[39m
+Extracted 2 claims from response
+
+ [32mΓ£ô[39m tests/integration/tool.grounding.e2e.test.ts [2m ([22m[2m1 test[22m[2m)[22m[33m 8150[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/memory.consolidation.test.ts [2m ([22m[2m9 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+
+ [33mΓ¥»[39m tests/unit/infrastructure.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: Γ£à audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | tests/integration/cognition.e2e.test.ts[2m > [22m[2mCognition Pipeline[2m > [22m[2mprocesses a query through the full cognition pipeline[22m[39m
+Extracted 1 claims from response
+
+[90mstdout[2m | tests/integration/cognition.e2e.test.ts[2m > [22m[2mCognition Pipeline[2m > [22m[2mclassifies intent correctly for different input types[22m[39m
+Extracted 2 claims from response
+
+[90mstdout[2m | tests/integration/cognition.e2e.test.ts[2m > [22m[2mCognition Pipeline[2m > [22m[2mclassifies intent correctly for different input types[22m[39m
+Extracted 2 claims from response
+
+ [32mΓ£ô[39m tests/integration/cognition.e2e.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[33m 18067[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/policy.engine.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[33m 699[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+
+ [33mΓ¥»[39m tests/integration/conversations.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32mΓ£ô[39m tests/integration/policy.denial.e2e.test.ts [2m ([22m[2m5 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+ [32mΓ£ô[39m tests/integration/memory.consolidation.e2e.test.ts [2m ([22m[2m1 test[22m[2m)[22m[33m 540[2mms[22m[39m
+ [33mΓ¥»[39m tests/relationship.owner-vs-public.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [33mΓ¥»[39m tests/integration/citations.persist.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/repositories.test.ts [2m ([22m[2m4 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+
+ [33mΓ¥»[39m tests/integration/chat.stream.e2e.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/branching.planner.test.ts [2m ([22m[2m2 tests[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/tools/SearchMemory.test.ts [2m ([22m[2m5 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/validation.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/verified.actions.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/eventBus.autonomy.test.ts [2m ([22m[2m3 tests[22m[2m)[22m[90m 137[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/backtracking.executor.test.ts [2m ([22m[2m2 tests[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/constraint.solver.test.ts [2m ([22m[2m2 tests[22m[2m)[22m
+[90mstdout[2m | _log (E:\Tentai Ecosystem\core\vi\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöä add secrets lifecycle management: https://dotenvx.com/ops
+
+ [32mΓ£ô[39m tests/unit/config.test.ts [2m ([22m[2m3 tests[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/planning.schema.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/memory.consolidation.boundary.test.ts [2m ([22m[2m2 tests[22m[2m)[22m
+ [32mΓ£ô[39m tests/unit/providers.config.test.ts [2m ([22m[2m1 test[22m[2m)[22m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Suites 13 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/behavior-rules.e2e.test.ts [ tests/behavior-rules.e2e.test.ts ]
+Error: Failed to load url ../../src/brain/BehaviorRulesEngine.js (resolved id: ../../src/brain/BehaviorRulesEngine.js) in E:/Tentai Ecosystem/core/vi/tests/behavior-rules.e2e.test.ts. Does the file exist?
+ Γ¥» loadAndTransform ../../../Tentai%20Ecosystem/core/vi/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/25]ΓÄ»
+
+ FAIL  tests/clients.cross-consistency.e2e.test.ts > Cross-Client Consistency
+Error: Logger not initialized. Call initializeLogger first.
+ Γ¥» Module.getLogger src/telemetry/logger.ts:30:11
+     28| export function getLogger(): PinoLogger {
+     29|   if (!logger) {
+     30|     throw new Error('Logger not initialized. Call initializeLogger firΓÇª
+       |           ^
+     31|   }
+     32|   return logger;
+ Γ¥» IdentityResolver.<instance_members_initializer> src/identity/IdentityResolver.ts:45:29
+ Γ¥» new IdentityResolver src/identity/IdentityResolver.ts:47:3
+ Γ¥» tests/clients.cross-consistency.e2e.test.ts:32:24
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/25]ΓÄ»
+
+ FAIL  tests/identity.cross-client.e2e.test.ts > IdentityResolver (Phase 1)
+Error: Logger not initialized. Call initializeLogger first.
+ Γ¥» Module.getLogger src/telemetry/logger.ts:30:11
+     28| export function getLogger(): PinoLogger {
+     29|   if (!logger) {
+     30|     throw new Error('Logger not initialized. Call initializeLogger firΓÇª
+       |           ^
+     31|   }
+     32|   return logger;
+ Γ¥» IdentityResolver.<instance_members_initializer> src/identity/IdentityResolver.ts:45:29
+ Γ¥» new IdentityResolver src/identity/IdentityResolver.ts:47:3
+ Γ¥» tests/identity.cross-client.e2e.test.ts:20:16
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/25]ΓÄ»
+
+ FAIL  tests/identity.cross-client.e2e.test.ts > IdentityResolver (Phase 1)
+Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+ Γ¥» node_modules/pg-pool/index.js:45:11
+ Γ¥» tests/identity.cross-client.e2e.test.ts:55:5
+     53| 
+     54|   afterAll(async () => {
+     55|     await pool.query('DROP TABLE IF EXISTS identity_audit_log');
+       |     ^
+     56|     await pool.query('DROP TABLE IF EXISTS user_identity_map');
+     57|     await pool.end();
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/25]ΓÄ»
+
+ FAIL  tests/MemoryOrchestrator.test.ts [ tests/MemoryOrchestrator.test.ts ]
+Error: Logger not initialized. Call initializeLogger first.
+ Γ¥» Module.getLogger src/telemetry/logger.ts:30:11
+     28| export function getLogger(): PinoLogger {
+     29|   if (!logger) {
+     30|     throw new Error('Logger not initialized. Call initializeLogger firΓÇª
+       |           ^
+     31|   }
+     32|   return logger;
+ Γ¥» src/brain/memory/MemoryOrchestrator.ts:8:16
+ Γ¥» tests/MemoryOrchestrator.test.ts:3:31
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/25]ΓÄ»
+
+ FAIL  tests/preferences.persist.cross-session.e2e.test.ts > Phase 3: Cross-Session Personality Persistence
+Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+ Γ¥» node_modules/pg-pool/index.js:45:11
+ Γ¥» tests/preferences.persist.cross-session.e2e.test.ts:33:5
+     31| 
+     32|     // Ensure test user exists
+     33|     await pool.query(
+       |     ^
+     34|       `INSERT INTO user_profiles (vi_user_id, user_id) VALUES ($1, $2)
+     35|        ON CONFLICT DO NOTHING`,
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/25]ΓÄ»
+
+ FAIL  tests/preferences.persist.cross-session.e2e.test.ts > Phase 3: Cross-Session Personality Persistence
+Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+ Γ¥» node_modules/pg-pool/index.js:45:11
+ Γ¥» tests/preferences.persist.cross-session.e2e.test.ts:42:5
+     40|   afterAll(async () => {
+     41|     // Cleanup
+     42|     await pool.query('DELETE FROM preference_audit_log WHERE vi_user_iΓÇª
+       |     ^
+     43|     await pool.query('DELETE FROM user_preferences WHERE vi_user_id = ΓÇª
+     44|     await pool.end();
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/25]ΓÄ»
+
+ FAIL  tests/relationship.owner-vs-public.e2e.test.ts [ tests/relationship.owner-vs-public.e2e.test.ts ]
+Error: Failed to load url ../../src/brain/RelationshipResolver.js (resolved id: ../../src/brain/RelationshipResolver.js) in E:/Tentai Ecosystem/core/vi/tests/relationship.owner-vs-public.e2e.test.ts. Does the file exist?
+ Γ¥» loadAndTransform ../../../Tentai%20Ecosystem/core/vi/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[8/25]ΓÄ»
+
+ FAIL  tests/integration/auth.e2e.test.ts [ tests/integration/auth.e2e.test.ts ]
+ FAIL  tests/integration/chat.e2e.test.ts [ tests/integration/chat.e2e.test.ts ]
+ FAIL  tests/integration/chat.stream.e2e.test.ts [ tests/integration/chat.stream.e2e.test.ts ]
+ FAIL  tests/integration/citations.persist.e2e.test.ts [ tests/integration/citations.persist.e2e.test.ts ]
+ FAIL  tests/integration/conversations.e2e.test.ts [ tests/integration/conversations.e2e.test.ts ]
+ FAIL  tests/integration/phase-1.2-admin-endpoints.test.ts [ tests/integration/phase-1.2-admin-endpoints.test.ts ]
+ FAIL  tests/unit/infrastructure.test.ts [ tests/unit/infrastructure.test.ts ]
+Error: Transform failed with 1 error:
+E:/Tentai Ecosystem/core/vi/src/brain/BehaviorRulesEngine.ts:149:24: ERROR: Expected "]" but found "re"
+ Γ¥» failureErrorWithLog node_modules/vite/node_modules/esbuild/lib/main.js:1472:15
+ Γ¥» node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+ Γ¥» responseCallbacks.<computed> node_modules/vite/node_modules/esbuild/lib/main.js:622:9
+ Γ¥» handleIncomingPacket node_modules/vite/node_modules/esbuild/lib/main.js:677:12
+ Γ¥» Socket.readFromStdout node_modules/vite/node_modules/esbuild/lib/main.js:600:7
+ Γ¥» Socket.emit node:events:518:28
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[9/25]ΓÄ»
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 10 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/77ez-acceptance.test.ts > Phase 1: Identity Spine > should resolve provider identity to vi_user_id
+ FAIL  tests/77ez-acceptance.test.ts > Phase 2: Memory System > should build continuity pack with memory layers
+ FAIL  tests/77ez-acceptance.test.ts > Phase 2: Memory System > should persist preferences across sessions
+ FAIL  tests/77ez-acceptance.test.ts > Phase 3: Relationship Model > should differentiate owner vs public behavior
+ FAIL  tests/77ez-acceptance.test.ts > Phase 3: Relationship Model > should NOT exhibit cringe behaviors
+ FAIL  tests/77ez-acceptance.test.ts > Phase 7: Client Adapters > should accept identity headers from all clients
+ FAIL  tests/77ez-acceptance.test.ts > Phase 7: Client Adapters > should produce consistent outputs for same user across clients
+ FAIL  tests/77ez-acceptance.test.ts > Integration: Cross-Client Memory Share > should share memory across Discord and Sovereign for same user
+FetchError: request to http://localhost:3000/v1/chat failed, reason: 
+ Γ¥» ClientRequest.<anonymous> node_modules/node-fetch/lib/index.js:1501:11
+ Γ¥» ClientRequest.emit node:events:518:28
+ Γ¥» emitErrorEvent node:_http_client:104:11
+ Γ¥» Socket.socketErrorListener node:_http_client:518:5
+ Γ¥» Socket.emit node:events:518:28
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { errno: 'ECONNREFUSED', code: 'ECONNREFUSED' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[10/25]ΓÄ»
+
+ FAIL  tests/77ez-acceptance.test.ts > Phase 1: Identity Spine > should link provider identity to vi_user_id
+FetchError: request to http://localhost:3000/v1/identity/link failed, reason: 
+ Γ¥» ClientRequest.<anonymous> node_modules/node-fetch/lib/index.js:1501:11
+ Γ¥» ClientRequest.emit node:events:518:28
+ Γ¥» emitErrorEvent node:_http_client:104:11
+ Γ¥» Socket.socketErrorListener node:_http_client:518:5
+ Γ¥» Socket.emit node:events:518:28
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { errno: 'ECONNREFUSED', code: 'ECONNREFUSED' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[11/25]ΓÄ»
+
+ FAIL  tests/77ez-acceptance.test.ts > Phase 1: Identity Spine > should retrieve all linked identities for a vi_user_id
+FetchError: request to http://localhost:3000/v1/identity/map/00000000-0000-0000-0000-000000000001 failed, reason: 
+ Γ¥» ClientRequest.<anonymous> node_modules/node-fetch/lib/index.js:1501:11
+ Γ¥» ClientRequest.emit node:events:518:28
+ Γ¥» emitErrorEvent node:_http_client:104:11
+ Γ¥» Socket.socketErrorListener node:_http_client:518:5
+ Γ¥» Socket.emit node:events:518:28
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { errno: 'ECONNREFUSED', code: 'ECONNREFUSED' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[12/25]ΓÄ»
+
+[2m Test Files [22m [1m[31m14 failed[39m[22m[2m | [22m[1m[32m35 passed[39m[22m[90m (49)[39m
+[2m      Tests [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m473 passed[39m[22m[90m (535)[39m
+[2m   Start at [22m 01:05:45
+[2m   Duration [22m 36.35s[2m (transform 853ms, setup 0ms, collect 1.30s, tests 33.77s, environment 0ms, prepare 75ms)[22m
+

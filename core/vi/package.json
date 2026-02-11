@@ -1,0 +1,74 @@
+{
+  "name": "@tentai/vi-core",
+  "version": "0.1.0",
+  "description": "Tentai Vi: Sovereign AI Runtime (The Brain)",
+  "type": "module",
+  "main": "dist/main.js",
+  "bin": {
+    "vi": "dist/cli/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --import tsx src/main.ts",
+    "start": "node dist/main.js",
+    "cli": "node --import tsx src/cli/cli.ts",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.md\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.md\"",
+    "migrate": "node dist/db/migrate.js",
+    "migrate:dev": "node --import tsx src/db/migrate.ts",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:load": "vitest run tests/load --threads=false",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:staging": "STAGING_VALIDATION_MODE=true node --import tsx scripts/stagingSmoke.ts",
+    "health": "node --import tsx scripts/healthCheck.ts"
+  },
+  "keywords": [
+    "ai",
+    "runtime",
+    "sovereign",
+    "tentai",
+    "vi"
+  ],
+  "author": "Tentai Ecosystem",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@fastify/cors": "^8.5.0",
+    "@fastify/jwt": "^8.0.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.67.3",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.209.0",
+    "@opentelemetry/resources": "^2.3.0",
+    "@opentelemetry/sdk-node": "^0.209.0",
+    "@opentelemetry/semantic-conventions": "^1.38.0",
+    "@prisma/client": "^5.0.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^17.2.3",
+    "fastify": "^4.20.0",
+    "openai": "^4.104.0",
+    "pg": "^8.12.0",
+    "pino": "^8.15.0",
+    "pino-pretty": "^10.2.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.2.0",
+    "vitest": "^1.5.0"
+  }
+}

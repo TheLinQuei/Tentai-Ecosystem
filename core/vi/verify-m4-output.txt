@@ -1,0 +1,89 @@
+2025-12-23T19:14:10.4214289-06:00 Starting M4 verification
+2025-12-23T19:14:10.4563098-06:00 Checking Docker availability
+2025-12-23T19:14:10.5036549-06:00 Docker version 29.1.3, build f52814d
+2025-12-23T19:14:10.5051422-06:00 Bringing up Postgres via docker-compose
+ Network vi_default  Creating
+ Network vi_default  Created
+ Container vi-postgres-1  Creating
+ Container vi-postgres-1  Created
+ Container vi-postgres-1  Starting
+ Container vi-postgres-1  Started
+2025-12-23T19:14:11.0273836-06:00 Waiting for Postgres readiness
+2025-12-23T19:14:11.2683327-06:00 Postgres ready
+2025-12-23T19:14:11.2699328-06:00 Building project
+
+> @tentai/vi-core@0.1.0 build
+> tsc
+
+2025-12-23T19:14:13.1975278-06:00 Running migrations
+
+> @tentai/vi-core@0.1.0 migrate
+> node dist/db/migrate.js
+
+{"level":30,"time":1766538853479,"pid":49148,"hostname":"Vi","msg":"Running migrations..."}
+{"level":30,"time":1766538853504,"pid":49148,"hostname":"Vi","msg":"Migrations complete"}
+2025-12-23T19:14:13.5265899-06:00 Running unit tests
+
+> @tentai/vi-core@0.1.0 test:unit
+> vitest run tests/unit
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Tentai Ecosystem/core/vi[39m
+
+ [32mΓ£ô[39m tests/unit/validation.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/repositories.test.ts [2m ([22m[2m4 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/config.test.ts [2m ([22m[2m3 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/infrastructure.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 45[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m   Start at [22m 19:14:14
+[2m   Duration [22m 772ms[2m (transform 145ms, setup 0ms, collect 578ms, tests 62ms, environment 1ms, prepare 543ms)[22m
+
+2025-12-23T19:14:14.9378445-06:00 Running full integration tests (including cognition)
+
+> @tentai/vi-core@0.1.0 test:integration
+> vitest run tests/integration
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/Tentai Ecosystem/core/vi[39m
+
+ [33mΓ¥»[39m tests/integration/cognition.e2e.test.ts [2m ([22m[2m4 tests[22m[2m)[22m[90m 76[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/conversations.e2e.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 112[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/auth.e2e.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 291[2mms[22m[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Suites 1 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  tests/integration/cognition.e2e.test.ts > Cognition Pipeline
+error: null value in column "email" of relation "users" violates not-null constraint
+ Γ¥» node_modules/pg-pool/index.js:45:11
+ Γ¥» UserRepository.create src/db/repositories/UserRepository.ts:41:20
+     39|     const { email, username, passwordHash, displayName = null } = inpuΓÇª
+     40| 
+     41|     const result = await this.pool.query<User>(
+       |                    ^
+     42|       `INSERT INTO users (email, username, password_hash, display_name)
+     43|        VALUES ($1, $2, $3, $4)
+ Γ¥» tests/integration/cognition.e2e.test.ts:51:22
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+Serialized Error: { length: 322, severity: 'ERROR', code: '23502', detail: 'Failing row contains (bb098578-8d73-4441-9a85-71ff51a814de, null, null, null, null, 2025-12-24 01:14:16.098075+00, 2025-12-24 01:14:16.098075+00, null, t, f).', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'users', column: 'email', dataType: undefined, constraint: undefined, file: 'execMain.c', line: '2057', routine: 'ExecConstraints' }
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/1]ΓÄ»
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 19:14:15
+[2m   Duration [22m 1.07s[2m (transform 189ms, setup 1ms, collect 1.08s, tests 479ms, environment 1ms, prepare 412ms)[22m
+
+2025-12-23T19:14:16.6827833-06:00 Verification failed: Integration tests failed
+ Container vi-postgres-1  Stopping
+ Container vi-postgres-1  Stopped
+ Container vi-postgres-1  Removing
+ Container vi-postgres-1  Removed
+ Network vi_default  Removing
+ Network vi_default  Removed
+Exception: E:\Tentai Ecosystem\core\vi\scripts\verify-m4.ps1:56:30
+Line |
+  56 |    if ($LASTEXITCODE -ne 0) { throw "Integration tests failed" }
+     |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Integration tests failed

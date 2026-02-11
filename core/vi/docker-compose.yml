@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: pgvector/pgvector:0.6.0-pg16
+    container_name: vi-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vi
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - vi-network
+    restart: unless-stopped
+
+  vi-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vi-core
+    environment:
+      NODE_ENV: development
+      VI_PORT: 3100
+      VI_HOST: 0.0.0.0
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/vi
+      VI_LOG_LEVEL: info
+      VI_TELEMETRY_ENABLED: true
+      VI_TELEMETRY_PATH: ./telemetry
+      VI_AUTH_ENABLED: false
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    ports:
+      - "3100:3100"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Use an internal volume so Vi boots even when compose is invoked inside a container
+      - telemetry-data:/app/telemetry
+    networks:
+      - vi-network
+    restart: unless-stopped
+
+  vector-store:
+    image: qdrant/qdrant:latest
+    container_name: vi-vector-store
+    ports:
+      - "6333:6333"
+    volumes:
+      - vector-data:/qdrant/storage
+    networks:
+      - vi-network
+    restart: unless-stopped
+
+  sovereign:
+    build:
+      context: ../../clients/command/sovereign
+      dockerfile: Dockerfile
+    container_name: sovereign
+    environment:
+      NODE_ENV: development
+      SOVEREIGN_PORT: 3001
+      VI_API_URL: http://vi-core:3100
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/vi
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: vi
+    ports:
+      - "3001:3001"
+    depends_on:
+      - vi-core
+      - postgres
+    volumes:
+      - ../../clients/command/sovereign/src:/app/src
+      - ../../clients/command/sovereign/public:/app/public
+      - ../..:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - vi-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  vector-data:
+  telemetry-data:
+
+networks:
+  vi-network:
+    driver: bridge

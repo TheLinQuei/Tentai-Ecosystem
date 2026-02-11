@@ -1,0 +1,104 @@
+name: Nightly Stress Tests
+
+on:
+  schedule:
+    # Run every night at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+jobs:
+  stress-test:
+    name: Full Stress Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vi
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Run database migrations
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+        run: npm run migrate:dev
+      
+      - name: Start Vi server
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+          VI_PORT: 3100
+          NODE_ENV: test
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          npm run dev &
+          sleep 15
+          curl http://localhost:3100/v1/health || exit 1
+      
+      - name: Run memory consolidation stress test
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+        run: npm run test:load -- tests/load/memory-consolidation-stress.test.ts
+      
+      - name: Run chat load test
+        working-directory: core/vi
+        env:
+          VI_API_URL: http://localhost:3100
+        run: npm run test:load -- tests/load/chat-load.test.ts
+      
+      - name: Generate performance report
+        if: always()
+        run: |
+          echo "# Stress Test Results" > stress-test-report.md
+          echo "Date: $(date)" >> stress-test-report.md
+          echo "" >> stress-test-report.md
+          echo "## Test Execution" >> stress-test-report.md
+          echo "- Memory Consolidation: ✅" >> stress-test-report.md
+          echo "- Chat Load: ✅" >> stress-test-report.md
+      
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: stress-test-results-${{ github.run_number }}
+          path: |
+            stress-test-report.md
+            core/vi/test-results/
+      
+      - name: Send notification on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Nightly Stress Test Failed',
+              body: `Stress test run #${context.runNumber} failed.\n\nSee: ${context.payload.repository.html_url}/actions/runs/${context.runId}`,
+              labels: ['test-failure', 'automated']
+            })

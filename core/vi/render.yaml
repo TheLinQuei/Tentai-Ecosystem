@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: vi-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VI_AUTH_ENABLED
+        value: false
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vi-postgres
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false  # You'll add this manually in Render dashboard
+    healthCheckPath: /v1/health
+    autoDeploy: true
+
+databases:
+  - name: vi-postgres
+    databaseName: vi
+    user: vi_user
+    plan: free  # 90 days free, 256MB RAM, 1GB storage
