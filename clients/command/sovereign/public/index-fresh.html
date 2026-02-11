@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>God Console - Vi Overseer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0e27;
+      color: #e0e6ff;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background: rgba(20, 25, 45, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .info-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 4px;
+      background: rgba(212, 175, 55, 0.1);
+      color: #d4af37;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 4px;
+      background: rgba(212, 175, 55, 0.1);
+      color: #d4af37;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: #d4af37;
+    }
+    .btn-success {
+      background: rgba(46, 204, 113, 0.1);
+      border-color: #2ecc71;
+      color: #2ecc71;
+    }
+    .btn-danger {
+      background: rgba(231, 76, 60, 0.1);
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+    .section {
+      background: rgba(20, 25, 45, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      color: #d4af37;
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .status-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .status-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .status-label {
+      color: #d4af37;
+      font-weight: bold;
+    }
+    .status-value {
+      color: #e0e6ff;
+    }
+    .status-running { color: #2ecc71; }
+    .status-stopped { color: #e74c3c; }
+    .status-degraded { color: #d4af37; }
+    .error { color: #e74c3c; }
+    .success { color: #2ecc71; }
+    #statusMessage {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      min-height: 20px;
+    }
+    #statusMessage.success {
+      background: rgba(46, 204, 113, 0.1);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+    }
+    #statusMessage.error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="info-box">
+        <div>
+          <div style="font-size: 10px; color: #888; margin-bottom: 4px;">Version</div>
+          <div id="viVersion" style="color: #d4af37; font-size: 16px; font-weight: bold;">God-1</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; color: #888; margin-bottom: 4px;">Control Plane</div>
+          <div id="provider" style="color: #d4af37; font-size: 16px; font-weight: bold;">Overseer</div>
+        </div>
+      </div>
+      <div class="info-box" style="justify-content: flex-end;">
+        <span class="pill" id="testModeBadge">TEST_MODE: off</span>
+      </div>
+    </header>
+
+    <div id="statusMessage"></div>
+
+    <div class="controls">
+      <button class="btn btn-success" id="startAllBtn">▶ START ALL SERVICES</button>
+      <button class="btn btn-danger" id="stopAllBtn">◾ STOP ALL SERVICES</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Ecosystem Status</div>
+      <div id="ecosystemStatus" class="status-grid">
+        <div class="status-row">
+          <div class="status-label">Loading...</div>
+          <div class="status-value">Fetching data from Overseer...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Audit Log (Last 24 hours)</div>
+      <div id="auditLog" class="status-grid">
+        <div class="status-row">
+          <div class="status-label">Waiting...</div>
+          <div class="status-value">No audit entries yet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      overseerUrl: window.location.origin,
+      testMode: false,
+    };
+
+    function showStatus(message, type) {
+      const el = document.getElementById('statusMessage');
+      el.textContent = message;
+      el.className = type;
+      if (type === 'success') {
+        setTimeout(() => { el.textContent = ''; el.className = ''; }, 3000);
+      }
+    }
+
+    async function updateStatus() {
+      try {
+        const response = await fetch(state.overseerUrl + '/overseer/ecosystem/status');
+        if (!response.ok) throw new Error('Failed to fetch status');
+        const data = await response.json();
+        
+        const statusEl = document.getElementById('ecosystemStatus');
+        statusEl.innerHTML = '';
+        
+        if (data.healthy) {
+          statusEl.innerHTML += '<div style="color: #2ecc71; margin-bottom: 12px; font-weight: bold;">HEALTHY</div>';
+        } else {
+          statusEl.innerHTML += '<div style="color: #e74c3c; margin-bottom: 12px; font-weight: bold;">DEGRADED</div>';
+        }
+        
+        if (data.services) {
+          for (const [id, svc] of Object.entries(data.services)) {
+            const statusColor = svc.status === 'running' ? '#2ecc71' : svc.status === 'stopped' ? '#e74c3c' : '#d4af37';
+            const critical = svc.critical ? ' [CRITICAL]' : '';
+            statusEl.innerHTML += '<div class="status-row" style="background: rgba(' + (svc.status === 'running' ? '46,204,113' : '231,76,60') + ',0.05);"><div class="status-label" style="color: ' + statusColor + ';">' + id + '</div><div class="status-value">' + svc.status.toUpperCase() + critical + ' | PID: ' + (svc.pid || 'none') + ' | Uptime: ' + (svc.uptime || 0) + 's</div></div>';
+          }
+        }
+      } catch (err) {
+        console.error('Status update failed:', err);
+        document.getElementById('ecosystemStatus').innerHTML = '<div style="color: #e74c3c;">Error: ' + err.message + '</div>';
+      }
+    }
+
+    async function updateAuditLog() {
+      try {
+        const response = await fetch(state.overseerUrl + '/overseer/audit/log?days=1');
+        if (!response.ok) throw new Error('Failed to fetch audit log');
+        const data = await response.json();
+        
+        const auditEl = document.getElementById('auditLog');
+        auditEl.innerHTML = '';
+        
+        if (!data.entries || data.entries.length === 0) {
+          auditEl.innerHTML = '<div style="color: #888;">No audit entries</div>';
+          return;
+        }
+        
+        for (const entry of data.entries.slice(0, 20)) {
+          const time = new Date(entry.timestamp).toLocaleTimeString();
+          const resultColor = entry.result === 'success' ? '#2ecc71' : '#e74c3c';
+          auditEl.innerHTML += '<div class="status-row"><div class="status-label" style="color: #d4af37;">' + time + '</div><div class="status-value"><span style="color: ' + resultColor + ';">' + entry.action + '</span>' + (entry.service ? ' [' + entry.service + ']' : '') + '</div></div>';
+        }
+      } catch (err) {
+        console.error('Audit log update failed:', err);
+        document.getElementById('auditLog').innerHTML = '<div style="color: #e74c3c;">Error: ' + err.message + '</div>';
+      }
+    }
+
+    async function startAll() {
+      try {
+        showStatus('Starting all services...', 'success');
+        const response = await fetch(state.overseerUrl + '/overseer/ecosystem/start-all', { method: 'POST' });
+        if (!response.ok) throw new Error('Start failed');
+        await new Promise(r => setTimeout(r, 1000));
+        updateStatus();
+        updateAuditLog();
+        showStatus('All services started', 'success');
+      } catch (err) {
+        showStatus('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function stopAll() {
+      try {
+        showStatus('Stopping all services...', 'success');
+        const response = await fetch(state.overseerUrl + '/overseer/ecosystem/stop-all', { method: 'POST' });
+        if (!response.ok) throw new Error('Stop failed');
+        await new Promise(r => setTimeout(r, 1000));
+        updateStatus();
+        updateAuditLog();
+        showStatus('All services stopped', 'success');
+      } catch (err) {
+        showStatus('Error: ' + err.message, 'error');
+      }
+    }
+
+    // Initial load
+    console.log('[GOD-CONSOLE] Starting initialization...');
+    updateStatus();
+    updateAuditLog();
+    
+    // Refresh every 5 seconds
+    setInterval(updateStatus, 5000);
+    setInterval(updateAuditLog, 5000);
+    
+    // Button listeners
+    document.getElementById('startAllBtn').addEventListener('click', startAll);
+    document.getElementById('stopAllBtn').addEventListener('click', stopAll);
+    
+    console.log('[GOD-CONSOLE] Initialization complete!');
+  </script>
+</body>
+</html>

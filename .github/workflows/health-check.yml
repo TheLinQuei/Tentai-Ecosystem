@@ -1,0 +1,45 @@
+name: Health Check
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        working-directory: ./core/vi
+        run: npm ci
+      
+      - name: Run health check
+        working-directory: ./core/vi
+        env:
+          RAILWAY_URL: ${{ secrets.RAILWAY_URL }}
+        run: npm run health || true
+      
+      - name: Commit health log
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "Health Check Bot"
+          git add HEALTH_LOG.md
+          git diff --staged --quiet || git commit -m "🏥 Health check: $(date -u +'%Y-%m-%d %H:%M UTC')"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

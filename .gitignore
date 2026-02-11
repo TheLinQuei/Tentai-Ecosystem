@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+*.log
+.env
+.DS_Store
+coverage/
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+telemetry/
+.railway/
+deploy-log.txt
+backend-log.txt

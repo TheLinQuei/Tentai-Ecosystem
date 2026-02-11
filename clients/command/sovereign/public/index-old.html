@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vi God Console — God-0</title>
+  <style>
+    :root {
+      --onyx: #0b0f14;
+      --ink: #0f172a;
+      --gold: #d4af37;
+      --purple: #5b2e91;
+      --green: #2ecc71;
+      --red: #e74c3c;
+      --text: #e6e9f0;
+      --muted: #9aa4b5;
+      --card: #111827;
+      --divider: rgba(212, 175, 55, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "SF Pro Display", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(120% 120% at 20% 20%, rgba(91, 46, 145, 0.16), transparent 40%),
+                  radial-gradient(120% 120% at 80% 0%, rgba(212, 175, 55, 0.18), transparent 42%),
+                  var(--onyx);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .console {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 18px 22px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .crown {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--divider);
+      background: rgba(15, 23, 42, 0.7);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(91, 46, 145, 0.3);
+      border-radius: 12px;
+      position: sticky;
+      top: 10px;
+      z-index: 2;
+    }
+
+    .crown::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.3), 0 8px 30px rgba(91, 46, 145, 0.2);
+      border-radius: 12px;
+    }
+
+    .crown .title {
+      font-size: 14px;
+      letter-spacing: 0.8px;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.3;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      min-height: 28px;
+    }
+
+    .pill.gold { border-color: rgba(212, 175, 55, 0.7); color: var(--gold); }
+    .pill.purple { border-color: rgba(91, 46, 145, 0.7); color: var(--text); }
+    .pill.green { border-color: rgba(46, 204, 113, 0.6); color: var(--green); }
+    .pill.red { border-color: rgba(231, 76, 60, 0.7); color: var(--red); }
+    .pill.muted { color: var(--muted); }
+
+    .controls-strip {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr auto auto auto;
+      gap: 10px;
+      align-items: center;
+      background: rgba(17, 24, 39, 0.65);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.32);
+    }
+
+    .controls-strip label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .controls-strip input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: rgba(13, 17, 27, 0.85);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--divider);
+      background: linear-gradient(145deg, rgba(91, 46, 145, 0.22), rgba(212, 175, 55, 0.18));
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28); }
+    .btn.gold { border-color: rgba(212, 175, 55, 0.7); color: var(--gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 0.9fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
+      position: relative;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      color: var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 18px rgba(0, 0, 0, 0.28);
+    }
+
+    .card:last-child { margin-bottom: 0; }
+
+    .card .label {
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .hierarchy .card { position: relative; }
+    .stance-card { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.12), 0 10px 24px rgba(212, 175, 55, 0.12); }
+    .governor-card { border-color: rgba(231, 149, 46, 0.5); }
+    .reasoning-card { border-color: rgba(91, 46, 145, 0.4); }
+    .signals-card, .constraints-card { opacity: 0.92; }
+
+    @keyframes goldPulse {
+      0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(212, 175, 55, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+    }
+
+    @keyframes purpleFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes amberFlash {
+      0% { box-shadow: 0 0 0 0 rgba(255, 191, 71, 0.4); }
+      100% { box-shadow: 0 0 0 14px rgba(255, 191, 71, 0); }
+    }
+
+    @keyframes fractureLine {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 0; }
+    }
+
+    .alive-gold { animation: goldPulse 1.4s ease-out; }
+    .alive-purple { background: linear-gradient(120deg, rgba(91,46,145,0.25), rgba(15,23,42,0.9), rgba(91,46,145,0.25)); background-size: 200% 200%; animation: purpleFlow 2.4s ease infinite; }
+    .alert-amber { animation: amberFlash 1s ease-out; }
+    .alert-red { border-color: rgba(231, 76, 60, 0.8) !important; box-shadow: 0 0 0 1px rgba(231, 76, 60, 0.35); }
+    .fracture { background-image: repeating-linear-gradient(90deg, rgba(212,175,55,0.18) 0, rgba(212,175,55,0.18) 8px, transparent 8px, transparent 16px); background-size: 140% 4px; animation: fractureLine 2s linear infinite; }
+    .glyph { color: rgba(212, 175, 55, 0.8); font-size: 11px; letter-spacing: 1px; }
+
+    .chat-section {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .chat-header {
+      margin-bottom: 10px;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-history {
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .chat-message {
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chat-message.user {
+      background: rgba(91, 46, 145, 0.15);
+      border-color: rgba(91, 46, 145, 0.3);
+    }
+
+    .chat-message.assistant {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    .chat-message .role {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .chat-message .content {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: rgba(13, 17, 27, 0.85);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .hologram-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    #viHologramCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hologram-sigil {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Default: authoritative gold */
+      --holo-color: rgba(212, 175, 55, 0.7);
+      --holo-glow: rgba(212, 175, 55, 0.5);
+      animation: holoBreath 5s ease-in-out infinite;
+    }
+
+    /* Semantic state colors */
+    .hologram-sigil.active {
+      --holo-color: rgba(91, 46, 145, 0.8);
+      --holo-glow: rgba(91, 46, 145, 0.6);
+    }
+
+    .hologram-sigil.stance {
+      --holo-color: rgba(212, 175, 55, 0.95);
+      --holo-glow: rgba(212, 175, 55, 0.8);
+    }
+
+    .hologram-sigil.governor {
+      --holo-color: rgba(231, 76, 60, 0.8);
+      --holo-glow: rgba(231, 76, 60, 0.6);
+    }
+
+    .hologram-sigil.clean {
+      --holo-color: rgba(46, 204, 113, 0.7);
+      --holo-glow: rgba(46, 204, 113, 0.5);
+    }
+
+    @keyframes holoBreath {
+      0%, 100% { filter: drop-shadow(0 0 40px var(--holo-glow)) drop-shadow(0 0 80px var(--holo-glow)); }
+      50% { filter: drop-shadow(0 0 60px var(--holo-glow)) drop-shadow(0 0 120px var(--holo-glow)); }
+    }
+
+    .holo-figure {
+      position: relative;
+      width: 160px;
+      height: 240px;
+      transform: perspective(1200px) rotateX(-8deg);
+      opacity: 0.92;
+    }
+
+    /* Background noise mask for imperfection */
+    .holo-figure::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(1px 1px at 20% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 1%),
+        radial-gradient(1px 1px at 60% 70%, rgba(212, 175, 55, 0.08) 0%, transparent 1%),
+        radial-gradient(1px 1px at 50% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 1%);
+      background-size: 200% 200%;
+      animation: noiseShift 3s linear infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes noiseShift {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    /* Head - simple circle with defined eyes */
+    .holo-head {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 54px;
+      height: 54px;
+      border: 2.5px solid var(--holo-color);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 40% 35%, var(--holo-color) 0%, rgba(212, 175, 55, 0.2) 70%, transparent 100%);
+      box-shadow: 
+        0 0 40px var(--holo-glow),
+        inset 0 0 25px rgba(212, 175, 55, 0.3);
+      z-index: 3;
+    }
+
+    /* Eyes - focused, looking forward */
+    .holo-eyes {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 4;
+    }
+
+    .holo-eye {
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, var(--holo-color), rgba(212, 175, 55, 0.6));
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--holo-glow);
+    }
+
+    /* Neck - thin connector */
+    .holo-neck {
+      position: absolute;
+      top: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 8px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.4) 100%);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 12px var(--holo-glow));
+      z-index: 3;
+    }
+
+    /* Shoulders - horizontal emphasis */
+    .holo-shoulders {
+      position: absolute;
+      top: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92px;
+      height: 7px;
+      background: linear-gradient(90deg, transparent 5%, var(--holo-color) 20%, var(--holo-color) 80%, transparent 95%);
+      border-radius: 3.5px;
+      filter: drop-shadow(0 0 18px var(--holo-glow)) drop-shadow(0 0 35px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Torso - the key: curves inward at waist, outward at hips */
+    .holo-torso {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 72px;
+      border: 2px solid var(--holo-color);
+      border-radius: 25px 25px 30px 30px; /* Top: narrow, bottom: wider (hip curve) */
+      background: linear-gradient(90deg, transparent 8%, var(--holo-color) 50%, transparent 92%);
+      filter: drop-shadow(0 0 18px var(--holo-glow)) drop-shadow(0 0 36px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Central spine - energy thread down the middle */
+    .holo-spine {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.5px;
+      height: 72px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, var(--holo-color) 45%, rgba(212, 175, 55, 0.3) 100%);
+      filter: drop-shadow(0 0 12px var(--holo-glow)) drop-shadow(0 0 25px var(--holo-glow));
+      z-index: 3;
+    }
+
+    /* Arms - more form than lines */
+    .holo-arm {
+      position: absolute;
+      top: 68px;
+      width: 6px;
+      height: 70px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.3) 85%, transparent 100%);
+      border-radius: 3px;
+      filter: drop-shadow(0 0 10px var(--holo-glow));
+      z-index: 1;
+    }
+
+    .holo-arm-left {
+      left: 12px;
+      transform: rotateZ(-12deg);
+    }
+
+    .holo-arm-right {
+      right: 12px;
+      transform: rotateZ(12deg);
+    }
+
+    /* Hip accent - subtle wider line */
+    .holo-hips {
+      position: absolute;
+      top: 134px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 62px;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, var(--holo-color) 15%, var(--holo-color) 85%, transparent);
+      border-radius: 2.5px;
+      filter: drop-shadow(0 0 12px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Legs - defined but not spindly */
+    .holo-leg {
+      position: absolute;
+      top: 138px;
+      width: 5px;
+      height: 100px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.45) 70%, transparent 100%);
+      border-radius: 2.5px;
+      filter: drop-shadow(0 0 10px var(--holo-glow));
+      z-index: 1;
+    }
+
+    .holo-leg-left {
+      left: 24px;
+      transform: rotateZ(-4deg);
+    }
+
+    .holo-leg-right {
+      right: 24px;
+      transform: rotateZ(4deg);
+    }
+
+    /* Core - pulsing heart center */
+    .holo-core {
+      position: absolute;
+      top: 98px;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      background: radial-gradient(circle at 30% 30%, var(--holo-color), rgba(212, 175, 55, 0.3));
+      border-radius: 50%;
+      border: 1.5px solid var(--holo-color);
+      box-shadow: 
+        0 0 22px var(--holo-glow),
+        0 0 44px var(--holo-glow),
+        inset 0 0 12px rgba(212, 175, 55, 0.4);
+      animation: corePulse 2.2s ease-in-out infinite;
+      z-index: 4;
+    }
+
+    /* Three.js hologram canvas fills container */
+    #viHologramCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list .item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .list .item .text { flex: 1; color: var(--text); font-size: 13px; }
+    .list .item .meta { color: var(--muted); font-size: 12px; }
+    .list .item .meta.red { color: var(--red); }
+
+    .flags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .flag { padding: 4px 6px; border-radius: 6px; font-size: 11px; background: rgba(91, 46, 145, 0.2); border: 1px solid rgba(91, 46, 145, 0.4); }
+    .flag.red { background: rgba(231, 76, 60, 0.16); border-color: rgba(231, 76, 60, 0.5); color: var(--red); }
+    .flag.green { background: rgba(46, 204, 113, 0.14); border-color: rgba(46, 204, 113, 0.4); color: var(--green); }
+
+    .ledger-grid { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; }
+
+    .evidence-section {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .evidence-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+
+    .events {
+      max-height: 220px;
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .event { border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding: 8px 4px; }
+    .event:last-child { border-bottom: none; }
+    .event .type { color: var(--gold); font-size: 12px; }
+    .event .message { color: var(--text); font-size: 13px; }
+    .event .time { color: var(--muted); font-size: 11px; }
+
+    .watermark {
+      position: fixed;
+      inset: 20px;
+      pointer-events: none;
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      font-size: 68px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: rgba(46, 204, 113, 0.06);
+      text-transform: uppercase;
+      transform: rotate(-10deg);
+      z-index: 0;
+    }
+
+    .error-box {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: var(--red);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: 1fr; }
+      .controls-strip { grid-template-columns: 1fr; }
+      .crown { grid-template-columns: 1fr; position: static; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Vi's Presence: Core Sigil + Volumetric Aura -->
+  <div class="hologram-container">
+    <div class="presence-aura" id="viPresenceAura"></div>
+    <div class="core-sigil" id="viCoreSigil">
+      <div class="sigil-inner"></div>
+    </div>
+  </div>
+
+  <div class="watermark" id="watermark">DETERMINISTIC</div>
+  <div class="console">
+    <header class="crown">
+      <div>
+        <div class="title">Crown Bar</div>
+        <div class="row">
+          <span class="pill gold">Version <span id="viVersion">—</span></span>
+          <span class="pill purple">SelfModel <span id="selfModelHash">—</span></span>
+          <span class="pill" id="providerState">Provider: —</span>
+        </div>
+      </div>
+      <div>
+        <div class="title">Session · User · Run</div>
+        <div class="row">
+          <span class="pill muted" id="sessionValue">Session: —</span>
+          <span class="pill muted" id="userValue">User: —</span>
+          <span class="pill muted" id="replayValue">Replay: —</span>
+        </div>
+      </div>
+      <div style="justify-self: end; text-align: right;">
+        <div class="title">Mode</div>
+        <div class="row" style="justify-content: flex-end;">
+          <span class="pill gold" id="testModeBadge">TEST_MODE: off</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="controls-strip">
+      <div>
+        <label for="userInput">User ID</label>
+        <input id="userInput" placeholder="user UUID" value="00000000-0000-0000-0000-000000000001" />
+      </div>
+      <div>
+        <label for="sessionInput">Session ID</label>
+        <input id="sessionInput" placeholder="session UUID" value="11111111-1111-1111-1111-111111111111" />
+      </div>
+      <div>
+        <label for="queryInput">Recall Query (optional)</label>
+        <input id="queryInput" placeholder="" />
+      </div>
+      <button class="btn gold" id="refreshEvidence">Refresh Evidence</button>
+      <button class="btn" id="toggleTestMode">Toggle TEST_MODE</button>
+    </section>
+
+    <section class="controls-strip" style="margin-top: 4px;">
+      <div class="title" style="grid-column: 1/-1; font-size: 13px; color: var(--gold); margin-bottom: 8px;">Authority Control Plane (God-1: Ecosystem Dominion)</div>
+      <button class="btn gold" id="startAll" style="background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.5); color: var(--green); grid-column: 1/-1;">▶ Bring Vi Online (All Services)</button>
+      <button class="btn" id="stopAll" style="background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); color: var(--red); grid-column: 1/-1;">◾ Take Vi Offline (All Services)</button>
+      <div style="grid-column: 1/-1;">
+        <div style="color: var(--gold); font-size: 12px; margin-bottom: 6px; font-weight: 600;">Ecosystem Status (One Truth)</div>
+        <div id="ecosystemStatus" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px; font-family: monospace; font-size: 11px; color: var(--muted); max-height: 180px; overflow-y: auto;"></div>
+      </div>
+      <div style="grid-column: 1/-1;">
+        <div style="color: var(--gold); font-size: 12px; margin-bottom: 6px; font-weight: 600;">Command Audit Trail (Immutable)</div>
+        <div id="auditLog" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px; font-family: monospace; font-size: 10px; color: var(--muted); max-height: 160px; overflow-y: auto;"></div>
+      </div>
+    </section>
+
+    <section class="chat-section">
+      <div class="chat-header">
+        <div class="title">Throne Room (Chat with Vi)</div>
+      </div>
+      <div class="chat-container">
+        <div class="chat-history" id="chatHistory"></div>
+        <div class="chat-input-wrapper">
+          <input type="text" id="chatInput" placeholder="Type your message..." class="chat-input" />
+          <button class="btn gold" id="sendMessage">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <main class="grid">
+      <section class="panel hierarchy" id="decisionPanel">
+        <h2>Decision Pillar <span id="governorBadge" class="pill muted">Governor: —</span></h2>
+        <div class="card stance-card" id="stanceCard">
+          <div class="label">Stance (edict)</div>
+          <div class="row" id="stanceSummary">—</div>
+          <div class="value" id="stanceReasoning">—</div>
+        </div>
+        <div class="card governor-card" id="governorCard">
+          <div class="label">Governor (intervention)</div>
+          <div class="value" id="governorStatus">—</div>
+          <div class="flags" id="governorIssues"></div>
+        </div>
+        <div class="card reasoning-card" id="reasoningCard">
+          <div class="label">Reasoning Stream</div>
+          <div class="list" id="reasoningStream"></div>
+        </div>
+        <div class="card signals-card">
+          <div class="label">Signals</div>
+          <div class="flags" id="stanceSignals"></div>
+        </div>
+        <div class="card constraints-card">
+          <div class="label">Constraints</div>
+          <div class="flags" id="stanceConstraints"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="memoryPanel">
+        <h2>Memory Sanctum</h2>
+        <div class="card">
+          <div class="label">Raw Retrieval</div>
+          <div class="list" id="rawList"></div>
+        </div>
+        <div class="card">
+          <div class="label">Post-Filter Memory</div>
+          <div class="list" id="postList"></div>
+        </div>
+        <div class="card">
+          <div class="label">Suppressed (filtered)</div>
+          <div class="list" id="suppressedList"></div>
+        </div>
+        <div class="card">
+          <div class="label">Injected Memory Blob</div>
+          <div class="value" id="injectedBlob">—</div>
+        </div>
+      </section>
+
+      <section class="panel" id="ledgerPanel">
+        <h2>Continuity & Cost Ledger</h2>
+        <div class="ledger-grid">
+          <div class="card" id="continuityCard">
+            <div class="label">Continuity</div>
+            <div class="value" id="continuitySummary">—</div>
+          </div>
+          <div class="card" id="costCard">
+            <div class="label">Cost & Reliability</div>
+            <div class="value" id="costSummary">—</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="evidence-section">
+      <div class="row" style="justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div class="title">Evidence Vault</div>
+        <div class="row" style="gap: 8px;">
+          <button class="btn" id="exportJson">Export JSON</button>
+          <button class="btn" id="exportMd">Export Markdown</button>
+        </div>
+      </div>
+      <div class="evidence-grid">
+        <div class="card" style="min-height: 220px;">
+          <div class="label">Runs (latest)</div>
+          <div class="list" id="runsList"></div>
+        </div>
+        <div class="card" style="min-height: 220px;">
+          <div class="label">Events</div>
+          <div class="events" id="eventsList"></div>
+        </div>
+      </div>
+      <div id="errorBox" class="error-box" style="display:none;"></div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      testMode: false,
+      evidence: null,
+      liveEvents: [],
+      stream: null,
+      governorCount: 0,
+      overseerUrl: window.location.origin, // Use current origin instead of hardcoded IP
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // VI OVERSEER CONTROL PLANE
+    // ═══════════════════════════════════════════════════════════════
+
+    async function overseerRequest(endpoint, method = 'GET', body = null) {
+      try {
+        const opts = { method };
+        if (body) {
+          opts.headers = { 'Content-Type': 'application/json' };
+          opts.body = JSON.stringify(body);
+        }
+        const res = await fetch(`${state.overseerUrl}${endpoint}`, opts);
+        if (!res.ok) {
+          throw new Error(`Overseer error: ${res.status}`);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error('Overseer request failed:', err);
+        throw err;
+      }
+    }
+
+    async function viCoreStart() {
+      try {
+        const result = await overseerRequest('/overseer/services/vi-core/start', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core started', 'success');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function viCoreStop() {
+      try {
+        const result = await overseerRequest('/overseer/services/vi-core/stop', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core stopped', 'neutral');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function viCoreRestart() {
+      try {
+        const result = await overseerRequest('/overseer/services/vi-core/restart', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core restarting...', 'success');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function updateViCoreStatus() {
+      try {
+        const status = await overseerRequest('/overseer/services/vi-core/status');
+        const logsDiv = document.getElementById('viCoreLogs');
+        if (logsDiv) {
+          logsDiv.innerHTML = `<div style="color: var(--gold);">[${status.status.toUpperCase()}] PID: ${status.pid || 'none'} | Uptime: ${status.uptime}s</div>`;
+          if (status.lastError) {
+            logsDiv.innerHTML += `<div style="color: var(--red); margin-top: 4px;">Error: ${status.lastError}</div>`;
+          }
+        }
+
+        // Fetch recent logs
+        const logsData = await overseerRequest('/overseer/logs/vi-core?lines=10');
+        if (logsDiv && logsData.logs) {
+          logsData.logs.forEach((line) => {
+            const logLine = document.createElement('div');
+            logLine.textContent = line;
+            logLine.style.lineHeight = '1.4';
+            if (line.includes('[ERROR]')) {
+              logLine.style.color = 'var(--red)';
+            }
+            logsDiv.appendChild(logLine);
+          });
+          logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+      } catch (err) {
+        console.warn('Status update failed:', err);
+      }
+    }
+
+    function showStatus(message, type = 'info') {
+      console.log(`[${type}] ${message}`);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // VI PRESENCE SYSTEM - Core Sigil + Volumetric Aura
+    // ═══════════════════════════════════════════════════════════════
+    
+    const viCoreSigil = document.getElementById('viCoreSigil');
+    const viPresenceAura = document.getElementById('viPresenceAura');
+
+    function updateViPresence(stateValue, duration = 2000) {
+      // Update core sigil
+      viCoreSigil.classList.remove('idle', 'stance', 'governor', 'active');
+      viCoreSigil.classList.add(stateValue);
+      
+      // Update presence aura
+      viPresenceAura.classList.remove('idle', 'stance', 'governor', 'active');
+      viPresenceAura.classList.add(stateValue);
+      
+      // Auto-return to idle after duration
+      if (stateValue !== 'idle') {
+        setTimeout(() => {
+          viCoreSigil.classList.remove(stateValue);
+          viPresenceAura.classList.remove(stateValue);
+        }, duration);
+      }
+    }
+
+    const elements = {
+      watermark: document.getElementById('watermark'),
+      testModeBadge: document.getElementById('testModeBadge'),
+      providerState: document.getElementById('providerState'),
+      sessionValue: document.getElementById('sessionValue'),
+      userValue: document.getElementById('userValue'),
+      replayValue: document.getElementById('replayValue'),
+      stanceSummary: document.getElementById('stanceSummary'),
+      stanceReasoning: document.getElementById('stanceReasoning'),
+      stanceSignals: document.getElementById('stanceSignals'),
+      stanceConstraints: document.getElementById('stanceConstraints'),
+      governorBadge: document.getElementById('governorBadge'),
+      governorStatus: document.getElementById('governorStatus'),
+      governorIssues: document.getElementById('governorIssues'),
+      reasoningStream: document.getElementById('reasoningStream'),
+      rawList: document.getElementById('rawList'),
+      postList: document.getElementById('postList'),
+      suppressedList: document.getElementById('suppressedList'),
+      injectedBlob: document.getElementById('injectedBlob'),
+      continuitySummary: document.getElementById('continuitySummary'),
+      costSummary: document.getElementById('costSummary'),
+      continuityCard: document.getElementById('continuityCard'),
+      costCard: document.getElementById('costCard'),
+      stanceCard: document.getElementById('stanceCard'),
+      governorCard: document.getElementById('governorCard'),
+      reasoningCard: document.getElementById('reasoningCard'),
+      runsList: document.getElementById('runsList'),
+      eventsList: document.getElementById('eventsList'),
+      errorBox: document.getElementById('errorBox'),
+      viVersion: document.getElementById('viVersion'),
+      selfModelHash: document.getElementById('selfModelHash'),
+    };
+
+    function flag(text, tone) {
+      const span = document.createElement('span');
+      span.className = `flag${tone ? ' ' + tone : ''}`;
+      span.textContent = text;
+      return span;
+    }
+
+    function glyph(text) {
+      const span = document.createElement('span');
+      span.className = 'glyph';
+      span.textContent = text;
+      return span;
+    }
+
+    function clearList(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function pulse(el, cls, ms = 1200) {
+      if (!el) return;
+      el.classList.add(cls);
+      setTimeout(() => el.classList.remove(cls), ms);
+    }
+
+    function connectStream(userId, sessionId) {
+      if (state.stream) {
+        state.stream.close();
+      }
+      const params = new URLSearchParams({ userId, sessionId }).toString();
+      const es = new EventSource(`/api/events/stream?${params}`);
+      state.stream = es;
+
+      es.onmessage = (e) => {
+        try {
+          const evt = JSON.parse(e.data);
+          handleLiveEvent(evt);
+        } catch (err) {
+          console.warn('Failed to parse event', err);
+        }
+      };
+
+      es.onerror = () => {
+        showError('Event stream disconnected');
+      };
+    }
+
+    function handleLiveEvent(ev) {
+      if (!ev || !ev.type) return;
+      state.liveEvents.unshift(ev);
+      state.liveEvents = state.liveEvents.slice(0, 50);
+      renderEvents([...state.liveEvents, ...(state.evidence?.events || [])]);
+
+      if (ev.type === 'stance_decision') {
+        const stanceData = {
+          stance: ev.data?.stance,
+          reasoning: ev.data?.reasoning,
+          userSignals: ev.data?.userSignals || [],
+          bondInfluence: ev.data?.bondInfluence,
+          selfModelConstraints: ev.data?.selfModelConstraints || [],
+          governorInterventions: state.governorCount,
+          timestamp: ev.timestamp,
+        };
+        state.evidence = state.evidence || {};
+        state.evidence.stance = stanceData;
+        renderStance(state.evidence);
+        pushReasoning(`Stance → ${stanceData.stance || '—'}`);
+        pulse(elements.stanceCard, 'alive-gold');
+        // Hologram semantic color: gold for stance lock
+        updateHologramState('stance');
+        setTimeout(() => updateHologramState('idle'), 2800);
+      }
+
+      if (ev.type === 'response_governor_intervention') {
+        state.governorCount += 1;
+        const issues = Array.isArray(ev.data?.issues) ? ev.data.issues : [];
+        renderGovernor(state.governorCount, issues);
+        pulse(elements.governorCard, 'alert-amber');
+        // Hologram semantic color: red for intervention
+        updateHologramState('governor');
+        setTimeout(() => updateHologramState('idle'), 1500);
+      }
+
+      if (ev.type === 'memory_retrieved' || ev.type === 'chat_request') {
+        pulse(elements.reasoningCard, 'alive-purple', 2200);
+        // Hologram semantic color: purple for cognition active
+        updateHologramState('active');
+        setTimeout(() => updateHologramState('idle'), 2000);
+      }
+
+      if (ev.type === 'history_compressed') {
+        pulse(elements.continuityCard, 'fracture', 2600);
+      }
+    }
+
+    async function loadEvidence() {
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      const query = (document.getElementById('queryInput').value || '').trim();
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID are required.');
+        return;
+      }
+      hideError();
+      const params = new URLSearchParams({ userId, sessionId });
+      if (query) params.append('query', query);
+      const headers = state.testMode ? { 'x-vi-test-mode': 'true' } : {};
+      try {
+        const res = await fetch(`/api/evidence?${params.toString()}`, { headers });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || 'Failed to load evidence');
+        }
+        const data = await res.json();
+        state.evidence = data;
+        state.testMode = !!data.testMode;
+        state.governorCount = data.governorInterventions || 0;
+        renderEvidence();
+        connectStream(userId, sessionId);
+      } catch (err) {
+        showError(err.message || 'Failed to load evidence');
+      }
+    }
+
+    function renderEvidence() {
+      const data = state.evidence;
+      if (!data) return;
+      elements.sessionValue.textContent = `Session: ${data.sessionId || '—'}`;
+      elements.userValue.textContent = `User: ${data.userId || '—'}`;
+      elements.replayValue.textContent = data.runs?.[0]?.timestamp || '—';
+
+      const providerState = data.providerState || 'live';
+      elements.providerState.textContent = `Provider: ${providerState}`;
+      elements.providerState.className = 'pill ' + (providerState === 'disabled' ? 'green' : providerState === 'degraded' ? 'purple' : 'red');
+
+      state.testMode = data.testMode;
+      elements.testModeBadge.textContent = `TEST_MODE: ${state.testMode ? 'on' : 'off'}`;
+      elements.testModeBadge.className = 'pill ' + (state.testMode ? 'gold' : 'muted');
+      elements.watermark.style.display = state.testMode ? 'flex' : 'none';
+
+      renderStance(data);
+      renderGovernor(state.governorCount, data.stance?.governorIssues || []);
+      renderMemory(data.memory);
+      renderContinuity(data.continuity);
+      renderRuns(data.runs || []);
+      renderEvents([...(state.liveEvents || []), ...(data.events || [])]);
+      elements.viVersion.textContent = data.version || '0.1.x';
+      elements.selfModelHash.textContent = data.selfModelHash || 'cache';
+    }
+
+    function renderStance(data) {
+      clearList(elements.stanceSignals);
+      clearList(elements.stanceConstraints);
+      const stance = data.stance || {};
+      elements.stanceSummary.textContent = stance.stance ? stance.stance.toUpperCase() : '—';
+      elements.stanceReasoning.textContent = stance.reasoning || '—';
+      (stance.userSignals || []).forEach(sig => elements.stanceSignals.appendChild(flag(sig, 'purple')));
+      (stance.selfModelConstraints || []).forEach(c => elements.stanceConstraints.appendChild(flag(c, 'muted')));
+      const gov = typeof data.governorInterventions === 'number' ? data.governorInterventions : (stance.governorInterventions || 0);
+      elements.governorBadge.textContent = `Governor: ${gov}`;
+      elements.governorBadge.className = 'pill ' + (gov > 0 ? 'red' : 'green');
+      state.governorCount = gov;
+    }
+
+    function renderGovernor(count, issues) {
+      elements.governorStatus.textContent = count > 0 ? `${count} interventions` : 'Clean pass';
+      clearList(elements.governorIssues);
+      (issues || []).forEach((issue) => elements.governorIssues.appendChild(flag(issue, 'red')));
+      elements.governorBadge.textContent = `Governor: ${count}`;
+      elements.governorBadge.className = 'pill ' + (count > 0 ? 'red' : 'green');
+    }
+
+    function renderMemory(memory) {
+      clearList(elements.rawList);
+      clearList(elements.postList);
+      clearList(elements.suppressedList);
+      if (!memory) {
+        elements.injectedBlob.textContent = '—';
+        return;
+      }
+      const postIds = new Set((memory.postFiltered || []).map((i) => i.id));
+      (memory.retrieved || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta">${item.type || ''} · ${(item.relevance ?? item.similarity ?? '').toString()}</div>`;
+        elements.rawList.appendChild(div);
+      });
+      (memory.postFiltered || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        const meta = item.adjustedScore !== undefined ? `score ${item.adjustedScore.toFixed ? item.adjustedScore.toFixed(2) : item.adjustedScore}` : '';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta">${item.type || ''} ${meta}</div>`;
+        elements.postList.appendChild(div);
+      });
+      const suppressed = (memory.retrieved || []).filter((item) => item.id && !postIds.has(item.id));
+      suppressed.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta red">${item.type || ''} · suppressed</div>`;
+        elements.suppressedList.appendChild(div);
+      });
+      elements.injectedBlob.textContent = memory.injectedBlob && memory.injectedBlob.length > 0 ? memory.injectedBlob : '—';
+    }
+
+    function renderContinuity(continuity) {
+      if (!continuity) {
+        elements.continuitySummary.textContent = '—';
+        elements.costSummary.textContent = '—';
+        return;
+      }
+      const fracture = continuity.compressionTriggered;
+      if (fracture) pulse(elements.continuityCard, 'fracture', 2600);
+      const costSpike = (continuity.retries || 0) > 0;
+      elements.continuitySummary.innerHTML = `Records: ${continuity.totalRecords || 0}<br/>Compression: ${fracture ? 'triggered' : 'idle'}<br/>Tail kept: ${continuity.tailKept || 0}<br/>Summary: ${continuity.summaryHash || 'n/a'}`;
+      elements.costSummary.innerHTML = `Retries: ${(continuity.retries || 0)}<br/>Backoff: ${(continuity.backoffTimeline || []).length} steps<br/>Errors: ${(continuity.errors || []).length}`;
+      elements.costCard.classList.toggle('alert-amber', costSpike);
+    }
+
+    function renderRuns(runs) {
+      clearList(elements.runsList);
+      runs.slice(0, 5).forEach(run => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${(run.input_text || run.inputText || '').slice(0, 120)}</div><div class="meta">${run.timestamp || ''}</div>`;
+        elements.runsList.appendChild(div);
+      });
+    }
+
+    function renderEvents(events) {
+      clearList(elements.eventsList);
+      events.slice(0, 18).forEach(ev => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'event';
+        wrapper.innerHTML = `<div class="type">${ev.layer ? 'L' + ev.layer : ''} · ${ev.type}</div><div class="message">${ev.message || ''}</div><div class="time">${ev.timestamp || ''}</div>`;
+        elements.eventsList.appendChild(wrapper);
+      });
+    }
+
+    function pushReasoning(text) {
+      if (!text) return;
+      const row = document.createElement('div');
+      row.className = 'item';
+      row.innerHTML = `<div class="text">${text}</div>`;
+      elements.reasoningStream.prepend(row);
+      while (elements.reasoningStream.childElementCount > 6) {
+        elements.reasoningStream.removeChild(elements.reasoningStream.lastChild);
+      }
+    }
+
+    function showError(msg) {
+      elements.errorBox.style.display = 'block';
+      elements.errorBox.textContent = msg;
+    }
+
+    function hideError() {
+      elements.errorBox.style.display = 'none';
+    }
+
+    function toggleTestMode() {
+      state.testMode = !state.testMode;
+      elements.testModeBadge.textContent = `TEST_MODE: ${state.testMode ? 'on' : 'off'}`;
+      elements.testModeBadge.className = 'pill ' + (state.testMode ? 'gold' : 'muted');
+      elements.watermark.style.display = state.testMode ? 'flex' : 'none';
+
+      // Enforce at Overseer level (hard gate)
+      overseerRequest('/overseer/mode/test-mode', 'POST', {
+        enabled: state.testMode,
+      })
+        .then(() => {
+          showStatus(`TEST_MODE ${state.testMode ? 'enabled' : 'disabled'} at Overseer`);
+          updateViCoreStatus();
+        })
+        .catch((err) => {
+          showError(`Failed to sync TEST_MODE with Overseer: ${err.message}`);
+        });
+    }
+
+    function exportJson() {
+      if (!state.evidence) return;
+      const blob = new Blob([JSON.stringify(state.evidence, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'evidence.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportMarkdown() {
+      if (!state.evidence) return;
+      const data = state.evidence;
+      const md = [
+        `# Vi Evidence Bundle`,
+        `- user: ${data.userId || '—'}`,
+        `- Vi presence reacts: gold for stance lock
+        updateViPresence('stance', 2800);
+      }
+
+      if (ev.type === 'response_governor_intervention') {
+        state.governorCount += 1;
+        const issues = Array.isArray(ev.data?.issues) ? ev.data.issues : [];
+        renderGovernor(state.governorCount, issues);
+        pulse(elements.governorCard, 'alert-amber');
+        // Vi presence reacts: red for intervention
+        updateViPresence('governor', 1500);
+      }
+
+      if (ev.type === 'memory_retrieved' || ev.type === 'chat_request') {
+        pulse(elements.reasoningCard, 'alive-purple', 2200);
+        // Vi presence reacts: purple for cognition
+        updateViPresence('active'
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('refreshEvidence').addEventListener('click', loadEvidence);
+    document.getElementById('toggleTestMode').addEventListener('click', toggleTestMode);
+    document.getElementById('exportJson').addEventListener('click', exportJson);
+    document.getElementById('exportMd').addEventListener('click', exportMarkdown);
+
+    // God-1: Ecosystem control buttons
+    document.getElementById('startAll').addEventListener('click', () => {
+      fetch(state.overseerUrl + '/overseer/ecosystem/start-all', { method: 'POST' })
+        .then(r => r.json())
+        .then(result => {
+          const msg = result.message || 'Services starting...';
+          document.getElementById('errorBox').style.display = 'block';
+          document.getElementById('errorBox').textContent = '[OK] ' + msg;
+          document.getElementById('errorBox').style.color = '#2ecc71';
+          populateEcosystemStatus();
+          setTimeout(() => populateAuditLog(), 500);
+        })
+        .catch(err => {
+          document.getElementById('errorBox').style.display = 'block';
+          document.getElementById('errorBox').textContent = '[ERROR] ' + err.message;
+          document.getElementById('errorBox').style.color = '#e74c3c';
+        });
+    });
+
+    document.getElementById('stopAll').addEventListener('click', () => {
+      fetch(state.overseerUrl + '/overseer/ecosystem/stop-all', { method: 'POST' })
+        .then(r => r.json())
+        .then(result => {
+          const msg = result.message || 'Services stopping...';
+          document.getElementById('errorBox').style.display = 'block';
+          document.getElementById('errorBox').textContent = '[OK] ' + msg;
+          document.getElementById('errorBox').style.color = '#d4af37';
+          populateEcosystemStatus();
+          setTimeout(() => populateAuditLog(), 500);
+        })
+        .catch(err => {
+          document.getElementById('errorBox').style.display = 'block';
+          document.getElementById('errorBox').textContent = '[ERROR] ' + err.message;
+          document.getElementById('errorBox').style.color = '#e74c3c';
+        });
+    });
+
+    async function updateEcosystemStatus() {
+      try {
+        const status = await overseerRequest('/overseer/ecosystem/status');
+        const ecosystemDiv = document.getElementById('ecosystemStatus');
+        if (ecosystemDiv) {
+          ecosystemDiv.innerHTML = '';
+          const healthyBadge = status.healthy ? '[HEALTHY]' : '[DEGRADED]';
+          const healthColor = status.healthy ? 'var(--green)' : 'var(--red)';
+          const header = document.createElement('div');
+          header.style.color = healthColor;
+          header.style.marginBottom = '6px';
+          header.textContent = `${healthyBadge} | ${new Date(status.timestamp).toLocaleTimeString()}`;
+          ecosystemDiv.appendChild(header);
+
+          for (const [serviceId, svc] of Object.entries(status.services || {})) {
+            const line = document.createElement('div');
+            const statusColor = svc.status === 'running' ? 'var(--green)' : svc.status === 'crashed' ? 'var(--red)' : 'var(--gold)';
+            const isCritical = svc.critical ? ' [CRITICAL]' : '';
+            line.innerHTML = `<span style="color: ${statusColor};">${serviceId}</span>: ${svc.status}${isCritical} | PID: ${svc.pid || 'none'} | Uptime: ${svc.uptime}s`;
+            line.style.lineHeight = '1.6';
+            ecosystemDiv.appendChild(line);
+          }
+        }
+      } catch (err) {
+        console.warn('Ecosystem status failed:', err);
+      }
+    }
+
+    async function updateAuditLog() {
+      try {
+        const auditData = await overseerRequest('/overseer/audit/log?days=1');
+        const auditDiv = document.getElementById('auditLog');
+        if (auditDiv && auditData.entries) {
+          auditDiv.innerHTML = '';
+          for (const entry of auditData.entries.slice(0, 20)) {
+            const line = document.createElement('div');
+            const time = new Date(entry.timestamp).toLocaleTimeString();
+            const resultColor = entry.result === 'success' ? 'var(--green)' : 'var(--red)';
+            line.innerHTML = `<span style="color: var(--gold);">${time}</span> | <span style="color: ${resultColor};">${entry.action}</span> ${entry.service ? `[${entry.service}]` : ''} | ${entry.user}`;
+            line.style.lineHeight = '1.4';
+            auditDiv.appendChild(line);
+          }
+        }
+      } catch (err) {
+        console.warn('Audit log failed:', err);
+      }
+    }
+
+    // Initialize crown bar with Overseer data
+    function initializeCrownBar() {
+      // Set static values immediately
+      const versionEl = document.getElementById('viVersion');
+      const modelEl = document.getElementById('selfModelHash');
+      const providerEl = document.getElementById('providerState');
+      const testEl = document.getElementById('testModeBadge');
+      
+      if (versionEl) versionEl.textContent = 'God-1';
+      if (modelEl) modelEl.textContent = 'Overseer';
+      if (providerEl) {
+        providerEl.textContent = 'Provider: Overseer';
+        providerEl.className = 'pill purple';
+      }
+      if (testEl) {
+        testEl.textContent = 'TEST_MODE: off';
+        testEl.className = 'pill muted';
+      }
+      
+      // Then fetch actual status asynchronously
+      fetch(state.overseerUrl + '/health')
+        .then(r => r.json())
+        .then(data => {
+          if (testEl && data.testMode) {
+            testEl.textContent = 'TEST_MODE: on';
+            testEl.className = 'pill gold';
+          }
+        })
+        .catch(err => console.warn('Health check failed:', err));
+    }
+
+    function populateEcosystemStatus() {
+      const statusEl = document.getElementById('ecosystemStatus');
+      if (!statusEl) return;
+      
+      fetch(state.overseerUrl + '/overseer/ecosystem/status')
+        .then(r => r.json())
+        .then(data => {
+          statusEl.innerHTML = '';
+          
+          // Header
+          const header = document.createElement('div');
+          header.style.marginBottom = '8px';
+          header.style.fontWeight = 'bold';
+          const healthyText = data.healthy ? '[HEALTHY]' : '[DEGRADED]';
+          const healthColor = data.healthy ? '#2ecc71' : '#e74c3c';
+          header.innerHTML = `<span style="color: ${healthColor};">${healthyText}</span> | ${new Date(data.timestamp).toLocaleTimeString()}`;
+          statusEl.appendChild(header);
+          
+          // Services
+          if (data.services) {
+            for (const [id, svc] of Object.entries(data.services)) {
+              const line = document.createElement('div');
+              const statusColor = svc.status === 'running' ? '#2ecc71' : svc.status === 'crashed' ? '#e74c3c' : '#d4af37';
+              const critical = svc.critical ? ' [CRITICAL]' : '';
+              line.innerHTML = `<span style="color: ${statusColor};">${id}</span>: ${svc.status}${critical} | PID: ${svc.pid || 'none'}`;
+              line.style.lineHeight = '1.5';
+              statusEl.appendChild(line);
+            }
+          }
+        })
+        .catch(err => {
+          statusEl.innerHTML = `<span style="color: #e74c3c;">Error loading status: ${err.message}</span>`;
+        });
+    }
+
+    function populateAuditLog() {
+      const auditEl = document.getElementById('auditLog');
+      if (!auditEl) return;
+      
+      fetch(state.overseerUrl + '/overseer/audit/log?days=1')
+        .then(r => r.json())
+        .then(data => {
+          auditEl.innerHTML = '';
+          
+          if (!data.entries || data.entries.length === 0) {
+            auditEl.textContent = '(No audit entries yet)';
+            return;
+          }
+          
+          for (const entry of data.entries.slice(0, 20)) {
+            const line = document.createElement('div');
+            const time = new Date(entry.timestamp).toLocaleTimeString();
+            const resultColor = entry.result === 'success' ? '#2ecc71' : '#e74c3c';
+            const service = entry.service ? `[${entry.service}]` : '';
+            line.innerHTML = `<span style="color: #d4af37;">${time}</span> | <span style="color: ${resultColor};">${entry.action}</span> ${service}`;
+            line.style.lineHeight = '1.4';
+            auditEl.appendChild(line);
+          }
+        })
+        .catch(err => {
+          auditEl.innerHTML = `<span style="color: #e74c3c;">Error loading audit: ${err.message}</span>`;
+        });
+    }
+
+    // Refresh status every 5 seconds
+    setInterval(function() {
+      console.log('[GOD-CONSOLE] Polling...');
+      populateEcosystemStatus();
+      populateAuditLog();
+    }, 5000);
+
+    // DEBUG: Test if JavaScript is running
+    console.log('[GOD-CONSOLE] Script starting...');
+    console.log('[GOD-CONSOLE] typeof initializeCrownBar:', typeof initializeCrownBar);
+    console.log('[GOD-CONSOLE] state.overseerUrl:', state.overseerUrl);
+    
+    // Initial load - run immediately with direct function calls
+    try {
+      console.log('[GOD-CONSOLE] Calling initializeCrownBar()...');
+      initializeCrownBar();
+      console.log('[GOD-CONSOLE] initializeCrownBar() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] initializeCrownBar() error:', e);
+    }
+    
+    try {
+      console.log('[GOD-CONSOLE] Calling populateEcosystemStatus()...');
+      populateEcosystemStatus();
+      console.log('[GOD-CONSOLE] populateEcosystemStatus() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] populateEcosystemStatus() error:', e);
+    }
+    
+    try {
+      console.log('[GOD-CONSOLE] Calling populateAuditLog()...');
+      populateAuditLog();
+      console.log('[GOD-CONSOLE] populateAuditLog() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] populateAuditLog() error:', e);
+    }
+    
+    console.log('[GOD-CONSOLE] Script complete!');
+
+    // Chat functionality
+    const chatHistory = document.getElementById('chatHistory');
+    const chatInput = document.getElementById('chatInput');
+    const sendMessageBtn = document.getElementById('sendMessage');
+
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID are required to chat.');
+        return;
+      }
+
+      // Activate hologram during chat
+      updateHologramState('active');
+
+      // Add user Vi presence during chat
+      updateViPresenccument.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = `<div class="role">USER</div><div class="content">${message}</div>`;
+      chatHistory.appendChild(userMsg);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      chatInput.value = '';
+
+      try {
+        const headers = state.testMode ? { 'x-vi-test-mode': 'true', 'x-guest-user-id': userId } : { 'x-guest-user-id': userId };
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({ message, sessionId, includeTrace: false }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Chat failed: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Add assistant message to chat
+        const assistantMsg = document.createElement('div');
+        assistantMsg.className = 'chat-message assistant';
+        assistantMsg.innerHTML = `<div class="role">VI</div><div class="content">${data.output || 'No response'}</div>`;
+        chatHistory.appendChild(assistantMsg);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Deactivate Vi presence after response
+        updateViPresence('idle');
+
+        // Refresh evidence to see new telemetry
+        setTimeout(() => loadEvidence(), 500);
+      } catch (err) {
+        updateViPresence('idle');
+        showError(err.message || 'Failed to send message');
+      }
+    }
+
+    sendMessageBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Auto-load evidence on page load if IDs are present
+    window.addEventListener('load', () => {
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      if (userId && sessionId) {
+        loadEvidence();
+      }
+    });
+  </script>
+</body>
+</html>

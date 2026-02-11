@@ -1,0 +1,205 @@
+# Prometheus Alert Rules for Vi Runtime
+# Phase 8: Production Operations
+#
+# Usage:
+#   Add to Prometheus configuration:
+#   rule_files:
+#     - "alerts/vi-alerts.yml"
+
+groups:
+  - name: vi_availability
+    interval: 30s
+    rules:
+      - alert: ViHighErrorRate
+        expr: |
+          (
+            rate(vi_chat_requests_total{status="error"}[5m])
+            /
+            rate(vi_chat_requests_total[5m])
+          ) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          component: vi-runtime
+        annotations:
+          summary: "Vi error rate above 5%"
+          description: "{{ $value | humanizePercentage }} of requests are failing (threshold: 5%)"
+          runbook_url: https://docs.tentai.dev/runbooks/high-error-rate
+
+      - alert: ViCriticalErrorRate
+        expr: |
+          (
+            rate(vi_chat_requests_total{status="error"}[5m])
+            /
+            rate(vi_chat_requests_total[5m])
+          ) > 0.15
+        for: 1m
+        labels:
+          severity: critical
+          component: vi-runtime
+        annotations:
+          summary: "Vi error rate critically high"
+          description: "{{ $value | humanizePercentage }} of requests are failing (threshold: 15%)"
+          runbook_url: https://docs.tentai.dev/runbooks/critical-error-rate
+
+      - alert: ViServiceDown
+        expr: up{job="vi-runtime"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: vi-runtime
+        annotations:
+          summary: "Vi service is down"
+          description: "Vi runtime has been unavailable for 1+ minutes"
+          runbook_url: https://docs.tentai.dev/runbooks/service-down
+
+  - name: vi_performance
+    interval: 30s
+    rules:
+      - alert: ViHighLatency
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket{path="/v1/chat"}[5m])
+          ) > 3
+        for: 5m
+        labels:
+          severity: warning
+          component: vi-runtime
+        annotations:
+          summary: "Vi p95 latency above 3s"
+          description: "95th percentile latency is {{ $value }}s (threshold: 3s)"
+          runbook_url: https://docs.tentai.dev/runbooks/high-latency
+
+      - alert: ViCriticalLatency
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket{path="/v1/chat"}[5m])
+          ) > 10
+        for: 2m
+        labels:
+          severity: critical
+          component: vi-runtime
+        annotations:
+          summary: "Vi p95 latency critically high"
+          description: "95th percentile latency is {{ $value }}s (threshold: 10s)"
+          runbook_url: https://docs.tentai.dev/runbooks/critical-latency
+
+  - name: vi_capacity
+    interval: 30s
+    rules:
+      - alert: ViHighRateLimiting
+        expr: |
+          (
+            rate(vi_chat_rate_limited_total[5m])
+            /
+            rate(vi_chat_requests_total[5m])
+          ) > 0.10
+        for: 5m
+        labels:
+          severity: warning
+          component: vi-runtime
+        annotations:
+          summary: "High rate limiting detected"
+          description: "{{ $value | humanizePercentage }} of requests are being rate limited (threshold: 10%)"
+          runbook_url: https://docs.tentai.dev/runbooks/high-rate-limiting
+
+      - alert: ViAutonomyChimeStorm
+        expr: rate(vi_autonomy_chimes_total[5m]) > 5
+        for: 3m
+        labels:
+          severity: warning
+          component: autonomy
+        annotations:
+          summary: "Autonomy chime rate unusually high"
+          description: "Chime rate is {{ $value }}/sec (threshold: 5/sec), possible policy misconfiguration"
+          runbook_url: https://docs.tentai.dev/runbooks/chime-storm
+
+  - name: vi_resources
+    interval: 30s
+    rules:
+      - alert: ViHighMemoryUsage
+        expr: |
+          process_resident_memory_bytes{job="vi-runtime"}
+          / 1024 / 1024 / 1024 > 2
+        for: 5m
+        labels:
+          severity: warning
+          component: vi-runtime
+        annotations:
+          summary: "Vi memory usage above 2GB"
+          description: "Memory usage is {{ $value | humanize }}GB (threshold: 2GB)"
+          runbook_url: https://docs.tentai.dev/runbooks/high-memory
+
+      - alert: ViCriticalMemoryUsage
+        expr: |
+          process_resident_memory_bytes{job="vi-runtime"}
+          / 1024 / 1024 / 1024 > 4
+        for: 2m
+        labels:
+          severity: critical
+          component: vi-runtime
+        annotations:
+          summary: "Vi memory usage critically high"
+          description: "Memory usage is {{ $value | humanize }}GB (threshold: 4GB)"
+          runbook_url: https://docs.tentai.dev/runbooks/critical-memory
+
+  - name: vi_database
+    interval: 30s
+    rules:
+      - alert: ViDatabaseConnectionPoolExhausted
+        expr: pg_stat_database_numbackends{datname="vi"} > 80
+        for: 3m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL connection pool near capacity"
+          description: "{{ $value }} active connections (threshold: 80)"
+          runbook_url: https://docs.tentai.dev/runbooks/db-connections
+
+      - alert: ViSlowQueries
+        expr: |
+          rate(pg_stat_statements_mean_exec_time{datname="vi"}[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Average query time is {{ $value }}ms (threshold: 1000ms)"
+          runbook_url: https://docs.tentai.dev/runbooks/slow-queries
+
+  - name: vi_slo
+    interval: 1m
+    rules:
+      - alert: ViSLOAvailabilityBreach
+        expr: |
+          (
+            sum(rate(vi_chat_requests_total{status!="error"}[30m]))
+            /
+            sum(rate(vi_chat_requests_total[30m]))
+          ) < 0.999
+        for: 5m
+        labels:
+          severity: critical
+          component: slo
+          slo: availability
+        annotations:
+          summary: "SLO breach: 99.9% availability target missed"
+          description: "Current availability: {{ $value | humanizePercentage }} (target: 99.9%)"
+          runbook_url: https://docs.tentai.dev/runbooks/slo-availability-breach
+
+      - alert: ViSLOLatencyBreach
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket{path="/v1/chat"}[30m])
+          ) > 2
+        for: 10m
+        labels:
+          severity: warning
+          component: slo
+          slo: latency
+        annotations:
+          summary: "SLO breach: p95 latency target missed"
+          description: "Current p95 latency: {{ $value }}s (target: <2s)"
+          runbook_url: https://docs.tentai.dev/runbooks/slo-latency-breach

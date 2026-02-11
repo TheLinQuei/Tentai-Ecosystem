@@ -1,0 +1,32 @@
+/**
+ * @tentai/tokens - Canonical Theme Source
+ * 
+ * Single source of truth for Tentai 77EZ design system.
+ * All clients import this. No hardcoded hex values outside this file.
+ * 
+ * Brand: Obsidian base, gold accents, purple lightning, Origin Jumpworks luxury.
+ */
+
+:root {
+  /* === BASE PALETTE === */
+  --onyx: #0a0e14;        /* Primary background - obsidian black */
+  --ink: #0f172a;         /* Secondary background - deep slate */
+  --panel: #0d1118;       /* Panel background */
+  --card: #111827;        /* Card background */
+
+  /* === ACCENT COLORS === */
+  --gold: #d4af37;        /* Primary accent - sovereign gold */
+  --divider: rgba(212, 175, 55, 0.15);  /* Subtle dividers */
+
+  /* === TEXT === */
+  --text: #e6e9f0;        /* Primary text - crisp white */
+  --muted: #9aa4b5;       /* Muted text - readable gray */
+
+  /* === SEMANTIC === */
+  --green: #2ecc71;       /* Success, online status */
+  --error: #e74c3c;       /* Error, danger */
+
+  /* === SYSTEM HIGHLIGHTS === */
+  --purple: #5b2e91;      /* System accent - purple lightning */
+  --cyan: #00d9ff;        /* Secondary system accent */
+}

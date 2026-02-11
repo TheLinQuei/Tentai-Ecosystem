@@ -1,0 +1,265 @@
+# Milestone 2: Data Persistence & Validation — Plan
+
+**Status:** 🔵 PLANNED (Follows Milestone 1 Stable Foundation)
+**Start Date:** TBD (after M1 sign-off)
+**Phase:** Phase 1 (Brain Architecture)
+
+## Overview
+
+Milestone 2 builds on the stable Milestone 1 foundation to add:
+1. **Database integration** (PostgreSQL with schema)
+2. **Request/response validation** (schemas, TypeScript types)
+3. **Enhanced logging** (structured logs, telemetry events)
+4. **Repository pattern** (domain logic ↔ storage separation)
+
+This milestone remains within **Phase 1** constraints:
+- No authentication (Phase 3)
+- No multi-provider model integration (Phase 2+)
+- No user state persistence across restarts
+
+## Deliverables
+
+### 1. Database Layer
+- PostgreSQL schema design (migrations)
+- Repository pattern implementation
+- Connection pooling with `pg` library
+- Transaction support for atomic operations
+
+**Files:**
+- `src/db/schema.sql` — Schema definitions
+- `src/db/migrations/` — Migration scripts
+- `src/db/connection.ts` — Pool setup
+- `src/repositories/` — Domain repositories
+
+### 2. Validation Framework
+- Schema definition using `zod` or `joi`
+- Request validation middleware
+- Response type guards
+- Error normalization
+
+**Files:**
+- `src/schemas/` — Input/output schemas
+- `src/middleware/validate.ts` — Validation middleware
+- `src/types/errors.ts` — Error definitions
+
+### 3. Logging System
+- Structured logging with `winston` or `pino`
+- Telemetry event recording
+- Request/response logging middleware
+- Error tracking
+
+**Files:**
+- `src/logging/logger.ts` — Logger setup
+- `src/logging/events.ts` — Event definitions
+- `src/middleware/logging.ts` — Logging middleware
+
+### 4. Repository Pattern
+Separates domain logic from storage:
+
+```typescript
+// Domain model
+interface Conversation {
+  id: string;
+  title: string;
+  createdAt: Date;
+}
+
+// Repository interface
+interface ConversationRepository {
+  create(data: CreateConversationInput): Promise<Conversation>;
+  findById(id: string): Promise<Conversation | null>;
+  list(): Promise<Conversation[]>;
+}
+
+// Handler uses repository (no direct DB calls)
+async function handleCreateConversation(
+  req: Request,
+  repo: ConversationRepository
+): Promise<Conversation> {
+  const data = validateCreateInput(req.body);
+  return repo.create(data);
+}
+```
+
+### 5. Documentation
+- Database schema documentation
+- API request/response schemas (JSON Schema)
+- Logging event reference
+- Migration guide
+
+**Files:**
+- `docs/20-modules/DATABASE.md`
+- `docs/20-modules/VALIDATION.md`
+- `docs/20-modules/LOGGING.md`
+
+## Boundary Policies (Per copilot-rules §3)
+
+### Fully Implemented
+- ✅ Database connection & basic CRUD
+- ✅ Request validation
+- ✅ Structured logging
+
+### NotImplementedByDesign (Blocked by Phase 2+)
+- ❌ Cross-database replication (Phase 4)
+- ❌ Event sourcing (Phase 2)
+- ❌ Caching layer (Phase 2)
+
+**Example:**
+```typescript
+// In ConversationRepository
+async function cacheGetConversation(id: string) {
+  throw new NotImplementedByDesign(
+    'Response caching is not yet implemented.',
+    {
+      phase: 'Phase 2',
+      reason: 'Requires integration with cache invalidation logic.',
+      when: 'After Phase 2 event system',
+      ticket: 'https://github.com/tentai/vi/issues/XX'
+    }
+  );
+}
+```
+
+## Exit Criteria (Stability Verification)
+
+```bash
+# Fresh checkout
+cd core/vi
+rm -rf node_modules dist package-lock.json
+npm install
+
+# Type check
+npm run type-check  # ✅ 0 errors
+
+# Build
+npm run build  # ✅ Success
+
+# Database setup (if applicable)
+npm run db:setup  # ✅ Schema created
+
+# Run
+npm start &
+sleep 2
+curl http://localhost:3001/health  # ✅ Success
+kill %1
+
+# CLI
+node dist/cli/cli.js --version  # ✅ Works
+```
+
+**All steps must pass on a fresh checkout before Milestone 3 begins.**
+
+See [MILESTONE_VERIFICATION.md](../../00-ecosystem/MILESTONE_VERIFICATION.md) for full verification process.
+
+## Architecture
+
+```
+src/
+├── main.ts                    # Server (unchanged)
+├── cli.ts                     # CLI (unchanged)
+├── config.ts                  # Config + DB connection strings
+├── handlers/                  # (unchanged - no DB calls)
+│   ├── health.ts
+│   ├── interact.ts
+│   └── models.ts
+├── repositories/              # NEW: Domain repositories
+│   ├── ConversationRepository.ts
+│   ├── MessageRepository.ts
+│   └── index.ts
+├── schemas/                   # NEW: Validation schemas
+│   ├── conversation.ts
+│   ├── message.ts
+│   └── index.ts
+├── db/                        # NEW: Database layer
+│   ├── connection.ts
+│   ├── migrations/
+│   └── schema.sql
+├── logging/                   # NEW: Logging system
+│   ├── logger.ts
+│   ├── events.ts
+│   └── index.ts
+├── middleware/                # NEW: Validation & logging
+│   ├── validate.ts
+│   ├── logging.ts
+│   └── index.ts
+├── types/
+│   ├── index.ts               # (domain models)
+│   └── errors.ts              # (NEW: error types)
+└── utils/
+    └── NotImplementedByDesign.ts  # (for boundaries)
+
+docs/
+├── 00-overview/
+│   ├── README.md
+│   ├── QUICKSTART.md
+│   └── MILESTONE-2-PLAN.md         # THIS FILE
+├── 10-architecture/
+│   └── README.md
+├── 20-modules/
+│   ├── DATABASE.md            # NEW
+│   ├── VALIDATION.md          # NEW
+│   └── LOGGING.md             # NEW
+└── 90-adr/
+    └── (decisions as they arise)
+```
+
+## Dependencies to Add
+
+**Runtime:**
+```json
+{
+  "pg": "^8.11.0",           // PostgreSQL client
+  "zod": "^3.22.0",          // Schema validation
+  "winston": "^3.11.0",      // Structured logging
+  "uuid": "^9.0.0"           // ID generation
+}
+```
+
+**Development:**
+```json
+{
+  "@types/pg": "^8.11.0",
+  "@types/uuid": "^9.0.0"
+}
+```
+
+## Implementation Order
+
+1. **Database Layer First**
+   - Set up connection pool
+   - Create schema
+   - Build repository pattern
+
+2. **Validation Schemas Second**
+   - Define schemas for current endpoints
+   - Add validation middleware
+
+3. **Logging System Third**
+   - Instrument database calls
+   - Log handler entry/exit
+   - Record errors
+
+4. **Documentation Last**
+   - Generate schema docs
+   - Write repository guides
+   - Record decisions in ADRs
+
+## Known Limitations
+
+- Single database (no multi-tenant support until Phase 3)
+- No query optimization or indexing strategy (add in Phase 3)
+- No database replication (Phase 4)
+- Migrations are manual SQL files (not ORM-based)
+
+## Phase Dependencies
+
+**Blocks:**
+- Phase 2: Requires stable data persistence from M2
+- Phase 3: Requires user auth schema (M2 prerequisite)
+
+**Blocked By:**
+- Nothing (depends only on M1)
+
+---
+
+**Next Milestone:** Milestone 3 - Advanced Reasoning & State Management

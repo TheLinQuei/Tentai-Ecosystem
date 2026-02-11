@@ -1,0 +1,20 @@
+{
+  "name": "@tentai/tokens",
+  "version": "0.1.0",
+  "description": "Canonical design tokens for Tentai 77EZ design system",
+  "type": "module",
+  "main": "theme.css",
+  "files": [
+    "theme.css",
+    "README.md"
+  ],
+  "keywords": [
+    "design-tokens",
+    "theme",
+    "css-variables",
+    "tentai"
+  ],
+  "author": "Tentai Architecture Team",
+  "license": "UNLICENSED",
+  "private": true
+}

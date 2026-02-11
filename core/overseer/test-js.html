@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JavaScript Test</title>
+</head>
+<body>
+  <h1>JavaScript Execution Test</h1>
+  <div id="result">JavaScript NOT executed</div>
+  
+  <script>
+    // If this executes, the div will change
+    document.getElementById('result').innerHTML = 'JavaScript IS executing!';
+    document.getElementById('result').style.color = 'green';
+    
+    // Try to make an API call
+    fetch('/health')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('result').innerHTML += '<br><br>API Call Result:<br>' + JSON.stringify(data, null, 2);
+        document.getElementById('result').style.whiteSpace = 'pre';
+      })
+      .catch(err => {
+        document.getElementById('result').innerHTML += '<br><br>API Call Error: ' + err.message;
+      });
+  </script>
+</body>
+</html>

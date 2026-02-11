@@ -1,0 +1,547 @@
+# PHASE 1 SPEC: Vi (The Brain)
+
+**Master Build Specification for core/vi**
+
+This is the authoritative definition of what "Phase 1 complete" means. Reference this before writing code, during reviews, and at exit gates.
+
+---
+
+## Non-Negotiables
+
+1. **No stubs.** If something is deferred, it must fail loudly via `NotImplementedByDesign` with: phase, reason, unlockCriteria, ticketId.
+
+2. **Single golden path first.** One runtime path that works end-to-end before optional features.
+
+3. **Everything behind an interface.** Every integration is swappable, but the default must be real and tested.
+
+4. **Contracts first.** Any external-facing shapes go into vi-protocol before implementation.
+
+5. **Reproducible builds.** Fresh clone → install → test → run works.
+
+---
+
+## Phase 1 Objective
+
+Build the sovereign intelligence runtime that can:
+
+- Run sessions reliably
+- Understand intent well enough to route actions
+- Retrieve memory deterministically
+- Reason with tool use
+- Produce high-quality responses
+- Persist and consolidate memory
+- Audit and explain why it did what it did
+- Expose a stable API for clients later (Phase 2)
+
+**Phase 1 ends when Vi can run as a service + CLI and pass a full test suite.**
+
+---
+
+## A. Deliverables (What exists at Phase 1 completion)
+
+### A1) Runtime Interfaces (public)
+
+**CLI**
+```bash
+vi chat                    # Interactive session
+vi ask "question here"     # Single turn
+vi debug session <id>      # Replay with trace
+```
+
+**HTTP API**
+```
+POST   /v1/chat            # Send message, get response
+GET    /v1/sessions        # List sessions
+GET    /v1/sessions/<id>   # Get session state
+POST   /v1/memory/query    # Search memory
+POST   /v1/tools/run       # Execute tool (if permitted)
+GET    /v1/health          # Service health
+GET    /metrics             # Prometheus metrics
+```
+
+**Event Stream (internal)**
+- Structured events for telemetry and later client bridges
+- Topics: turn.started, turn.completed, tool.called, memory.written, error
+
+### A2) Core Internal Systems
+
+- Session lifecycle engine
+- Cognition pipeline
+- Tool registry + execution sandbox
+- Memory stack (short-term + long-term + consolidation)
+- Identity + policy gate (safety + trust + authority)
+- Observability (logs, metrics, traces)
+- Evaluation suite (quality gates)
+- Config system + secrets handling
+- Packaging + versioning
+
+---
+
+## B. Architecture (The Brain as a System)
+
+### B1) High-level flow
+
+```
+Input
+  ↓
+Perception (normalize + entity extract)
+  ↓
+Intent (route to handler)
+  ↓
+Context Build (gather memory, policy, tools)
+  ↓
+Plan (decide on action: direct response vs tool-assisted)
+  ↓
+Tool Use (if needed)
+  ↓
+Respond (synthesize output)
+  ↓
+Persist (write to session, memory, audit)
+  ↓
+Consolidate (merge STM → LTM periodically)
+```
+
+### B2) Canonical loop artifacts
+
+These must exist for every turn. They make the brain debuggable.
+
+```typescript
+TurnInput                 // What user said
+PerceptionReport          // What we understood
+IntentDecision            // What we decided to do
+ContextPacket             // What the model sees
+Plan                      // Action plan (direct response vs tools)
+ToolCalls[]               // What tools we wanted to run
+ModelResponse             // Raw model output
+TurnResult                // Final response + evidence
+MemoryWrites[]            // What we learned
+TelemetryEvents[]         // What happened
+```
+
+---
+
+## C. Modules (What the brain is made of)
+
+### C1) Session System (required)
+
+**Purpose:** Represent a conversation as a durable, replayable thing.
+
+**Responsibilities**
+- Create/restore sessions with stable IDs
+- Maintain turn counter, participants, timestamps
+- Store system state: mood/emotion flags, active goals, working set
+- Capture entire decision trace for debugging
+
+**Done criteria**
+- [ ] Session IDs stable across restarts
+- [ ] Rehydration produces same context packet
+- [ ] Replay tool reproduces a turn (minus LLM nondeterminism at temp=0)
+
+### C2) Perception Layer (required)
+
+**Purpose:** Normalize all input types into consistent semantic form.
+
+**Input types in Phase 1**
+- Text
+- (Optional) basic file references for later
+
+**Outputs**
+- Language detection (simple)
+- Entities extracted (names, projects, repo names, commands)
+- "User ask type" features (question vs command vs plan vs vent)
+
+**Done criteria**
+- [ ] Deterministic normalization tests pass
+- [ ] Entity extraction not regex-only (light NLP ok)
+
+### C3) Intent Router (required)
+
+**Purpose:** Decide what user means in operational terms.
+
+**Minimum intent classes**
+- `chat.general` — Casual conversation
+- `chat.tech` — Technical question
+- `task.plan` — Planning request
+- `task.execute` — Task execution (tool needed)
+- `memory.query` — Memory search
+- `memory.write` — Explicit memory save
+- `governance.policy` — Policy question
+- `debug.explain` — "Why did you do that?"
+
+**Done criteria**
+- [ ] Intent is logged with confidence score
+- [ ] Intent drives tool availability
+- [ ] Regression suite of intent examples passes
+
+### C4) Context Builder (required)
+
+**Purpose:** Build the "what the model sees" packet.
+
+**Must include**
+- Conversation summary (compacted)
+- Last N turns (configurable, default 5)
+- Memory retrieval results (ranked by relevance)
+- Active goals + constraints
+- Identity + permissions snapshot
+- Tool registry manifest (filtered by policy)
+
+**Done criteria**
+- [ ] Context packet is inspectable via `/debug/context/<turnId>`
+- [ ] Retrieval + ranking deterministic in tests
+- [ ] Context size bounded (prevent token explosion)
+
+### C5) Planning (required)
+
+**Purpose:** Convert intent + context into action plan.
+
+**Plan outputs**
+- `DirectResponse` — Answer user directly
+- `ToolAssistedResponse` — Call tool(s), synthesize answer
+- Ordered steps with success criteria
+- Confidence + fallback strategy
+
+**Done criteria**
+- [ ] Plans stored per turn with full trace
+- [ ] Plans validated against schema + invariants
+- [ ] Tool steps declare expected outputs
+
+### C6) Reasoning Core (required)
+
+**Purpose:** Execute planning with model calls and tool mediation.
+
+**Rules**
+- All model calls go through single LLM Gateway
+- All tool calls go through Tool Executor
+- Reasoning core returns: response + evidence + tool trace
+
+**Done criteria**
+- [ ] Works end-to-end with at least 1 tool
+- [ ] Full trace stored for every run
+- [ ] Partial failure behavior defined (tool fails → fallback + error event)
+
+### C7) Tool System (required)
+
+**Purpose:** Make Vi actionable without becoming unsafe or chaotic.
+
+**Phase 1 tool categories**
+- `filesystem.read` — Read-only, restricted to repo root
+- `shell.exec` — Restricted allowlist (optional but powerful)
+- `http.fetch` — Optional
+- `memory.query` — Always available
+- `memory.write` — Always available
+
+**Safety posture**
+- Tool permissioning depends on identity/policy
+- Tool calls require explicit schema validation
+- Tool results chunked + summarized before LLM sees them
+
+**Done criteria**
+- [ ] Tool registry with versioning
+- [ ] Allowlist enforcement tested
+- [ ] Tool invocation audit log exists
+- [ ] Tool sandbox prevents escapes (proof tested)
+
+### C8) Memory System (required)
+
+**This separates "chatbot" from "assistant."**
+
+**Memory layers (Phase 1)**
+- **STM (Short-term):** active working set (session scoped)
+- **LTM (Long-term):** durable notes (user/project scoped)
+- **Episodic:** full turn-by-turn history with trace
+- **Semantic:** keyword + embedding index (Phase 1 minimal but real if embeddings included)
+
+**Operations**
+- `write(item, scope, tags)` — append with provenance
+- `retrieve(query, limit, ranking)` — ranked results
+- `consolidate()` — merge STM into LTM (rules-based + optional model-assisted)
+- `forget(ids)` — explicit deletion
+
+**Data requirements per memory item**
+```typescript
+{
+  id: string;
+  scope: "session" | "user" | "global";
+  timestamps: { created, accessed, updated };
+  source: { turnId, toolResult?, manual? };
+  confidence: 0.0 - 1.0;
+  tags: string[];
+  privacyClass: "public" | "internal" | "private";
+  summary: string;  // "why this matters"
+  content: string;
+}
+```
+
+**Done criteria**
+- [ ] Retrieval returns useful items for test prompts
+- [ ] Consolidation runs and changes LTM deterministically
+- [ ] Export/import works (JSON)
+- [ ] Consolidation tests compare with manual golden data
+
+### C9) Identity + Policy (required)
+
+**Purpose:** Prevent "helpful assistant" from becoming "random intern."
+
+**Identity capabilities in Phase 1**
+- Recognize known operator vs unknown user (local config + passphrase support)
+- Maintain "trust state" that gates dangerous tools
+- Maintain "role" (owner/admin/guest)
+
+**Policy gating rules**
+- Tools gated by role + trust
+- Memory writes gated by sensitivity type
+- Audit required for "privileged" actions
+
+**Done criteria**
+- [ ] Attempting restricted actions fails loudly + logs why
+- [ ] Policy decisions are explainable (`/v1/explain-policy/<action>`)
+- [ ] Audit log shows who did what when
+
+### C10) LLM Gateway (required)
+
+**Purpose:** Abstract model provider and enforce best practices.
+
+**Requirements**
+- Provider adapters (start with OpenAI, add more later)
+- Centralized prompt construction
+- Response parsing + validation
+- Retry logic with jitter (exponential backoff)
+- Rate limiting + budget guardrails
+- Logging (sanitized, no PII)
+- Token counting before/after
+
+**Done criteria**
+- [ ] One provider fully integrated
+- [ ] Tests use deterministic mock adapter for evaluation
+- [ ] Gateway supports streaming responses (optional but recommended)
+- [ ] Error handling covers quota, timeout, malformed response
+
+### C11) Telemetry (required)
+
+**If you want Jarvis-level, you need black-box and white-box visibility.**
+
+**What we track**
+- Turn latency breakdown: perception, retrieval, llm, tools, persist
+- Tool error rates + error types
+- Token usage/cost per turn
+- Memory retrieval hit rate
+- Intent distribution
+- Safety/policy denials
+- Model output quality signals (if available)
+
+**Storage**
+- Local JSONL (development)
+- Optional OTLP export (production)
+- Metrics endpoint `/metrics` (Prometheus format)
+
+**Done criteria**
+- [ ] Telemetry on by default in dev
+- [ ] CI asserts telemetry events emitted
+- [ ] Dashboard/query tool exists to analyze turns
+
+### C12) Evaluation & Testing (required)
+
+**This is where "no stubs" becomes real.**
+
+**Test types**
+- **Unit:** modules + invariants (80%+ coverage minimum)
+- **Contract:** protocol schemas (all shapes validated)
+- **Integration:** full session turn with mocked LLM
+- **E2E:** live run against real provider (behind feature flag)
+- **Golden:** prompt → expected structured outputs (intent, tools, memory)
+- **Load:** 100+ turns without memory corruption
+
+**Quality gates (Phase 1 exit)**
+- [ ] Coverage >= 85% for core modules
+- [ ] 0 silent failures (no `catch (e) {}` without handling)
+- [ ] Deterministic suite passes with fixed seeds
+- [ ] Lint + typecheck clean (0 errors)
+- [ ] Load test: 100 turns without corruption
+- [ ] All non-mock code tested
+
+---
+
+## D. Data & Storage Choices (Phase 1)
+
+**Recommended for Phase 1: SQLite**
+- Local-first, easy dev, deterministic, portable
+- Later: migrate to Postgres for multi-client/service
+
+**Tables needed**
+```
+sessions
+  id, userId, createdAt, updatedAt, state, trace
+
+turns
+  id, sessionId, index, input, output, turnTrace, createdAt
+
+tool_calls
+  id, turnId, toolName, args, result, error, executedAt
+
+memories
+  id, scope, source, content, confidence, tags, createdAt, updatedAt
+
+audit_events
+  id, userId, action, resource, allowed, reason, createdAt
+
+embeddings (optional)
+  id, memoryId, embedding, model
+```
+
+---
+
+## E. Dependencies (Phase 1 recommended stack)
+
+### Runtime
+- **TypeScript** (strict mode)
+- **Node 22+**
+- **Fastify** or Express (for API)
+- **Zod** (schema validation)
+- **Pino** (structured logging)
+- **dotenv** or config library (typed)
+
+### Storage
+- **Prisma** or **Drizzle** (ORM)
+- **SQLite driver** (or Postgres if preferred)
+
+### LLM
+- **OpenAI SDK** (or your chosen provider)
+- **Embeddings:** provider-based if included in Phase 1
+
+### Tooling
+- **Execa** (shell execution, if allowed)
+- **Glob/Path** libs (safe FS access)
+- **Commander.js** (CLI)
+
+### Testing
+- **Vitest** (test runner)
+- **Supertest** (HTTP testing)
+- **MSW** (HTTP mocking)
+- **ESLint** + **Prettier** (linting)
+
+### Telemetry
+- **OpenTelemetry SDK** (optional but ideal)
+- **Prometheus client** (metrics)
+
+---
+
+## F. "No Stubs" Enforcement Mechanism
+
+**Required rule:** Any function planned but not implemented must:
+
+```typescript
+throw new NotImplementedByDesign(
+  'What would have been done here',
+  {
+    phase: 'Phase 2',
+    reason: 'Requires system X to be defined',
+    unlockCriteria: 'When Phase 2 schema is locked',
+    ticketId: 'TENTAI-42'
+  }
+);
+```
+
+**Coverage:** Must be tested (assert it throws).
+
+**No:** TODOs, `return null`, silent fallbacks.
+
+---
+
+## G. Phase 1 Milestones (Ordered)
+
+### Milestone 1: Skeleton that runs
+- [ ] CLI boots (`vi --help`)
+- [ ] API boots (`/health` responds)
+- [ ] Config loads from env + .env
+- [ ] Logs + telemetry write to disk
+
+### Milestone 2: One-turn cognition (no tools)
+- [ ] Perception normalizes input
+- [ ] Intent detection routes correctly
+- [ ] Context builder gathers available data
+- [ ] LLM gateway makes model call
+- [ ] Response comes back and is stored
+- [ ] Full trace written to turn record
+
+### Milestone 3: Memory write + retrieval
+- [ ] Session writes memory items
+- [ ] Retrieval finds relevant items
+- [ ] Consolidation rules defined
+- [ ] STM → LTM merge working
+
+### Milestone 4: Tool system
+- [ ] Tool registry with 2+ tools (e.g., `memory.query`, `filesystem.read`)
+- [ ] Tool executor validates inputs
+- [ ] Tool results summarized before LLM
+- [ ] Tool audit log written
+
+### Milestone 5: Planning + tool-assisted response
+- [ ] Model chooses tool (if beneficial)
+- [ ] Tool executes (or fails safely)
+- [ ] Response integrates tool output with citations
+- [ ] Evidence trail shows tool use
+
+### Milestone 6: Consolidation
+- [ ] Consolidation rules applied periodically
+- [ ] STM → LTM deterministic in tests
+- [ ] Golden test cases compare with manual golden data
+
+### Milestone 7: Identity + policy gating
+- [ ] Trust state maintained
+- [ ] Role gating for tools/memory
+- [ ] Restricted actions denied + logged
+- [ ] Audit log present and queryable
+
+### Milestone 8: Evaluation suite + exit
+- [ ] Golden tests pass
+- [ ] Integration suite passes
+- [ ] Load test passes (100 turns, no corruption)
+- [ ] Architecture docs written
+- [ ] Module docs written
+- [ ] Runbook written
+
+**Phase 1 only ends at Milestone 8.**
+
+---
+
+## H. Phase 1 "DONE" Definition (Hard exit criteria)
+
+Vi is "the brain" only when ALL of these are true:
+
+- [ ] `vi ask "…"` works, returns response, persists trace
+- [ ] `/v1/chat` works with session continuity (can switch sessions, restore state)
+- [ ] Memory retrieval demonstrably improves responses (test: ask same question twice, second response better due to memory)
+- [ ] Tool calls are validated, audited, and permissioned
+- [ ] Policy gating blocks restricted actions correctly (test: attempt unauthorized tool, denied + logged)
+- [ ] Telemetry shows full latency breakdown (perception, retrieval, llm, tools, persist)
+- [ ] Test suite passes with deterministic results (fixed RNG seed)
+- [ ] Docs explain module boundaries and invariants
+- [ ] Zero "fake implementations" exist (no NotImplementedByDesign in core path)
+- [ ] Load test: 100 turns without memory corruption
+- [ ] CI/CD: Fresh clone → install → test → run works
+- [ ] Code coverage: >= 85% core modules, 0 silent failures
+
+---
+
+## I. What Phase 2 will unlock (NOT implemented now)
+
+Just so Phase 1 doesn't sprawl:
+
+- Command Center (Sovereign) UI integration
+- Multi-client protocol bus
+- Lore ingestion + canon reasoning
+- Discord bot bridge (Vigil)
+- Full Aegis auth service
+- SERAPH hardware layer
+
+**These are consumers. Phase 1 is the producer.**
+
+---
+
+## Reference
+
+**Master spec version:** 1.0  
+**Date:** 2025-01-01  
+**Status:** Ready for implementation  
+
+**Next:** See [core/vi/docs/10-architecture.md](../../core/vi/docs/10-architecture.md) for implementation details and module breakdown.

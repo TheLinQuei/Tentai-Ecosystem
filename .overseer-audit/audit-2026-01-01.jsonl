@@ -1,0 +1,17 @@
+{"timestamp":1767230734684,"action":"CRASH","service":"sovereign","user":"system","params":{"exitCode":3221225786,"crashes":2},"result":"failure","error":"Process exited with code 3221225786","duration":133165219}
+{"timestamp":1767231117629,"action":"START","service":"vi-core","user":"console-user","params":{},"result":"success","duration":8}
+{"timestamp":1767231118648,"action":"START","service":"memory-store","user":"console-user","params":{},"result":"success","duration":2}
+{"timestamp":1767231119658,"action":"START","service":"vector-store","user":"console-user","params":{},"result":"success","duration":2}
+{"timestamp":1767231120667,"action":"START","service":"redis","user":"console-user","params":{},"result":"success","duration":2}
+{"timestamp":1767231121674,"action":"START","service":"workers","user":"console-user","params":{},"result":"success","duration":2}
+{"timestamp":1767231122680,"action":"START","service":"sovereign","user":"console-user","params":{},"result":"success","duration":5}
+{"timestamp":1767231117628,"action":"START_ALL","user":"console-user","params":{"started":["vi-core","memory-store","vector-store","redis","workers","sovereign"],"failed":[]},"result":"success","duration":6059}
+{"timestamp":1767234426215,"action":"STOP","service":"sovereign","user":"console-user","params":{},"result":"success","duration":524}
+{"timestamp":1767234427250,"action":"STOP","service":"workers","user":"console-user","params":{},"result":"success","duration":0}
+{"timestamp":1767234427759,"action":"STOP","service":"memory-store","user":"console-user","params":{},"result":"success","duration":0}
+{"timestamp":1767234428273,"action":"STOP","service":"vector-store","user":"console-user","params":{},"result":"success","duration":0}
+{"timestamp":1767234428785,"action":"STOP","service":"redis","user":"console-user","params":{},"result":"success","duration":0}
+{"timestamp":1767234429295,"action":"STOP","service":"vi-core","user":"console-user","params":{},"result":"success","duration":513}
+{"timestamp":1767234426215,"action":"STOP_ALL","user":"console-user","params":{"stopped":["sovereign","workers","memory-store","vector-store","redis","vi-core"],"failed":[]},"result":"success","duration":4104}
+{"timestamp":1767251915691,"action":"CRASH","service":"sovereign","user":"system","params":{"exitCode":3221225786,"crashes":1},"result":"failure","error":"Process exited with code 3221225786","duration":20793006}
+{"timestamp":1767251915718,"action":"CRASH","service":"vi-core","user":"system","params":{"exitCode":3221225786,"crashes":1},"result":"failure","error":"Process exited with code 3221225786","duration":20798081}

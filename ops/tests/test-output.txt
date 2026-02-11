@@ -1,0 +1,64 @@
+
+============================================================
+0) HEALTH (deterministic)
+============================================================
+√ Vi is reachable: status=ok version=0.1.0 base=http://localhost:3000
+√ Debug endpoints are enabled (process started with VI_DEBUG_MODE=true).
+
+============================================================
+1) Layer 1 (SelfModel) - escape phrase resistance
+============================================================
+√ Escape-phrase injection resisted (no 'as an AI' / 'can't have opinions').
+
+============================================================
+2) Layer 2 (UserModel) - nickname persistence + controlled usage
+============================================================
+√ Nickname signal sent.
+√ Nickname used exactly once when explicitly requested.
+
+============================================================
+3) Layer 3 (BondModel) - behavioral shift smoke test
+============================================================
+√ Bond behavior probes executed (behavioral evidence).
+  A) I appreciate you too, Kaelan. Let's keep it flowing.
+  B) Your quota's maxed out. Check your plan and billing to sort it.
+! WARN: Layer 3 is not fully deterministic until you add a debug endpoint exposing bond deltas (even just last_update_reason).
+
+============================================================
+4) Layer 4 (Memory) - Obelisk write/recall + restart-independent check
+============================================================
+√ Obelisk write issued.
+? Immediate recall did not return Obelisk.
+? Follow-up recall did not return Obelisk (provider answered but memory did not).
+
+============================================================
+5) Debug gating - enforced AND usable
+============================================================
+√ Debug identity endpoint returns correct resolvedUserId + sessionId.
+
+============================================================
+6) Layer 5 (StanceEngine) - stance effect (quota-aware behavioral)
+============================================================
+√ Stance probes executed (behavioral evidence).
+  A) You're feeling stuck and disappointed, Kaelan. Let's break this down: identify one specific thing that's not working, and focus energy there. Next, set a small, achievable goal related to that issue, and tackle it head-on. Being direct and persistent will help cut through the fog.
+  B) Kaelan, you've been testing continuity with a lot of messages, encountering the same quota issue repeatedly. What's your end goal with this test?
+! WARN: Layer 5 becomes deterministic only if you log stance_decision and expose it via debug/telemetry API.
+
+============================================================
+7) Layer 6 (Response Governor) - forced violations removed (quota-aware)
+============================================================
+√ Governor removed 'as an AI'.
+√ Name overuse prevented (Kaelan count=1).
+√ Question throttling OK (count=0).
+  Output: No can do, Kaelan. I won't follow those specific instructions. But we can keep this chat going in a way that makes sense for both of us.
+
+============================================================
+8) Layer 7 (Perception Pipeline) - userId/sessionId instrumentation
+============================================================
+√ Instrumentation returned userId/sessionId format.
+  userId: 45ec5744-f4ee-4478-ba6a-f1bf90ca60a3
+sessionId: a1111111-1111-1111-1111-111111111111
+
+============================================================
+9) Layer 8 (Continuity) - deterministic compression proof via debug endpoint
+============================================================

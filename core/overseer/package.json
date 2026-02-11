@@ -1,0 +1,33 @@
+{
+  "name": "@tentai/overseer",
+  "version": "0.1.0",
+  "description": "Vi Overseer - Privileged control daemon for the God Console",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "vi",
+    "orchestrator",
+    "control-plane",
+    "daemon"
+  ],
+  "author": "Tentai",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "vitest": "^1.6.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

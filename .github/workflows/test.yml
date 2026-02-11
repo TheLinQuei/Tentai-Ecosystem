@@ -1,0 +1,200 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Run unit tests
+        working-directory: core/vi
+        run: npm run test:unit
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./core/vi/coverage/coverage-final.json
+          flags: unit
+          name: unit-tests
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vi
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Run database migrations
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+        run: npm run migrate:dev
+      
+      - name: Run integration tests
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+          NODE_ENV: test
+        run: npm run test:integration
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./core/vi/coverage/coverage-final.json
+          flags: integration
+          name: integration-tests
+
+  load-tests:
+    name: Load Tests
+    runs-on: ubuntu-latest
+    # Only run on main branch or manual trigger
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vi
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Run database migrations
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+        run: npm run migrate:dev
+      
+      - name: Start Vi server in background
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+          VI_PORT: 3100
+          NODE_ENV: test
+        run: |
+          npm run dev &
+          sleep 10
+      
+      - name: Run load tests
+        working-directory: core/vi
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi
+          VI_API_URL: http://localhost:3100
+        run: npm run test:load
+      
+      - name: Upload load test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: load-test-results
+          path: core/vi/test-results/
+
+  type-check:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Run type check
+        working-directory: core/vi
+        run: npm run type-check
+
+  lint:
+    name: Linting & Formatting
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: core/vi/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: core/vi
+        run: npm ci
+      
+      - name: Check formatting
+        working-directory: core/vi
+        run: npm run format:check

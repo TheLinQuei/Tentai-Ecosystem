@@ -1,0 +1,3584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vi God Console — God-0</title>
+  <style>
+    :root {
+      --onyx: #0a0e14;
+      --ink: #0f172a;
+      --gold: #d4af37;
+      --purple: #5b2e91;
+      --text: #e6e9f0;
+      --muted: #9aa4b5;
+      --panel: #0d1118;
+      --card: #111827;
+      --error: #e74c3c;
+      --green: #2ecc71;
+      --divider: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Auth Gate Container - Vanta Black with Purple Lighting */
+    .auth-gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: 
+        radial-gradient(circle at 30% 50%, rgba(91, 46, 145, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 70% 20%, rgba(91, 46, 145, 0.15) 0%, transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
+        #0a0e14;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-gate::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(91, 46, 145, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.05) 0%, transparent 30%);
+      animation: ambientPulse 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-gate > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes ambientPulse {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+      50% { transform: scale(1.05) translate(10px, -10px); opacity: 1; }
+    }
+
+    /* Premium Auth Panel - Luxury with Gold & Purple */
+    .auth-panel {
+      background: linear-gradient(135deg, rgba(10, 14, 20, 0.95) 0%, rgba(15, 18, 28, 0.92) 100%);
+      border: 1.5px solid;
+      border-image: linear-gradient(135deg, rgba(212, 175, 55, 0.6), rgba(91, 46, 145, 0.4)) 1;
+      border-radius: 16px;
+      padding: 24px 36px 32px 36px;
+      box-shadow: 
+        0 0 40px rgba(212, 175, 55, 0.15),
+        0 0 80px rgba(91, 46, 145, 0.1),
+        inset 0 1px 1px rgba(212, 175, 55, 0.3),
+        inset 0 -1px 1px rgba(91, 46, 145, 0.2);
+      max-width: 420px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-panel::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20%;
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+      opacity: 0;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    /* Brand Header - Gold Accent */
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid;
+      border-image: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.25), transparent) 1;
+    }
+
+    .auth-brand .logo {
+      font-size: 14px;
+      letter-spacing: 2.5px;
+      color: #d4af37;
+      font-weight: 700;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.25), 0 0 16px rgba(212, 175, 55, 0.1);
+    }
+
+    .auth-brand .tagline {
+      font-size: 13px;
+      color: #dbe2ec;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+      opacity: 0.95;
+      font-weight: 500;
+    }
+
+    .auth-brand .environment {
+      font-size: 11px;
+      color: rgba(219, 226, 236, 0.8);
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 6px rgba(212, 175, 55, 0.2);
+      font-weight: 500;
+    }
+
+    /* Auth Banner (global errors) */
+    .auth-banner {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      color: var(--red);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 20px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "SF Pro Display", system-ui, -apple-system, sans-serif;
+      background: #0a0e14;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Hide all app chrome until authenticated to prevent old UI flash */
+    body:not(.authed) #tabBar,
+    body:not(.authed) #userInfoBar,
+    body:not(.authed) .crown,
+    body:not(.authed) .controls-strip,
+    body:not(.authed) .console,
+    body:not(.authed) .view-pane:not(#authPane) {
+      display: none !important;
+    }
+
+    /* Let auth gate take full stage */
+    body:not(.authed) #authPane {
+      display: block;
+      min-height: 100vh;
+    }
+
+    .auth-form .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #9fb0c4;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+      font-weight: 500;
+    }
+
+    .auth-form h3 {
+      font-size: 17px;
+      color: #e8edf5;
+      margin: 0 0 6px 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Form Structure */
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      color: #d3dbe6;
+      letter-spacing: 0.35px;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .form-group .helper-text {
+      font-size: 11px;
+      color: rgba(219, 226, 236, 0.75);
+      display: none;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .form-group input:focus ~ .helper-text {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Input Styling */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #d4af37;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    }
+
+    .auth-form input {
+      padding: 13px 16px 13px 44px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(212, 175, 55, 0.25);
+      background: rgba(10, 14, 20, 0.9);
+      color: #eef2f7;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      width: 100%;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .auth-form input:focus {
+      outline: none;
+      border-color: rgba(212, 175, 55, 0.7);
+      background: rgba(10, 14, 20, 0.97);
+      box-shadow: 
+        inset 0 0 8px rgba(0, 0, 0, 0.35),
+        0 0 12px rgba(212, 175, 55, 0.2),
+        0 0 24px rgba(91, 46, 145, 0.12);
+    }
+
+    .auth-form input::placeholder {
+      color: rgba(230, 233, 240, 0.32);
+    }
+
+    .auth-form input.error {
+      border-color: rgba(231, 76, 60, 0.6);
+      background: rgba(231, 76, 60, 0.05);
+    }
+
+    .auth-form input.error:focus {
+      border-color: rgba(231, 76, 60, 0.8);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.08);
+    }
+
+    /* Field Error Messages */
+    .form-error {
+      font-size: 11px;
+      color: #ff6b6b;
+      margin-top: 4px;
+      display: none;
+      animation: slideDown 0.2s ease;
+      font-weight: 600;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    /* Password Wrapper and Toggle */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .password-wrapper input {
+      flex: 1;
+      padding: 13px 54px 13px 44px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(212, 175, 55, 0.25);
+      background: rgba(10, 14, 20, 0.9);
+      color: #eef2f7;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .password-wrapper input:focus {
+      outline: none;
+      border-color: rgba(212, 175, 55, 0.7);
+      background: rgba(10, 14, 20, 0.97);
+      box-shadow: 
+        inset 0 0 8px rgba(0, 0, 0, 0.35),
+        0 0 12px rgba(212, 175, 55, 0.2),
+        0 0 24px rgba(91, 46, 145, 0.12);
+    }
+
+    .password-wrapper input::placeholder {
+      color: rgba(230, 233, 240, 0.32);
+    }
+
+    .password-wrapper .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #d4af37;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 6px;
+      background: rgba(10, 14, 20, 0.9);
+      border: 1.5px solid rgba(212, 175, 55, 0.3);
+      color: #d4af37;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      z-index: 2;
+      width: 42px;
+      height: 42px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .password-toggle:hover {
+      color: #d4af37;
+      background: rgba(10, 14, 20, 0.97);
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .password-toggle:active {
+      transform: scale(0.96);
+    }
+
+    /* Form Buttons - Premium Gold with Purple Glow */
+    .auth-form button {
+      padding: 13px 18px;
+      height: 44px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 8px;
+      background: rgba(212, 175, 55, 0.18);
+      border: 1.5px solid rgba(212, 175, 55, 0.45);
+      color: #f4e4a2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: none;
+    }
+
+    .auth-form button:hover:not(:disabled),
+    .auth-form button:focus-visible:not(:disabled) {
+      background: rgba(212, 175, 55, 0.28);
+      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.18), 0 0 24px rgba(91, 46, 145, 0.12);
+      border-color: rgba(212, 175, 55, 0.65);
+      transform: translateY(-1px);
+    }
+
+    .auth-form button:active:not(:disabled) {
+      transform: translateY(0px);
+    }
+
+    .auth-form button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* Loading Spinner */
+    .button-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Cool-down Timer */
+    #loginCooldown {
+      color: var(--red);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* Toggle Links */
+    .toggle-link {
+      color: #b8c4d4;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 4px;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: all 0.2s ease;
+      letter-spacing: 0.2px;
+      font-weight: 500;
+    }
+
+    .toggle-link:hover {
+      opacity: 1;
+      color: #e6e9f0;
+      text-decoration: underline;
+    }
+
+    /* Dev Quick Fill */
+    .dev-quick-fill {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      text-align: right;
+    }
+
+    .dev-quick-fill a {
+      font-size: 11px;
+      color: rgba(219, 226, 236, 0.55);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      letter-spacing: 0.2px;
+      opacity: 0.75;
+    }
+
+    .dev-quick-fill a:hover {
+      color: rgba(219, 226, 236, 0.8);
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    /* Shake animation for failed auth */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .auth-panel.error-shake {
+      animation: shake 0.4s ease;
+    }
+
+    .pill.gold { border-color: rgba(212, 175, 55, 0.7); color: var(--gold); }
+    .pill.purple { border-color: rgba(91, 46, 145, 0.7); color: var(--text); }
+    .pill.green { border-color: rgba(46, 204, 113, 0.6); color: var(--green); }
+    .pill.red { border-color: rgba(231, 76, 60, 0.7); color: var(--red); }
+    .pill.muted { color: var(--muted); }
+
+    .controls-strip {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr auto auto auto;
+      gap: 10px;
+      align-items: center;
+      background: rgba(17, 24, 39, 0.65);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.32);
+    }
+
+    .dev-controls { display: none; }
+    body.is-dev .dev-controls { display: grid; }
+
+    .dev-only { display: none !important; }
+    body.is-dev .dev-only { display: block !important; }
+    body.is-dev .dev-only.dev-controls { display: grid !important; }
+
+    .controls-strip label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .controls-strip input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: rgba(13, 17, 27, 0.85);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .controls-strip .btn {
+      align-self: end;
+      height: 44px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--divider);
+      background: linear-gradient(145deg, rgba(91, 46, 145, 0.22), rgba(212, 175, 55, 0.18));
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28); }
+    .btn.gold { border-color: rgba(212, 175, 55, 0.7); color: var(--gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 0.9fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .view-pane,
+    .console,
+    .panel {
+      color: var(--text);
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
+      position: relative;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      color: var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 18px rgba(0, 0, 0, 0.28);
+    }
+
+    .card:last-child { margin-bottom: 0; }
+
+    .card .label {
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .hierarchy .card { position: relative; }
+    .stance-card { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.12), 0 10px 24px rgba(212, 175, 55, 0.12); }
+    .governor-card { border-color: rgba(231, 149, 46, 0.5); }
+    .reasoning-card { border-color: rgba(91, 46, 145, 0.4); }
+    .signals-card, .constraints-card { opacity: 0.92; }
+
+    @keyframes goldPulse {
+      0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(212, 175, 55, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+    }
+
+    @keyframes purpleFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes amberFlash {
+      0% { box-shadow: 0 0 0 0 rgba(255, 191, 71, 0.4); }
+      100% { box-shadow: 0 0 0 14px rgba(255, 191, 71, 0); }
+    }
+
+    @keyframes fractureLine {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 0; }
+    }
+
+    .alive-gold { animation: goldPulse 1.4s ease-out; }
+    .alive-purple { background: linear-gradient(120deg, rgba(91,46,145,0.25), rgba(15,23,42,0.9), rgba(91,46,145,0.25)); background-size: 200% 200%; animation: purpleFlow 2.4s ease infinite; }
+    .alert-amber { animation: amberFlash 1s ease-out; }
+    .alert-red { border-color: rgba(231, 76, 60, 0.8) !important; box-shadow: 0 0 0 1px rgba(231, 76, 60, 0.35); }
+    .fracture { background-image: repeating-linear-gradient(90deg, rgba(212,175,55,0.18) 0, rgba(212,175,55,0.18) 8px, transparent 8px, transparent 16px); background-size: 140% 4px; animation: fractureLine 2s linear infinite; }
+    .glyph { color: rgba(212, 175, 55, 0.8); font-size: 11px; letter-spacing: 1px; }
+
+    .chat-section {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .chat-header {
+      margin-bottom: 10px;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-history {
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .chat-message {
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chat-message.user {
+      background: rgba(91, 46, 145, 0.15);
+      border-color: rgba(91, 46, 145, 0.3);
+    }
+
+    .chat-message.assistant {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    .chat-message .role {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .chat-message .content {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: rgba(13, 17, 27, 0.85);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .hologram-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    #viHologramCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hologram-sigil {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Default: authoritative gold */
+      --holo-color: rgba(212, 175, 55, 0.7);
+      --holo-glow: rgba(212, 175, 55, 0.5);
+      animation: holoBreath 5s ease-in-out infinite;
+    }
+
+    /* Semantic state colors */
+    .hologram-sigil.active {
+      --holo-color: rgba(91, 46, 145, 0.8);
+      --holo-glow: rgba(91, 46, 145, 0.6);
+    }
+
+    .hologram-sigil.stance {
+      --holo-color: rgba(212, 175, 55, 0.95);
+      --holo-glow: rgba(212, 175, 55, 0.8);
+    }
+
+    .hologram-sigil.governor {
+      --holo-color: rgba(231, 76, 60, 0.8);
+      --holo-glow: rgba(231, 76, 60, 0.6);
+    }
+
+    .hologram-sigil.clean {
+      --holo-color: rgba(46, 204, 113, 0.7);
+      --holo-glow: rgba(46, 204, 113, 0.5);
+    }
+
+    @keyframes holoBreath {
+      0%, 100% { filter: drop-shadow(0 0 40px var(--holo-glow)) drop-shadow(0 0 80px var(--holo-glow)); }
+      50% { filter: drop-shadow(0 0 60px var(--holo-glow)) drop-shadow(0 0 120px var(--holo-glow)); }
+    }
+
+    .holo-figure {
+      position: relative;
+      width: 160px;
+      height: 240px;
+      transform: perspective(1200px) rotateX(-8deg);
+      opacity: 0.92;
+    }
+
+    /* Background noise mask for imperfection */
+    .holo-figure::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(1px 1px at 20% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 1%),
+        radial-gradient(1px 1px at 60% 70%, rgba(212, 175, 55, 0.08) 0%, transparent 1%),
+        radial-gradient(1px 1px at 50% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 1%);
+      background-size: 200% 200%;
+      animation: noiseShift 3s linear infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes noiseShift {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    /* Head - simple circle with defined eyes */
+    .holo-head {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 54px;
+      height: 54px;
+      border: 2.5px solid var(--holo-color);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 40% 35%, var(--holo-color) 0%, rgba(212, 175, 55, 0.2) 70%, transparent 100%);
+      box-shadow: 
+        0 0 40px var(--holo-glow),
+        inset 0 0 25px rgba(212, 175, 55, 0.3);
+      z-index: 3;
+    }
+
+    /* Eyes - focused, looking forward */
+    .holo-eyes {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 4;
+    }
+
+    .holo-eye {
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, var(--holo-color), rgba(212, 175, 55, 0.6));
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--holo-glow);
+    }
+
+    /* Neck - thin connector */
+    .holo-neck {
+      position: absolute;
+      top: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 8px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.4) 100%);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 12px var(--holo-glow));
+      z-index: 3;
+    }
+
+    /* Shoulders - horizontal emphasis */
+    .holo-shoulders {
+      position: absolute;
+      top: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92px;
+      height: 7px;
+      background: linear-gradient(90deg, transparent 5%, var(--holo-color) 20%, var(--holo-color) 80%, transparent 95%);
+      border-radius: 3.5px;
+      filter: drop-shadow(0 0 18px var(--holo-glow)) drop-shadow(0 0 35px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Torso - the key: curves inward at waist, outward at hips */
+    .holo-torso {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 72px;
+      border: 2px solid var(--holo-color);
+      border-radius: 25px 25px 30px 30px; /* Top: narrow, bottom: wider (hip curve) */
+      background: linear-gradient(90deg, transparent 8%, var(--holo-color) 50%, transparent 92%);
+      filter: drop-shadow(0 0 18px var(--holo-glow)) drop-shadow(0 0 36px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Central spine - energy thread down the middle */
+    .holo-spine {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.5px;
+      height: 72px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, var(--holo-color) 45%, rgba(212, 175, 55, 0.3) 100%);
+      filter: drop-shadow(0 0 12px var(--holo-glow)) drop-shadow(0 0 25px var(--holo-glow));
+      z-index: 3;
+    }
+
+    /* Arms - more form than lines */
+    .holo-arm {
+      position: absolute;
+      top: 68px;
+      width: 6px;
+      height: 70px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.3) 85%, transparent 100%);
+      border-radius: 3px;
+      filter: drop-shadow(0 0 10px var(--holo-glow));
+      z-index: 1;
+    }
+
+    .holo-arm-left {
+      left: 12px;
+      transform: rotateZ(-12deg);
+    }
+
+    .holo-arm-right {
+      right: 12px;
+      transform: rotateZ(12deg);
+    }
+
+    /* Hip accent - subtle wider line */
+    .holo-hips {
+      position: absolute;
+      top: 134px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 62px;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, var(--holo-color) 15%, var(--holo-color) 85%, transparent);
+      border-radius: 2.5px;
+      filter: drop-shadow(0 0 12px var(--holo-glow));
+      z-index: 2;
+    }
+
+    /* Legs - defined but not spindly */
+    .holo-leg {
+      position: absolute;
+      top: 138px;
+      width: 5px;
+      height: 100px;
+      background: linear-gradient(180deg, var(--holo-color) 0%, rgba(212, 175, 55, 0.45) 70%, transparent 100%);
+      border-radius: 2.5px;
+      filter: drop-shadow(0 0 10px var(--holo-glow));
+      z-index: 1;
+    }
+
+    .holo-leg-left {
+      left: 24px;
+      transform: rotateZ(-4deg);
+    }
+
+    .holo-leg-right {
+      right: 24px;
+      transform: rotateZ(4deg);
+    }
+
+    /* Core - pulsing heart center */
+    .holo-core {
+      position: absolute;
+      top: 98px;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      background: radial-gradient(circle at 30% 30%, var(--holo-color), rgba(212, 175, 55, 0.3));
+      border-radius: 50%;
+      border: 1.5px solid var(--holo-color);
+      box-shadow: 
+        0 0 22px var(--holo-glow),
+        0 0 44px var(--holo-glow),
+        inset 0 0 12px rgba(212, 175, 55, 0.4);
+      animation: corePulse 2.2s ease-in-out infinite;
+      z-index: 4;
+    }
+
+    /* Three.js hologram canvas fills container */
+    #viHologramCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list .item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .list .item .text { flex: 1; color: var(--text); font-size: 13px; }
+    .list .item .meta { color: var(--muted); font-size: 12px; }
+    .list .item .meta.red { color: var(--red); }
+
+    .flags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .flag { padding: 4px 6px; border-radius: 6px; font-size: 11px; background: rgba(91, 46, 145, 0.2); border: 1px solid rgba(91, 46, 145, 0.4); }
+    .flag.red { background: rgba(231, 76, 60, 0.16); border-color: rgba(231, 76, 60, 0.5); color: var(--red); }
+    .flag.green { background: rgba(46, 204, 113, 0.14); border-color: rgba(46, 204, 113, 0.4); color: var(--green); }
+
+    .ledger-grid { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; }
+
+    .evidence-section {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .evidence-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+
+    .events {
+      max-height: 220px;
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .event { border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding: 8px 4px; }
+    .event:last-child { border-bottom: none; }
+    .event .type { color: var(--gold); font-size: 12px; }
+    .event .message { color: var(--text); font-size: 13px; }
+    .event .time { color: var(--muted); font-size: 11px; }
+
+    .watermark {
+      position: fixed;
+      inset: 20px;
+      pointer-events: none;
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      font-size: 68px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: rgba(46, 204, 113, 0.06);
+      text-transform: uppercase;
+      transform: rotate(-10deg);
+      z-index: 0;
+    }
+
+    .error-box {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: var(--red);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .status-banner {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      color: var(--red);
+      padding: 10px;
+      border-radius: 6px;
+      margin: 8px 0 4px;
+      font-size: 13px;
+    }
+
+    /* Unified surface tabs */
+    .tabbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 16px;
+      max-width: 1320px;
+      margin: 10px auto 0;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(8px);
+    }
+
+    .tab-btn {
+      border: 1px solid var(--divider);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    }
+
+    .tab-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28); }
+    .tab-btn.active { border-color: rgba(212, 175, 55, 0.7); color: var(--gold); box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2); }
+
+    .view-pane { display: none; }
+    .view-pane.active { display: block; }
+
+    .overseer-frame {
+      width: 100%;
+      min-height: 82vh;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .auth-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(46, 204, 113, 0.1);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      border-radius: 8px;
+    }
+
+    .auth-status .user-info {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .auth-status .user-info .label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .auth-offline-banner {
+      background: rgba(231, 149, 46, 0.15);
+      border: 1px solid rgba(231, 149, 46, 0.5);
+      color: #e7952e;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* User Info Bar */
+    .user-info-bar {
+      max-width: 1320px;
+      margin: 10px auto 0;
+      padding: 10px 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .user-info-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .user-greeting {
+      color: var(--gold);
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .user-tier {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 4px 8px;
+      background: rgba(91, 46, 145, 0.2);
+      border: 1px solid rgba(91, 46, 145, 0.4);
+      border-radius: 6px;
+    }
+
+    .btn-logout {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      background: rgba(231, 76, 60, 0.15);
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(231, 76, 60, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Auth Message Box */
+    .auth-message {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .auth-message.success {
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      color: var(--green);
+      display: block;
+    }
+
+    .auth-message.error {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: var(--red);
+      display: block;
+    }
+
+    /* Hide everything until auth */
+    .auth-gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: 1fr; }
+      .controls-strip { grid-template-columns: 1fr; }
+      .crown { grid-template-columns: 1fr; position: static; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Vi's Presence: Core Sigil + Volumetric Aura -->
+  <div class="hologram-container">
+    <div class="presence-aura" id="viPresenceAura"></div>
+    <div class="core-sigil" id="viCoreSigil">
+      <div class="sigil-inner"></div>
+    </div>
+  </div>
+
+  <div class="watermark" id="watermark">DETERMINISTIC</div>
+
+  <div id="tabBar" class="tabbar">
+    <button class="tab-btn active" data-view="chat">Chat</button>
+    <button class="tab-btn dev-only" data-view="control">Control</button>
+    <button class="tab-btn dev-only" data-view="dev">Dev</button>
+  </div>
+  
+  <!-- User Info Bar (shown when logged in, replaces tabs) -->
+  <div id="userInfoBar" class="user-info-bar" style="display:none;">
+    <div class="user-info-content">
+      <div class="user-greeting">Welcome, <span id="userInfoName">Operator</span></div>
+      <span class="user-tier" id="userInfoTier">Tier: Standard</span>
+      <button class="btn-logout" id="topLogoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div id="chatPane" class="view-pane active">
+    <section class="chat-section">
+      <div class="chat-header">
+        <div class="title">Throne Room (Chat with Vi)</div>
+      </div>
+      <div class="chat-container">
+        <div class="chat-history" id="chatHistory"></div>
+        <div class="chat-input-wrapper">
+          <input type="text" id="chatInput" placeholder="Type your message..." class="chat-input" />
+          <button class="btn gold" id="sendMessage">Send</button>
+        </div>
+      </div>
+    </section>
+    <div id="errorBox" class="error-box" style="display:none;"></div>
+  </div>
+
+  <!-- Control Pane: reserved for operator-facing controls (hidden unless dev) -->
+  <div id="controlPane" class="view-pane dev-only">
+    <div class="console">
+      <section class="controls-strip" style="margin-top: 4px;">
+        <div class="title" style="grid-column: 1/-1; font-size: 13px; color: var(--gold); margin-bottom: 8px;">Operations Control</div>
+        <button class="btn gold" id="startAll" style="background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.5); color: var(--green); grid-column: 1/-1;">▶ Bring Vi Online (All Services)</button>
+        <button class="btn" id="stopAll" style="background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); color: var(--red); grid-column: 1/-1;">◾ Take Vi Offline (All Services)</button>
+        <button class="btn" id="toggleTestMode" style="grid-column: 1/-1;">Toggle TEST_MODE</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- Dev Pane: crown, telemetry, dev controls -->
+  <div id="devPane" class="view-pane dev-only">
+    <div class="console">
+      <div id="statusBanner" class="status-banner" style="display:none;"></div>
+
+      <header class="crown">
+        <div>
+          <div class="title">Crown Bar</div>
+          <div class="row">
+            <span class="pill gold">Version <span id="viVersion">—</span></span>
+            <span class="pill purple">SelfModel <span id="selfModelHash">—</span></span>
+            <span class="pill" id="providerState">Provider: —</span>
+          </div>
+        </div>
+        <div>
+          <div class="title">Session · User · Run</div>
+          <div class="row">
+            <span class="pill muted" id="sessionValue">Session: —</span>
+            <span class="pill muted" id="userValue">User: —</span>
+            <span class="pill muted" id="replayValue">Replay: —</span>
+          </div>
+        </div>
+        <div style="justify-self: end; text-align: right;">
+          <div class="title">Mode</div>
+          <div class="row" style="justify-content: flex-end;">
+            <span class="pill gold" id="testModeBadge">TEST_MODE: off</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="controls-strip dev-controls" style="margin-top: 4px;">
+        <div>
+          <label for="userInput">User ID</label>
+          <input id="userInput" placeholder="user UUID" value="00000000-0000-0000-0000-000000000001" />
+        </div>
+        <div>
+          <label for="sessionInput">Session ID</label>
+          <input id="sessionInput" placeholder="session UUID" value="11111111-1111-1111-1111-111111111111" />
+        </div>
+        <div>
+          <label for="queryInput">Recall Query (optional)</label>
+          <input id="queryInput" placeholder="" />
+        </div>
+        <button class="btn gold" id="refreshEvidence">Refresh Evidence</button>
+      </section>
+
+      <section class="controls-strip" style="margin-top: 12px; grid-template-columns: 1fr 1fr 1fr;">
+        <div style="grid-column: 1/-1; color: var(--gold); font-size: 13px; font-weight: 700; letter-spacing: 0.3px;">Service Controls</div>
+        <button class="btn" id="startViCore" style="background: rgba(46, 204, 113, 0.12); border-color: rgba(46, 204, 113, 0.4); color: var(--green);">▶ Start vi-core</button>
+        <button class="btn" id="stopViCore" style="background: rgba(231, 76, 60, 0.12); border-color: rgba(231, 76, 60, 0.4); color: var(--red);">◾ Stop vi-core</button>
+        <button class="btn" id="restartViCore">↻ Restart vi-core</button>
+      </section>
+
+      <section class="controls-strip" style="margin-top: 12px;">
+        <div style="grid-column: 1/-1; color: var(--gold); font-size: 12px; margin-bottom: 6px; font-weight: 600;">Ecosystem Status</div>
+        <div id="ecosystemStatus" style="grid-column: 1/-1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px; font-family: monospace; font-size: 11px; color: var(--muted); max-height: 180px; overflow-y: auto;"></div>
+      </section>
+
+      <section class="controls-strip" style="margin-top: 12px;">
+        <div style="grid-column: 1/-1; color: var(--gold); font-size: 12px; margin-bottom: 6px; font-weight: 600;">Command Audit Trail</div>
+        <div id="auditLog" style="grid-column: 1/-1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px; font-family: monospace; font-size: 10px; color: var(--muted); max-height: 160px; overflow-y: auto;"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Auth Pane: login/register only -->
+  <div id="authPane" class="view-pane active">
+    <div class="auth-gate">
+      <div id="authPanel" class="auth-panel">
+        <!-- Brand Header -->
+        <div class="auth-brand">
+          <div class="logo">TENTAI // GOD CONSOLE</div>
+          <div class="tagline">Operator Access Required</div>
+          <div class="environment" id="envLabel"></div>
+        </div>
+
+        <!-- Global Error Banner -->
+        <div id="authBanner" class="auth-banner" style="display:none;"></div>
+
+        <div id="authFormsContainer">
+          <!-- Login Form -->
+          <div id="loginForm" class="auth-form">
+            <h3>Authorize Operator</h3>
+            <p class="subtitle">Existing credentials</p>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✉</span>
+                <input 
+                  type="email" 
+                  id="loginEmail" 
+                  placeholder="operator@example.com" 
+                  autocomplete="email"
+                  autofocus 
+                />
+              </div>
+              <div class="helper-text">Your operator identity</div>
+              <div class="form-error" id="loginEmailError"></div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <div class="password-wrapper">
+                <span class="input-icon">🔐</span>
+                <input 
+                  type="password" 
+                  id="loginPassword" 
+                  placeholder="••••••••" 
+                  autocomplete="current-password"
+                />
+                <button 
+                  type="button" 
+                  class="password-toggle" 
+                  id="toggleLoginPassword" 
+                  title="Show password"
+                >👁</button>
+              </div>
+              <div class="form-error" id="loginPasswordError"></div>
+            </div>
+
+            <!-- Submit Button with Loading State -->
+            <button class="btn gold" id="loginBtn" data-default-text="Authorize">
+              <span id="loginBtnText">Authorize</span>
+            </button>
+
+            <!-- Cool-down State -->
+            <div id="loginCooldown" style="display:none; text-align:center; font-size:12px; color:var(--red);">
+              Try again in <span id="cooldownTimer">10</span>s
+            </div>
+
+            <!-- Toggle to Register -->
+            <div class="toggle-link" id="showRegisterForm">Create Operator Profile</div>
+
+            <!-- Dev Quick Fill (only in dev mode) -->
+            <div class="dev-quick-fill" id="devQuickFill" style="display:none;">
+              <a id="devQuickFillBtn">Use test operator (dev only)</a>
+            </div>
+          </div>
+
+          <!-- Register Form -->
+          <div id="registerForm" class="auth-form" style="display:none;">
+            <h3>Provision Operator</h3>
+            <p class="subtitle">Create new console access</p>
+
+            <!-- Display Name Field -->
+            <div class="form-group">
+              <label for="registerDisplayName">Display Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input 
+                  type="text" 
+                  id="registerDisplayName" 
+                  placeholder="How Vi will address you" 
+                />
+              </div>
+              <div class="helper-text">What Vi will call you</div>
+              <div class="form-error" id="registerDisplayNameError"></div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="registerEmail">Email</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✉</span>
+                <input 
+                  type="email" 
+                  id="registerEmail" 
+                  placeholder="operator@example.com" 
+                  autocomplete="email"
+                />
+              </div>
+              <div class="form-error" id="registerEmailError"></div>
+            </div>
+
+            <!-- Username Field -->
+            <div class="form-group">
+              <label for="registerUsername">Username</label>
+              <div class="input-wrapper">
+                <span class="input-icon">@</span>
+                <input 
+                  type="text" 
+                  id="registerUsername" 
+                  placeholder="unique_operator_id" 
+                  autocomplete="username"
+                />
+              </div>
+              <div class="helper-text">Alphanumeric, 3-50 chars</div>
+              <div class="form-error" id="registerUsernameError"></div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="registerPassword">Password</label>
+              <div class="password-wrapper">
+                <span class="input-icon">🔐</span>
+                <input 
+                  type="password" 
+                  id="registerPassword" 
+                  placeholder="••••••••" 
+                  autocomplete="new-password"
+                />
+                <button 
+                  type="button" 
+                  class="password-toggle" 
+                  id="toggleRegisterPassword" 
+                  title="Show password"
+                >👁</button>
+              </div>
+              <div class="form-error" id="registerPasswordError"></div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="form-group">
+              <label for="registerConfirmPassword">Confirm Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✓</span>
+                <input 
+                  type="password" 
+                  id="registerConfirmPassword" 
+                  placeholder="••••••••" 
+                  autocomplete="new-password"
+                />
+              </div>
+              <div class="form-error" id="registerConfirmPasswordError"></div>
+            </div>
+
+            <!-- Helper Text -->
+            <p style="font-size: 11px; color: var(--muted); text-align: center; margin: 0;">
+              This is a local development console. Use test credentials safely.
+            </p>
+
+            <!-- Submit Button -->
+            <button class="btn gold" id="registerBtn" data-default-text="Provision Access">
+              <span id="registerBtnText">Provision Access</span>
+            </button>
+
+            <!-- Toggle to Login -->
+            <div class="toggle-link" id="showLoginForm">Back to Authorization</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insights Pane: telemetry and exports -->
+  <div id="insightsPane" class="view-pane">
+    <div class="console">
+      <main class="grid">
+        <section class="panel hierarchy" id="decisionPanel">
+          <h2>Decision Pillar <span id="governorBadge" class="pill muted">Governor: —</span></h2>
+          <div class="card stance-card" id="stanceCard">
+            <div class="label">Stance (edict)</div>
+            <div class="row" id="stanceSummary">—</div>
+            <div class="value" id="stanceReasoning">—</div>
+          </div>
+          <div class="card governor-card" id="governorCard">
+            <div class="label">Governor (intervention)</div>
+            <div class="value" id="governorStatus">—</div>
+            <div class="flags" id="governorIssues"></div>
+          </div>
+          <div class="card reasoning-card" id="reasoningCard">
+            <div class="label">Reasoning Stream</div>
+            <div class="list" id="reasoningStream"></div>
+          </div>
+          <div class="card signals-card">
+            <div class="label">Signals</div>
+            <div class="flags" id="stanceSignals"></div>
+          </div>
+          <div class="card constraints-card">
+            <div class="label">Constraints</div>
+            <div class="flags" id="stanceConstraints"></div>
+          </div>
+        </section>
+
+        <section class="panel" id="memoryPanel">
+          <h2>Memory Sanctum</h2>
+          <div class="card">
+            <div class="label">Raw Retrieval</div>
+            <div class="list" id="rawList"></div>
+          </div>
+          <div class="card">
+            <div class="label">Post-Filter Memory</div>
+            <div class="list" id="postList"></div>
+          </div>
+          <div class="card">
+            <div class="label">Suppressed (filtered)</div>
+            <div class="list" id="suppressedList"></div>
+          </div>
+          <div class="card">
+            <div class="label">Injected Memory Blob</div>
+            <div class="value" id="injectedBlob">—</div>
+          </div>
+        </section>
+
+        <section class="panel" id="ledgerPanel">
+          <h2>Continuity & Cost Ledger</h2>
+          <div class="ledger-grid">
+            <div class="card" id="continuityCard">
+              <div class="label">Continuity</div>
+              <div class="value" id="continuitySummary">—</div>
+            </div>
+            <div class="card" id="costCard">
+              <div class="label">Cost & Reliability</div>
+              <div class="value" id="costSummary">—</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <section class="evidence-section">
+        <div class="row" style="justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div class="title">Evidence Vault</div>
+          <div class="row" style="gap: 8px;">
+            <button class="btn" id="exportJson">Export JSON</button>
+            <button class="btn" id="exportMd">Export Markdown</button>
+            <button class="btn" id="exportConversation">Export Conversation</button>
+            <button class="btn" id="importMemory">Import Memory</button>
+          </div>
+        </div>
+        <div class="evidence-grid">
+          <div class="card" style="min-height: 220px;">
+            <div class="label">Runs (latest)</div>
+            <div class="list" id="runsList"></div>
+          </div>
+          <div class="card" style="min-height: 220px;">
+            <div class="label">Events</div>
+            <div class="events" id="eventsList"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // AUTH STATE & TOKEN MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════
+    const authState = {
+      accessToken: localStorage.getItem('vi_access_token'),
+      refreshToken: localStorage.getItem('vi_refresh_token'),
+      currentUser: null,
+      displayName: null,
+      viCoreOnline: true,
+    };
+
+    function decodeJwt(token) {
+      try {
+        const [, payload] = token.split('.');
+        if (!payload) return null;
+        const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+        const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+        const json = atob(padded);
+        return JSON.parse(json);
+      } catch (err) {
+        console.warn('Failed to decode JWT', err);
+        return null;
+      }
+    }
+
+    function setCurrentUserFromToken(token) {
+      const payload = decodeJwt(token);
+      if (!payload) {
+        console.debug('Failed to decode JWT payload');
+        return null;
+      }
+      const now = Math.floor(Date.now() / 1000);
+      const expiresIn = payload.exp ? payload.exp - now : null;
+      console.debug('JWT payload exp:', payload.exp, 'now:', now, 'expires in seconds:', expiresIn);
+      
+      // Only reject if token expired more than 60 seconds ago (allow small clock skew)
+      if (payload.exp && payload.exp < (now - 60)) {
+        console.warn('Token expired:', new Date(payload.exp * 1000));
+        return null;
+      }
+      
+      const user = {
+        userId: payload.userId || payload.sub,
+        email: payload.email,
+        username: payload.username,
+      };
+      console.debug('Setting current user from token:', user);
+      authState.currentUser = user;
+      return user;
+    }
+
+    function saveTokens(accessToken, refreshToken) {
+      authState.accessToken = accessToken;
+      authState.refreshToken = refreshToken;
+      localStorage.setItem('vi_access_token', accessToken);
+      localStorage.setItem('vi_refresh_token', refreshToken);
+      setCurrentUserFromToken(accessToken);
+    }
+
+    function clearTokens() {
+      authState.accessToken = null;
+      authState.refreshToken = null;
+      authState.currentUser = null;
+      localStorage.removeItem('vi_access_token');
+      localStorage.removeItem('vi_refresh_token');
+    }
+
+    function getAuthHeaders() {
+      const headers = {};
+      if (authState.accessToken) {
+        headers['Authorization'] = `Bearer ${authState.accessToken}`;
+      }
+      return headers;
+    }
+
+    async function checkViHealth() {
+      try {
+        const res = await fetch('/api/health', { method: 'GET' });
+        authState.viCoreOnline = res.ok;
+        return res.ok;
+      } catch (err) {
+        authState.viCoreOnline = false;
+        return false;
+      }
+    }
+
+    async function refreshAccessToken() {
+      if (!authState.refreshToken) return false;
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken: authState.refreshToken }),
+        });
+        if (!res.ok) {
+          clearTokens();
+          return false;
+        }
+        const raw = await res.json();
+        const data = raw?.data || raw;
+        if (!data?.accessToken || !data?.refreshToken) {
+          clearTokens();
+          return false;
+        }
+        saveTokens(data.accessToken, data.refreshToken);
+        return true;
+      } catch (err) {
+        console.error('Token refresh failed:', err);
+        return false;
+      }
+    }
+
+    async function authenticatedFetch(url, options = {}) {
+      options.headers = { ...options.headers, ...getAuthHeaders() };
+      let res = await fetch(url, options);
+      
+      // If unauthorized/forbidden, try a single refresh then retry
+      if ((res.status === 401 || res.status === 403) && authState.refreshToken) {
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          options.headers = { ...options.headers, ...getAuthHeaders() };
+          res = await fetch(url, options);
+        }
+      }
+      
+      return res;
+    }
+
+    function updateAuthUI() {
+      const authPane = document.getElementById('authPane');
+      const chatPane = document.getElementById('chatPane');
+      const controlPane = document.getElementById('controlPane');
+      const insightsPane = document.getElementById('insightsPane');
+      const tabBar = document.getElementById('tabBar');
+      const userInfoBar = document.getElementById('userInfoBar');
+      const userInfoName = document.getElementById('userInfoName');
+      const wasAuthed = document.body.classList.contains('authed');
+      const previousView = currentView;
+
+      // Show logged in if we have a current user OR if we have valid tokens
+      let isLoggedIn = !!authState.currentUser;
+      let displayName = null;
+      
+      if (!isLoggedIn && authState.accessToken) {
+        // Try to extract user from token as fallback
+        const payload = decodeJwt(authState.accessToken);
+        if (payload && payload.email) {
+          displayName = payload.email || payload.username;
+          isLoggedIn = true;
+          console.debug('Showing logged in UI based on token payload');
+        }
+      }
+      
+      if (!displayName && authState.currentUser) {
+        displayName = authState.currentUser.email || authState.currentUser.username;
+      }
+
+      if (isLoggedIn) {
+        document.body.classList.add('authed');
+        enableDevUI();
+        // Hide auth pane, show app
+        authPane.style.display = 'none';
+        tabBar.style.display = 'flex';
+        userInfoBar.style.display = 'block';
+        userInfoName.textContent = displayName || 'Operator';
+
+        // Respect the current view once authenticated; only default to chat on the initial transition
+        const targetView = wasAuthed ? (previousView || 'chat') : 'chat';
+        switchView(targetView);
+
+        // Auto-populate userId field from authenticated user
+        const userIdInput = document.getElementById('userInput');
+        if (userIdInput && authState.currentUser && authState.currentUser.userId) {
+          userIdInput.value = authState.currentUser.userId;
+        } else if (userIdInput && authState.accessToken) {
+          const payload = decodeJwt(authState.accessToken);
+          if (payload && payload.userId) {
+            userIdInput.value = payload.userId;
+          }
+        }
+
+        showControls();
+        populateEcosystemStatus();
+      } else {
+        document.body.classList.remove('authed');
+        disableDevUI();
+        // Show auth pane, hide app
+        authPane.style.display = 'block';
+        authPane.classList.add('active');
+        chatPane.classList.remove('active');
+        controlPane.classList.remove('active');
+        insightsPane.classList.remove('active');
+        tabBar.style.display = 'none';
+        userInfoBar.style.display = 'none';
+        currentView = 'chat';
+        resetAuthButtons();
+        hideControls();
+      }
+    }
+
+    async function fetchUserProfile() {
+      if (!authState.currentUser || !authState.currentUser.userId) return null;
+      try {
+        const res = await authenticatedFetch(`/api/profile/${authState.currentUser.userId}`);
+        if (!res.ok) return null;
+        const profile = await res.json();
+        authState.displayName = profile.displayName || profile.username || profile.email;
+        return profile;
+      } catch (err) {
+        console.warn('Failed to fetch user profile:', err);
+        return null;
+      }
+    }
+
+    function showAuthMessage(message, type = 'error') {
+      const msgBox = document.getElementById('authMessage');
+      if (!msgBox) return;
+      msgBox.textContent = message;
+      msgBox.className = `auth-message ${type}`;
+      msgBox.style.display = 'block';
+      
+      // Auto-hide success messages after 3 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          msgBox.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function clearAuthMessage() {
+      const msgBox = document.getElementById('authMessage');
+      if (msgBox) {
+        msgBox.style.display = 'none';
+      }
+    }
+
+      // ============================================================
+      // PREMIUM AUTH UX LOGIC
+      // Smart error handling, cooldown, dev quick-fill, boot transition
+      // ============================================================
+
+      // Auth State for UX
+      const authUX = {
+        loginAttempts: 0,
+        lastFailureTime: null,
+        cooldownDuration: 10000, // 10 seconds
+        isCoolingDown: false,
+      };
+
+      // Detect dev mode
+      function isDev() {
+        return window.location.hostname === 'localhost' || 
+               window.location.hostname === '127.0.0.1';
+      }
+
+      // Initialize dev quick fill if in dev mode
+      function initDevQuickFill() {
+        const devBtn = document.getElementById('devQuickFillBtn');
+        const devSection = document.getElementById('devQuickFill');
+      
+        if (isDev() && devBtn && devSection) {
+          devSection.style.display = 'block';
+          devBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginEmail').value = 'Shykem.middleton@gmail.com';
+            document.getElementById('loginPassword').value = 'password123';
+            document.getElementById('loginEmail').focus();
+            clearAuthErrors();
+          });
+        }
+      }
+
+      // Set environment label
+      function initEnvironmentLabel() {
+        const envLabel = document.getElementById('envLabel');
+        if (envLabel && isDev()) {
+          envLabel.textContent = 'Local Development';
+        }
+      }
+
+      // Clear all field errors
+      function clearAuthErrors() {
+        document.querySelectorAll('.form-error').forEach(el => {
+          el.classList.remove('show');
+          el.textContent = '';
+        });
+        document.querySelectorAll('.auth-form input').forEach(el => {
+          el.classList.remove('error');
+        });
+        const banner = document.getElementById('authBanner');
+        if (banner) banner.style.display = 'none';
+      }
+
+      // Show field-specific error
+      function showFieldError(fieldId, message) {
+        const input = document.getElementById(fieldId);
+        const errorEl = document.getElementById(`${fieldId}Error`);
+      
+        if (input && errorEl) {
+          input.classList.add('error');
+          errorEl.textContent = message;
+          errorEl.classList.add('show');
+        
+          // Clear error when user types
+          input.addEventListener('input', () => {
+            input.classList.remove('error');
+            errorEl.classList.remove('show');
+          }, { once: true });
+        }
+      }
+
+      // Show global error banner
+      function showAuthBanner(message) {
+        const banner = document.getElementById('authBanner');
+        if (banner) {
+          banner.textContent = message;
+          banner.style.display = 'block';
+        }
+      }
+
+      // Set loading state on button
+      function setButtonLoading(btnId, loading) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        const defaultText = btn.dataset.defaultText || 'Authorize';
+        const loadingText = btn.dataset.loadingText || 'Authenticating…';
+
+        if (loading) {
+          btn.disabled = true;
+          if (!btn.querySelector('.button-spinner')) {
+            const spinner = document.createElement('span');
+            spinner.className = 'button-spinner';
+            spinner.id = `${btnId}Spinner`;
+            const text = btn.querySelector('span');
+            if (text) {
+              text.textContent = loadingText;
+              btn.insertBefore(spinner, text);
+            }
+          }
+        } else {
+          btn.disabled = false;
+          const spinner = btn.querySelector('.button-spinner');
+          if (spinner) spinner.remove();
+          const text = btn.querySelector('span');
+          if (text) text.textContent = defaultText;
+        }
+      }
+
+      function resetAuthButtons() {
+        setButtonLoading('loginBtn', false);
+        setButtonLoading('registerBtn', false);
+      }
+
+      // Start cooldown timer
+      function startCooldown() {
+        authUX.isCoolingDown = true;
+        authUX.loginAttempts++;
+        authUX.lastFailureTime = Date.now();
+      
+        const cooldownDiv = document.getElementById('loginCooldown');
+        const timerSpan = document.getElementById('cooldownTimer');
+        const loginBtn = document.getElementById('loginBtn');
+      
+        if (cooldownDiv && loginBtn) {
+          cooldownDiv.style.display = 'block';
+          loginBtn.disabled = true;
+        
+          let secondsLeft = authUX.cooldownDuration / 1000;
+          timerSpan.textContent = secondsLeft;
+        
+          const interval = setInterval(() => {
+            secondsLeft--;
+            timerSpan.textContent = secondsLeft;
+          
+            if (secondsLeft <= 0) {
+              clearInterval(interval);
+              cooldownDiv.style.display = 'none';
+              loginBtn.disabled = false;
+              authUX.isCoolingDown = false;
+              authUX.loginAttempts = 0;
+            }
+          }, 1000);
+        }
+      }
+
+      // Shake animation on failure
+      function shakeCard() {
+        const panel = document.getElementById('authPanel');
+        if (panel) {
+          panel.classList.add('error-shake');
+          setTimeout(() => panel.classList.remove('error-shake'), 400);
+        }
+      }
+
+      // Validate login form
+      function validateLoginForm() {
+        clearAuthErrors();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        let isValid = true;
+      
+        if (!email) {
+          showFieldError('loginEmail', 'Email is required');
+          isValid = false;
+        } else if (!email.includes('@')) {
+          showFieldError('loginEmail', 'Enter a valid email address');
+          isValid = false;
+        }
+      
+        if (!password) {
+          showFieldError('loginPassword', 'Password is required');
+          isValid = false;
+        }
+      
+        return isValid;
+      }
+
+      // Validate register form
+      function validateRegisterForm() {
+        clearAuthErrors();
+        const displayName = document.getElementById('registerDisplayName').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const username = document.getElementById('registerUsername').value.trim();
+        const password = document.getElementById('registerPassword').value.trim();
+        const confirmPassword = document.getElementById('registerConfirmPassword').value.trim();
+      
+        let isValid = true;
+      
+        if (!displayName) {
+          showFieldError('registerDisplayName', 'Display name is required');
+          isValid = false;
+        }
+      
+        if (!email) {
+          showFieldError('registerEmail', 'Email is required');
+          isValid = false;
+        } else if (!email.includes('@')) {
+          showFieldError('registerEmail', 'Enter a valid email address');
+          isValid = false;
+        }
+      
+        if (!username) {
+          showFieldError('registerUsername', 'Username is required');
+          isValid = false;
+        } else if (username.length < 3 || username.length > 50) {
+          showFieldError('registerUsername', 'Username must be 3-50 characters');
+          isValid = false;
+        } else if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+          showFieldError('registerUsername', 'Username: alphanumeric, hyphens, underscores only');
+          isValid = false;
+        }
+      
+        if (!password) {
+          showFieldError('registerPassword', 'Password is required');
+          isValid = false;
+        } else if (password.length < 8) {
+          showFieldError('registerPassword', 'Password must be at least 8 characters');
+          isValid = false;
+        }
+      
+        if (password !== confirmPassword) {
+          showFieldError('registerConfirmPassword', 'Passwords do not match');
+          isValid = false;
+        }
+      
+        return isValid;
+      }
+
+      // Boot transition screen (theater)
+      async function showBootTransition(user) {
+        const authPane = document.getElementById('authPane');
+        const bootScreen = document.createElement('div');
+        bootScreen.style.cssText = `
+          position: fixed;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(91, 46, 145, 0.1));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          gap: 20px;
+          z-index: 9999;
+          color: var(--gold);
+          font-family: 'Segoe UI', system-ui, sans-serif;
+        `;
+      
+        const title = document.createElement('div');
+        title.style.cssText = 'font-size: 20px; font-weight: 700; letter-spacing: 1px;';
+        title.textContent = 'Operator Verified';
+        bootScreen.appendChild(title);
+      
+        const messages = ['Binding session…', 'Syncing console permissions…', 'Preparing evidence vault…'];
+        document.body.appendChild(bootScreen);
+      
+        for (let msg of messages) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          const msgEl = document.createElement('div');
+          msgEl.style.cssText = 'font-size: 13px; color: rgba(212, 175, 55, 0.7); opacity: 0; animation: fadeIn 0.3s ease forwards;';
+          msgEl.textContent = msg;
+          bootScreen.appendChild(msgEl);
+        }
+      
+        // Transition to console
+        await new Promise(resolve => setTimeout(resolve, 800));
+        bootScreen.style.animation = 'fadeOut 0.5s ease forwards';
+      
+        setTimeout(() => {
+          bootScreen.remove();
+          authPane.style.display = 'none';
+          updateAuthUI();
+          showControls();
+          hideError();
+        }, 500);
+      }
+
+      // Override login with smart UX
+      async function loginWithUX(email, password) {
+        clearAuthErrors();
+      
+        if (authUX.isCoolingDown) {
+          showAuthBanner('Too many failed attempts. Please wait before trying again.');
+          return;
+        }
+      
+        setButtonLoading('loginBtn', true);
+      
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (!res.ok) {
+            let msg = '';
+            try {
+              const errData = await res.json();
+              msg = errData?.error || errData?.message || '';
+            } catch (_) {
+              msg = await res.text();
+            }
+          
+            shakeCard();
+            showAuthBanner('Authentication Failed');
+            showFieldError('loginPassword', 'Check credentials and try again');
+          
+            if (authUX.loginAttempts >= 3) {
+              startCooldown();
+            } else {
+              authUX.loginAttempts++;
+            }
+          
+            setButtonLoading('loginBtn', false);
+            return;
+          }
+
+          const raw = await res.json();
+          const data = raw?.data || raw;
+        
+          if (!data?.accessToken || !data?.refreshToken) {
+            throw new Error('Invalid auth response');
+          }
+        
+          saveTokens(data.accessToken, data.refreshToken);
+          const userFromToken = setCurrentUserFromToken(data.accessToken);
+          await fetchUserProfile();
+        
+          // Boot transition
+          await showBootTransition(userFromToken);
+        
+        } catch (err) {
+          shakeCard();
+          showAuthBanner('Authentication Failed');
+          showFieldError('loginPassword', err.message || 'Check credentials and try again');
+          setButtonLoading('loginBtn', false);
+        }
+      }
+
+      // Initialize UX enhancements when page loads
+      function initAuthUX() {
+        initEnvironmentLabel();
+        initDevQuickFill();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('dev') === '1') {
+          enableDevUI();
+        }
+
+      
+        // Hook up login button
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+          loginBtn.addEventListener('click', async () => {
+            if (validateLoginForm()) {
+              const email = document.getElementById('loginEmail').value.trim();
+              const password = document.getElementById('loginPassword').value.trim();
+              await loginWithUX(email, password);
+            }
+          });
+        }
+      
+        // Hook up register button
+        const registerBtn = document.getElementById('registerBtn');
+        if (registerBtn) {
+          registerBtn.addEventListener('click', async () => {
+            if (validateRegisterForm()) {
+              const displayName = document.getElementById('registerDisplayName').value.trim();
+              const username = document.getElementById('registerUsername').value.trim();
+              const email = document.getElementById('registerEmail').value.trim();
+              const password = document.getElementById('registerPassword').value.trim();
+            
+              setButtonLoading('registerBtn', true);
+              await register(username, email, password, displayName);
+              setButtonLoading('registerBtn', false);
+            }
+          });
+        }
+      
+        // Password toggles
+        const toggleLogin = document.getElementById('toggleLoginPassword');
+        if (toggleLogin) {
+          toggleLogin.addEventListener('click', () => {
+            const input = document.getElementById('loginPassword');
+            if (input.type === 'password') {
+              input.type = 'text';
+              toggleLogin.textContent = '👁‍🗨';
+            } else {
+              input.type = 'password';
+              toggleLogin.textContent = '👁';
+            }
+          });
+        }
+      
+        const toggleRegister = document.getElementById('toggleRegisterPassword');
+        if (toggleRegister) {
+          toggleRegister.addEventListener('click', () => {
+            const input = document.getElementById('registerPassword');
+            if (input.type === 'password') {
+              input.type = 'text';
+              toggleRegister.textContent = '👁‍🗨';
+            } else {
+              input.type = 'password';
+              toggleRegister.textContent = '👁';
+            }
+          });
+        }
+      
+        // Form toggles
+        const showRegister = document.getElementById('showRegisterForm');
+        if (showRegister) {
+          showRegister.addEventListener('click', () => {
+            clearAuthErrors();
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+          });
+        }
+      
+        const showLogin = document.getElementById('showLoginForm');
+        if (showLogin) {
+          showLogin.addEventListener('click', () => {
+            clearAuthErrors();
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+          });
+        }
+      
+        // Enter key support
+        ['loginEmail', 'loginPassword'].forEach(id => {
+          const input = document.getElementById(id);
+          if (input) {
+            input.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') document.getElementById('loginBtn').click();
+            });
+          }
+        });
+
+        ['registerUsername', 'registerEmail', 'registerPassword', 'registerConfirmPassword', 'registerDisplayName'].forEach(id => {
+          const input = document.getElementById(id);
+          if (input) {
+            input.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') document.getElementById('registerBtn').click();
+            });
+          }
+        });
+      }
+
+      // ============================================================
+
+    async function login(email, password) {
+      clearAuthMessage();
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!res.ok) {
+          let msg = '';
+          try {
+            const errData = await res.json();
+            msg = errData?.error || errData?.message || '';
+          } catch (_) {
+            msg = await res.text();
+          }
+          throw new Error(msg || 'Invalid email or password');
+        }
+
+        const raw = await res.json();
+        console.debug('Login response:', raw);
+        const data = raw?.data || raw;
+        if (!data?.accessToken || !data?.refreshToken) {
+          throw new Error('Invalid auth response');
+        }
+        console.debug('Got tokens, accessToken length:', data.accessToken.length);
+        const tokenPayload = decodeJwt(data.accessToken);
+        console.debug('Access token payload:', tokenPayload);
+        
+        saveTokens(data.accessToken, data.refreshToken);
+        const userFromToken = setCurrentUserFromToken(data.accessToken);
+        console.debug('User from token:', userFromToken);
+        
+        if (!userFromToken) {
+          console.warn('Failed to extract user from token after login, but proceeding');
+        }
+        await fetchUserProfile();
+        
+        showAuthMessage(`✓ Welcome back, ${userFromToken?.username || userFromToken?.email || 'Operator'}!`, 'success');
+        
+        // Small delay before switching to app to show success message
+        setTimeout(() => {
+          updateAuthUI();
+          showControls();
+          hideError();
+        }, 800);
+      } catch (err) {
+        showAuthMessage(err.message || 'Login failed. Please check your credentials.', 'error');
+      }
+    }
+
+    async function register(username, email, password, displayName) {
+      clearAuthMessage();
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password, displayName }),
+        });
+
+        if (!res.ok) {
+          let msg = '';
+          try {
+            const errData = await res.json();
+            msg = errData?.error || errData?.message || '';
+          } catch (_) {
+            msg = await res.text();
+          }
+          throw new Error(msg || 'Registration failed');
+        }
+
+        const raw = await res.json();
+        const data = raw?.data || raw;
+        if (!data?.accessToken || !data?.refreshToken) {
+          throw new Error('Invalid auth response');
+        }
+        saveTokens(data.accessToken, data.refreshToken);
+        setCurrentUserFromToken(data.accessToken);
+        await fetchUserProfile();
+        
+        showAuthMessage(`✓ Account created! Welcome, ${username}!`, 'success');
+        
+        // Small delay before switching to app
+        setTimeout(() => {
+          updateAuthUI();
+          showControls();
+          hideError();
+        }, 800);
+      } catch (err) {
+        showAuthMessage(err.message || 'Registration failed', 'error');
+      }
+    }
+
+    async function logout() {
+      try {
+        if (authState.accessToken) {
+          await authenticatedFetch('/api/auth/logout', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: authState.refreshToken }),
+          });
+        }
+      } catch (err) {
+        console.warn('Logout request failed:', err);
+      } finally {
+        clearTokens();
+        resetAuthButtons();
+        disableDevUI();
+        updateAuthUI();
+        hideControls();
+        showAuthMessage('Logged out successfully', 'success');
+      }
+    }
+
+    function showControls() {
+      const crown = document.querySelector('.crown');
+      const controlsStrips = document.querySelectorAll('.controls-strip');
+      const chatSection = document.querySelector('.chat-section');
+      const mainGrid = document.querySelector('.grid');
+      
+      if (crown) crown.style.display = 'grid';
+      controlsStrips.forEach(el => el.style.display = 'grid');
+      if (chatSection) chatSection.style.display = 'block';
+      if (mainGrid) mainGrid.style.display = 'grid';
+    }
+
+    function hideControls() {
+      const crown = document.querySelector('.crown');
+      const controlsStrips = document.querySelectorAll('.controls-strip');
+      const chatSection = document.querySelector('.chat-section');
+      const mainGrid = document.querySelector('.grid');
+      
+      if (crown) crown.style.display = 'none';
+      controlsStrips.forEach(el => el.style.display = 'none');
+      if (chatSection) chatSection.style.display = 'none';
+      if (mainGrid) mainGrid.style.display = 'none';
+    }
+
+    function enableDevUI() {
+      document.body.classList.add('is-dev');
+    }
+
+    function disableDevUI() {
+      document.body.classList.remove('is-dev');
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // MAIN STATE
+    // ═══════════════════════════════════════════════════════════════
+    const state = {
+      testMode: false,
+      evidence: null,
+      liveEvents: [],
+      stream: null,
+      governorCount: 0,
+      overseerUrl: '/overseer', // Sovereign proxy base
+      viOnline: false,
+      viLastError: '',
+    };
+
+    // Unified tab switcher
+    const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+    const chatPane = document.getElementById('chatPane');
+    const controlPane = document.getElementById('controlPane');
+    const insightsPane = document.getElementById('insightsPane');
+    const holo = document.querySelector('.hologram-container');
+    const watermark = document.getElementById('watermark');
+    let currentView = 'chat';
+
+    function switchView(view) {
+      currentView = view;
+      const isChat = view === 'chat';
+      chatPane?.classList.toggle('active', isChat);
+      controlPane?.classList.toggle('active', view === 'control');
+      insightsPane?.classList.toggle('active', view === 'insights');
+      tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+      if (holo) holo.style.display = isChat ? 'block' : 'none';
+      if (watermark) watermark.style.display = isChat ? 'block' : 'none';
+    }
+
+    tabButtons.forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+
+    // ═══════════════════════════════════════════════════════════════
+    // VI OVERSEER CONTROL PLANE
+    // ═══════════════════════════════════════════════════════════════
+
+    async function overseerRequest(endpoint, method = 'GET', body = null) {
+      try {
+        const opts = { method };
+        if (body) {
+          opts.headers = { 'Content-Type': 'application/json' };
+          opts.body = JSON.stringify(body);
+        }
+        const res = await fetch(`${state.overseerUrl}${endpoint}`, opts);
+        if (!res.ok) {
+          throw new Error(`Overseer error: ${res.status}`);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error('Overseer request failed:', err);
+        throw err;
+      }
+    }
+
+    async function viCoreStart() {
+      try {
+        const result = await overseerRequest('/services/vi-core/start', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core started', 'success');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function viCoreStop() {
+      try {
+        const result = await overseerRequest('/services/vi-core/stop', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core stopped', 'neutral');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function viCoreRestart() {
+      try {
+        const result = await overseerRequest('/services/vi-core/restart', 'POST');
+        if (result.ok) {
+          showStatus('Vi Core restarting...', 'success');
+          updateViCoreStatus();
+        } else {
+          showError(result.message);
+        }
+      } catch (err) {
+        showError(err instanceof Error ? err.message : String(err));
+      }
+    }
+
+    async function updateViCoreStatus() {
+      try {
+        const status = await overseerRequest('/services/vi-core/status');
+        const logsDiv = document.getElementById('viCoreLogs');
+        if (logsDiv) {
+          logsDiv.innerHTML = `<div style="color: var(--gold);">[${status.status.toUpperCase()}] PID: ${status.pid || 'none'} | Uptime: ${status.uptime}s</div>`;
+          if (status.lastError) {
+            logsDiv.innerHTML += `<div style="color: var(--red); margin-top: 4px;">Error: ${status.lastError}</div>`;
+          }
+        }
+
+        // Fetch recent logs
+        const logsData = await overseerRequest('/logs/vi-core?lines=10');
+        if (logsDiv && logsData.logs) {
+          logsData.logs.forEach((line) => {
+            const logLine = document.createElement('div');
+            logLine.textContent = line;
+            logLine.style.lineHeight = '1.4';
+            if (line.includes('[ERROR]')) {
+              logLine.style.color = 'var(--red)';
+            }
+            logsDiv.appendChild(logLine);
+          });
+          logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+      } catch (err) {
+        console.warn('Status update failed:', err);
+      }
+    }
+
+    function showStatus(message, type = 'info') {
+      console.log(`[${type}] ${message}`);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // VI PRESENCE SYSTEM - Core Sigil + Volumetric Aura
+    // ═══════════════════════════════════════════════════════════════
+    
+    const viCoreSigil = document.getElementById('viCoreSigil');
+    const viPresenceAura = document.getElementById('viPresenceAura');
+
+    function updateViPresence(stateValue, duration = 2000) {
+      // Update core sigil
+      viCoreSigil.classList.remove('idle', 'stance', 'governor', 'active');
+      viCoreSigil.classList.add(stateValue);
+      
+      // Update presence aura
+      viPresenceAura.classList.remove('idle', 'stance', 'governor', 'active');
+      viPresenceAura.classList.add(stateValue);
+      
+      // Auto-return to idle after duration
+      if (stateValue !== 'idle') {
+        setTimeout(() => {
+          viCoreSigil.classList.remove(stateValue);
+          viPresenceAura.classList.remove(stateValue);
+        }, duration);
+      }
+    }
+
+    const elements = {
+      watermark: document.getElementById('watermark'),
+      testModeBadge: document.getElementById('testModeBadge'),
+      providerState: document.getElementById('providerState'),
+      sessionValue: document.getElementById('sessionValue'),
+      userValue: document.getElementById('userValue'),
+      replayValue: document.getElementById('replayValue'),
+      stanceSummary: document.getElementById('stanceSummary'),
+      stanceReasoning: document.getElementById('stanceReasoning'),
+      stanceSignals: document.getElementById('stanceSignals'),
+      stanceConstraints: document.getElementById('stanceConstraints'),
+      governorBadge: document.getElementById('governorBadge'),
+      governorStatus: document.getElementById('governorStatus'),
+      governorIssues: document.getElementById('governorIssues'),
+      reasoningStream: document.getElementById('reasoningStream'),
+      rawList: document.getElementById('rawList'),
+      postList: document.getElementById('postList'),
+      suppressedList: document.getElementById('suppressedList'),
+      injectedBlob: document.getElementById('injectedBlob'),
+      continuitySummary: document.getElementById('continuitySummary'),
+      costSummary: document.getElementById('costSummary'),
+      continuityCard: document.getElementById('continuityCard'),
+      costCard: document.getElementById('costCard'),
+      stanceCard: document.getElementById('stanceCard'),
+      governorCard: document.getElementById('governorCard'),
+      reasoningCard: document.getElementById('reasoningCard'),
+      runsList: document.getElementById('runsList'),
+      eventsList: document.getElementById('eventsList'),
+      errorBox: document.getElementById('errorBox'),
+      viVersion: document.getElementById('viVersion'),
+      selfModelHash: document.getElementById('selfModelHash'),
+    };
+
+    function flag(text, tone) {
+      const span = document.createElement('span');
+      span.className = `flag${tone ? ' ' + tone : ''}`;
+      span.textContent = text;
+      return span;
+    }
+
+    function glyph(text) {
+      const span = document.createElement('span');
+      span.className = 'glyph';
+      span.textContent = text;
+      return span;
+    }
+
+    function clearList(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function pulse(el, cls, ms = 1200) {
+      if (!el) return;
+      el.classList.add(cls);
+      setTimeout(() => el.classList.remove(cls), ms);
+    }
+
+    function connectStream(userId, sessionId) {
+      if (state.stream) {
+        state.stream.close();
+      }
+      const params = new URLSearchParams({ userId, sessionId }).toString();
+      const es = new EventSource(`/api/events/stream?${params}`);
+      state.stream = es;
+
+      es.onmessage = (e) => {
+        try {
+          const evt = JSON.parse(e.data);
+          handleLiveEvent(evt);
+        } catch (err) {
+          console.warn('Failed to parse event', err);
+        }
+      };
+
+      es.onerror = () => {
+        showError('Event stream disconnected');
+      };
+    }
+
+    function handleLiveEvent(ev) {
+      if (!ev || !ev.type) return;
+      state.liveEvents.unshift(ev);
+      state.liveEvents = state.liveEvents.slice(0, 50);
+      renderEvents([...state.liveEvents, ...(state.evidence?.events || [])]);
+
+      if (ev.type === 'stance_decision') {
+        const stanceData = {
+          stance: ev.data?.stance,
+          reasoning: ev.data?.reasoning,
+          userSignals: ev.data?.userSignals || [],
+          bondInfluence: ev.data?.bondInfluence,
+          selfModelConstraints: ev.data?.selfModelConstraints || [],
+          governorInterventions: state.governorCount,
+          timestamp: ev.timestamp,
+        };
+        state.evidence = state.evidence || {};
+        state.evidence.stance = stanceData;
+        renderStance(state.evidence);
+        pushReasoning(`Stance → ${stanceData.stance || '—'}`);
+        pulse(elements.stanceCard, 'alive-gold');
+        // Vi presence reacts: gold for stance lock
+        updateViPresence('stance', 2800);
+      }
+
+      if (ev.type === 'response_governor_intervention') {
+        state.governorCount += 1;
+        const issues = Array.isArray(ev.data?.issues) ? ev.data.issues : [];
+        renderGovernor(state.governorCount, issues);
+        pulse(elements.governorCard, 'alert-amber');
+        // Vi presence reacts: red for intervention
+        updateViPresence('governor', 1500);
+      }
+
+      if (ev.type === 'memory_retrieved' || ev.type === 'chat_request') {
+        pulse(elements.reasoningCard, 'alive-purple', 2200);
+        // Vi presence reacts: purple for cognition
+        updateViPresence('active', 2200);
+      }
+
+      if (ev.type === 'history_compressed') {
+        pulse(elements.continuityCard, 'fracture', 2600);
+      }
+    }
+
+    async function loadEvidence() {
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      const query = (document.getElementById('queryInput').value || '').trim();
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID are required.');
+        return;
+      }
+      hideError();
+      const params = new URLSearchParams({ userId, sessionId });
+      if (query) params.append('query', query);
+      const headers = state.testMode ? { 'x-vi-test-mode': 'true' } : {};
+      try {
+        const res = await authenticatedFetch(`/api/evidence?${params.toString()}`, { headers });
+        if (!res.ok) {
+          const text = await res.text();
+          const authHint = (res.status === 401 || res.status === 403) ? 'Login required or session expired — please log in again.' : '';
+          throw new Error(authHint || text || 'Failed to load evidence');
+        }
+        const data = await res.json();
+        state.evidence = data;
+        state.testMode = !!data.testMode;
+        state.governorCount = data.governorInterventions || 0;
+        renderEvidence();
+        connectStream(userId, sessionId);
+      } catch (err) {
+        showError(err.message || 'Failed to load evidence');
+      }
+    }
+
+    function renderEvidence() {
+      const data = state.evidence;
+      if (!data) return;
+      elements.sessionValue.textContent = `Session: ${data.sessionId || '—'}`;
+      const displayText = authState.displayName || authState.currentUser?.username || authState.currentUser?.email || data.userId || '—';
+      elements.userValue.textContent = `User: ${displayText}`;
+      elements.replayValue.textContent = data.runs?.[0]?.timestamp || '—';
+
+      const providerState = data.providerState || 'live';
+      elements.providerState.textContent = `Provider: ${providerState}`;
+      elements.providerState.className = 'pill ' + (providerState === 'disabled' ? 'green' : providerState === 'degraded' ? 'purple' : 'red');
+
+      state.testMode = data.testMode;
+      elements.testModeBadge.textContent = `TEST_MODE: ${state.testMode ? 'on' : 'off'}`;
+      elements.testModeBadge.className = 'pill ' + (state.testMode ? 'gold' : 'muted');
+      elements.watermark.style.display = state.testMode ? 'flex' : 'none';
+
+      renderStance(data);
+      renderGovernor(state.governorCount, data.stance?.governorIssues || []);
+      renderMemory(data.memory);
+      renderContinuity(data.continuity);
+      renderRuns(data.runs || []);
+      renderEvents([...(state.liveEvents || []), ...(data.events || [])]);
+      elements.viVersion.textContent = data.version || '0.1.x';
+      elements.selfModelHash.textContent = data.selfModelHash || 'cache';
+    }
+
+    function renderStance(data) {
+      clearList(elements.stanceSignals);
+      clearList(elements.stanceConstraints);
+      const stance = data.stance || {};
+      elements.stanceSummary.textContent = stance.stance ? stance.stance.toUpperCase() : '—';
+      elements.stanceReasoning.textContent = stance.reasoning || '—';
+      (stance.userSignals || []).forEach(sig => elements.stanceSignals.appendChild(flag(sig, 'purple')));
+      (stance.selfModelConstraints || []).forEach(c => elements.stanceConstraints.appendChild(flag(c, 'muted')));
+      const gov = typeof data.governorInterventions === 'number' ? data.governorInterventions : (stance.governorInterventions || 0);
+      elements.governorBadge.textContent = `Governor: ${gov}`;
+      elements.governorBadge.className = 'pill ' + (gov > 0 ? 'red' : 'green');
+      state.governorCount = gov;
+    }
+
+    function renderGovernor(count, issues) {
+      elements.governorStatus.textContent = count > 0 ? `${count} interventions` : 'Clean pass';
+      clearList(elements.governorIssues);
+      (issues || []).forEach((issue) => elements.governorIssues.appendChild(flag(issue, 'red')));
+      elements.governorBadge.textContent = `Governor: ${count}`;
+      elements.governorBadge.className = 'pill ' + (count > 0 ? 'red' : 'green');
+    }
+
+    function renderMemory(memory) {
+      clearList(elements.rawList);
+      clearList(elements.postList);
+      clearList(elements.suppressedList);
+      if (!memory) {
+        elements.injectedBlob.textContent = '—';
+        return;
+      }
+      const postIds = new Set((memory.postFiltered || []).map((i) => i.id));
+      (memory.retrieved || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta">${item.type || ''} · ${(item.relevance ?? item.similarity ?? '').toString()}</div>`;
+        elements.rawList.appendChild(div);
+      });
+      (memory.postFiltered || []).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        const meta = item.adjustedScore !== undefined ? `score ${item.adjustedScore.toFixed ? item.adjustedScore.toFixed(2) : item.adjustedScore}` : '';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta">${item.type || ''} ${meta}</div>`;
+        elements.postList.appendChild(div);
+      });
+      const suppressed = (memory.retrieved || []).filter((item) => item.id && !postIds.has(item.id));
+      suppressed.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${item.text || ''}</div><div class="meta red">${item.type || ''} · suppressed</div>`;
+        elements.suppressedList.appendChild(div);
+      });
+      elements.injectedBlob.textContent = memory.injectedBlob && memory.injectedBlob.length > 0 ? memory.injectedBlob : '—';
+    }
+
+    function renderContinuity(continuity) {
+      if (!continuity) {
+        elements.continuitySummary.textContent = '—';
+        elements.costSummary.textContent = '—';
+        return;
+      }
+      const fracture = continuity.compressionTriggered;
+      if (fracture) pulse(elements.continuityCard, 'fracture', 2600);
+      const costSpike = (continuity.retries || 0) > 0;
+      elements.continuitySummary.innerHTML = `Records: ${continuity.totalRecords || 0}<br/>Compression: ${fracture ? 'triggered' : 'idle'}<br/>Tail kept: ${continuity.tailKept || 0}<br/>Summary: ${continuity.summaryHash || 'n/a'}`;
+      elements.costSummary.innerHTML = `Retries: ${(continuity.retries || 0)}<br/>Backoff: ${(continuity.backoffTimeline || []).length} steps<br/>Errors: ${(continuity.errors || []).length}`;
+      elements.costCard.classList.toggle('alert-amber', costSpike);
+    }
+
+    function renderRuns(runs) {
+      clearList(elements.runsList);
+      runs.slice(0, 5).forEach(run => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="text">${(run.input_text || run.inputText || '').slice(0, 120)}</div><div class="meta">${run.timestamp || ''}</div>`;
+        elements.runsList.appendChild(div);
+      });
+    }
+
+    function renderEvents(events) {
+      clearList(elements.eventsList);
+      events.slice(0, 18).forEach(ev => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'event';
+        wrapper.innerHTML = `<div class="type">${ev.layer ? 'L' + ev.layer : ''} · ${ev.type}</div><div class="message">${ev.message || ''}</div><div class="time">${ev.timestamp || ''}</div>`;
+        elements.eventsList.appendChild(wrapper);
+      });
+    }
+
+    function updateDegradedUI() {
+      const banner = document.getElementById('statusBanner');
+      const chatBox = document.getElementById('chatInput');
+      const chatBtn = document.getElementById('sendMessage');
+      const evidenceBtn = document.getElementById('refreshEvidence');
+      const exportJsonBtn = document.getElementById('exportJson');
+      const exportMdBtn = document.getElementById('exportMd');
+
+      const offline = !state.viOnline;
+      const reason = state.viLastError || 'Vi offline — start via Control tab';
+
+      if (banner) {
+        banner.style.display = offline ? 'block' : 'none';
+        banner.textContent = offline ? reason : '';
+      }
+
+      if (chatBox) {
+        chatBox.disabled = offline;
+        chatBox.placeholder = offline ? 'Vi offline — chat disabled' : 'Type your message...';
+      }
+      if (chatBtn) chatBtn.disabled = offline;
+      if (evidenceBtn) evidenceBtn.disabled = offline;
+      if (exportJsonBtn) exportJsonBtn.disabled = offline;
+      if (exportMdBtn) exportMdBtn.disabled = offline;
+    }
+
+    function pushReasoning(text) {
+      if (!text) return;
+      const row = document.createElement('div');
+      row.className = 'item';
+      row.innerHTML = `<div class="text">${text}</div>`;
+      elements.reasoningStream.prepend(row);
+      while (elements.reasoningStream.childElementCount > 6) {
+        elements.reasoningStream.removeChild(elements.reasoningStream.lastChild);
+      }
+    }
+
+    function showError(msg) {
+      elements.errorBox.style.display = 'block';
+      elements.errorBox.textContent = msg;
+    }
+
+    function hideError() {
+      elements.errorBox.style.display = 'none';
+    }
+
+    function toggleTestMode() {
+      state.testMode = !state.testMode;
+      elements.testModeBadge.textContent = `TEST_MODE: ${state.testMode ? 'on' : 'off'}`;
+      elements.testModeBadge.className = 'pill ' + (state.testMode ? 'gold' : 'muted');
+      elements.watermark.style.display = state.testMode ? 'flex' : 'none';
+
+      // Enforce at Overseer level (hard gate)
+      overseerRequest('/mode/test-mode', 'POST', {
+        enabled: state.testMode,
+      })
+        .then(() => {
+          showStatus(`TEST_MODE ${state.testMode ? 'enabled' : 'disabled'} at Overseer`);
+          updateViCoreStatus();
+        })
+        .catch((err) => {
+          showError(`Failed to sync TEST_MODE with Overseer: ${err.message}`);
+        });
+    }
+
+    function startViCore() {
+      return overseerRequest('/services/vi-core/start', 'POST')
+        .then((result) => {
+          showStatus(result.message || 'vi-core starting');
+          return result;
+        })
+        .catch((err) => {
+          showError(err instanceof Error ? err.message : String(err));
+          throw err;
+        });
+    }
+
+    function stopViCore() {
+      return overseerRequest('/services/vi-core/stop', 'POST')
+        .then((result) => {
+          showStatus(result.message || 'vi-core stopping');
+          return result;
+        })
+        .catch((err) => {
+          showError(err instanceof Error ? err.message : String(err));
+          throw err;
+        });
+    }
+
+    function exportJson() {
+      if (!state.evidence) return;
+      const blob = new Blob([JSON.stringify(state.evidence, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'evidence.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportMarkdown() {
+      if (!state.evidence) return;
+
+      const data = state.evidence;
+      const md = [
+        `# Vi Evidence Bundle`,
+        ``,
+        `- user: ${data.userId || '—'}`,
+        `- session: ${data.sessionId || '—'}`,
+        `- testMode: ${data.testMode ? 'on' : 'off'}`,
+        `- version: ${data.version || '—'}`,
+        ``,
+        `## Stance`,
+        `- stance: ${data.stance?.stance || '—'}`,
+        `- reasoning: ${data.stance?.reasoning || '—'}`,
+        ``,
+        `## Governor`,
+        `- interventions: ${data.governorInterventions ?? data.stance?.governorInterventions ?? 0}`,
+        `- issues: ${(data.stance?.governorIssues || []).join(', ') || '—'}`,
+        ``,
+        `## Continuity`,
+        `- records: ${data.continuity?.totalRecords ?? 0}`,
+        `- compressionTriggered: ${data.continuity?.compressionTriggered ? 'yes' : 'no'}`,
+        `- retries: ${data.continuity?.retries ?? 0}`,
+      ].join('\n');
+
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'evidence.md';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportConversation() {
+      if (!state.evidence) return;
+      
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID required for conversation export');
+        return;
+      }
+
+      // Use the new comprehensive export endpoint
+      const params = new URLSearchParams({ 
+        userId, 
+        sessionId, 
+        format: 'markdown'  // or 'json' for JSON format
+      }).toString();
+      
+      // Fetch as markdown and download
+      fetch(`/api/export/conversation?${params}&format=markdown`)
+        .then(r => {
+          if (!r.ok) throw new Error('Export failed');
+          return r.blob();
+        })
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `conversation-${sessionId.slice(0, 8)}.md`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showStatus('Conversation exported', 'success');
+        })
+        .catch(err => showError(`Export failed: ${err.message}`));
+    }
+
+    function importMemory() {
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID required for memory import');
+        return;
+      }
+
+      // Create a file input for user to select file
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'text/plain,.txt,.md';
+      input.onchange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+          const text = await file.text();
+          if (!text.trim()) {
+            showError('File is empty');
+            return;
+          }
+
+          const label = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+
+          // Send to import endpoint
+          const params = new URLSearchParams({ userId, sessionId }).toString();
+          const res = await fetch(`/api/import/memory?${params}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              memory: text,
+              injectionLabel: label,
+            }),
+          });
+
+          if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err || 'Import failed');
+          }
+
+          showStatus(`Memory imported from ${file.name}`, 'success');
+          setTimeout(() => loadEvidence(), 500); // Reload evidence to see injected memory
+        } catch (err) {
+          showError(`Memory import failed: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      };
+      input.click();
+    }
+
+    document.getElementById('refreshEvidence').addEventListener('click', loadEvidence);
+    document.getElementById('toggleTestMode').addEventListener('click', toggleTestMode);
+    document.getElementById('exportJson').addEventListener('click', exportJson);
+    document.getElementById('exportMd').addEventListener('click', exportMarkdown);
+    document.getElementById('exportConversation').addEventListener('click', exportConversation);
+    document.getElementById('importMemory').addEventListener('click', importMemory);
+
+    const startViCoreBtn = document.getElementById('startViCore');
+    const stopViCoreBtn = document.getElementById('stopViCore');
+    const restartViCoreBtn = document.getElementById('restartViCore');
+
+    // God-1: Ecosystem control buttons (PROTECTED - requires auth)
+    document.getElementById('startAll').addEventListener('click', async () => {
+      if (!authState.accessToken) {
+        showError('⚠ Authentication required. Go to the Auth tab and login first.');
+        return;
+      }
+      
+      const btn = document.getElementById('startAll');
+      const orig = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Starting…'; }
+      try {
+        const res = await authenticatedFetch(state.overseerUrl + '/ecosystem/start-all', { method: 'POST' });
+        const result = await res.json();
+        const msg = result.message || 'Services starting...';
+        showError('[OK] ' + msg);
+        elements.errorBox.style.color = '#2ecc71';
+        
+        // Auto-refresh status immediately
+        await populateEcosystemStatus();
+        await populateAuditLog();
+        
+        // Check Vi health after start (with delay for services to boot)
+        setTimeout(async () => {
+          await checkViHealth();
+          updateAuthUI();
+          await populateEcosystemStatus();
+        }, 3000);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        showError('[ERROR] ' + error.message);
+        elements.errorBox.style.color = '#e74c3c';
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = orig || '▶ Bring Vi Online (All Services)'; }
+      }
+    });
+
+    if (startViCoreBtn) {
+      startViCoreBtn.addEventListener('click', async () => {
+        if (!authState.accessToken) {
+          showError('⚠ Authentication required. Go to the Auth tab and login first.');
+          return;
+        }
+        startViCoreBtn.disabled = true;
+        try {
+          await startViCore();
+          await populateEcosystemStatus();
+        } catch (err) {
+          // already surfaced
+        } finally {
+          startViCoreBtn.disabled = false;
+        }
+      });
+    }
+
+    document.getElementById('stopAll').addEventListener('click', async () => {
+      if (!authState.accessToken) {
+        showError('⚠ Authentication required. Go to the Auth tab and login first.');
+        return;
+      }
+      
+      try {
+        const res = await authenticatedFetch(state.overseerUrl + '/ecosystem/stop-all', { method: 'POST' });
+        const result = await res.json();
+        const msg = result.message || 'Services stopping...';
+        showError('[OK] ' + msg);
+        elements.errorBox.style.color = '#d4af37';
+        
+        // Auto-refresh status immediately
+        await populateEcosystemStatus();
+        await populateAuditLog();
+        
+        // Check Vi health after stop
+        setTimeout(async () => {
+          await checkViHealth();
+          updateAuthUI();
+          await populateEcosystemStatus();
+        }, 2000);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        showError('[ERROR] ' + error.message);
+        elements.errorBox.style.color = '#e74c3c';
+      }
+    });
+
+    if (stopViCoreBtn) {
+      stopViCoreBtn.addEventListener('click', async () => {
+        if (!authState.accessToken) {
+          showError('⚠ Authentication required. Go to the Auth tab and login first.');
+          return;
+        }
+        stopViCoreBtn.disabled = true;
+        try {
+          await stopViCore();
+          await populateEcosystemStatus();
+        } catch (err) {
+          // already surfaced
+        } finally {
+          stopViCoreBtn.disabled = false;
+        }
+      });
+    }
+
+    if (restartViCoreBtn) {
+      restartViCoreBtn.addEventListener('click', async () => {
+        if (!authState.accessToken) {
+          showError('⚠ Authentication required. Go to the Auth tab and login first.');
+          return;
+        }
+        restartViCoreBtn.disabled = true;
+        try {
+          await stopViCore();
+          await startViCore();
+          await populateEcosystemStatus();
+        } catch (err) {
+          // already surfaced
+        } finally {
+          restartViCoreBtn.disabled = false;
+        }
+      });
+    }
+
+    async function updateEcosystemStatus() {
+      try {
+        const status = await overseerRequest('/ecosystem/status');
+        const ecosystemDiv = document.getElementById('ecosystemStatus');
+        if (ecosystemDiv) {
+          ecosystemDiv.innerHTML = '';
+          const healthyBadge = status.healthy ? '[HEALTHY]' : '[DEGRADED]';
+          const healthColor = status.healthy ? 'var(--green)' : 'var(--red)';
+          const header = document.createElement('div');
+          header.style.color = healthColor;
+          header.style.marginBottom = '6px';
+          header.textContent = `${healthyBadge} | ${new Date(status.timestamp).toLocaleTimeString()}`;
+          ecosystemDiv.appendChild(header);
+
+          for (const [serviceId, svc] of Object.entries(status.services || {})) {
+            const line = document.createElement('div');
+            const statusColor = svc.status === 'running' ? 'var(--green)' : svc.status === 'crashed' ? 'var(--red)' : 'var(--gold)';
+            const isCritical = svc.critical ? ' [CRITICAL]' : '';
+            line.innerHTML = `<span style="color: ${statusColor};">${serviceId}</span>: ${svc.status}${isCritical} | PID: ${svc.pid || 'none'} | Uptime: ${svc.uptime}s`;
+            line.style.lineHeight = '1.6';
+            ecosystemDiv.appendChild(line);
+          }
+        }
+      } catch (err) {
+        console.warn('Ecosystem status failed:', err);
+      }
+    }
+
+    async function updateAuditLog() {
+      try {
+        const auditData = await overseerRequest('/audit/log?days=1');
+        const auditDiv = document.getElementById('auditLog');
+        if (auditDiv && auditData.entries) {
+          auditDiv.innerHTML = '';
+          const filtered = auditData.entries.filter((e) => e.action !== 'ecosystem.status');
+          for (const entry of filtered.slice(0, 20)) {
+            const line = document.createElement('div');
+            const time = new Date(entry.timestamp).toLocaleTimeString();
+            const resultColor = entry.result === 'success' ? 'var(--green)' : 'var(--red)';
+            line.innerHTML = `<span style="color: var(--gold);">${time}</span> | <span style="color: ${resultColor};">${entry.action}</span> ${entry.service ? `[${entry.service}]` : ''} | ${entry.user}`;
+            line.style.lineHeight = '1.4';
+            auditDiv.appendChild(line);
+          }
+        }
+      } catch (err) {
+        console.warn('Audit log failed:', err);
+      }
+    }
+
+    // Initialize crown bar with Overseer data
+    function initializeCrownBar() {
+      // Set static values immediately
+      const versionEl = document.getElementById('viVersion');
+      const modelEl = document.getElementById('selfModelHash');
+      const providerEl = document.getElementById('providerState');
+      const testEl = document.getElementById('testModeBadge');
+      
+      if (versionEl) versionEl.textContent = 'God-1';
+      if (modelEl) modelEl.textContent = 'Overseer';
+      if (providerEl) {
+        providerEl.textContent = 'Provider: Overseer';
+        providerEl.className = 'pill purple';
+      }
+      if (testEl) {
+        testEl.textContent = 'TEST_MODE: off';
+        testEl.className = 'pill muted';
+      }
+      
+      // Then fetch actual status asynchronously
+      fetch(state.overseerUrl + '/health')
+        .then(r => r.json())
+        .then(data => {
+          if (testEl && data.testMode) {
+            testEl.textContent = 'TEST_MODE: on';
+            testEl.className = 'pill gold';
+          }
+        })
+        .catch(err => console.warn('Health check failed:', err));
+    }
+
+    function populateEcosystemStatus() {
+      const statusEl = document.getElementById('ecosystemStatus');
+      if (!statusEl) {
+        console.warn('ecosystemStatus element not found');
+        return;
+      }
+      
+      console.log('[POPULATE] Fetching ecosystem status from:', state.overseerUrl + '/ecosystem/status');
+      fetch(state.overseerUrl + '/ecosystem/status')
+        .then(r => {
+          console.log('[POPULATE] Response status:', r.status);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+        .then(data => {
+          console.log('[POPULATE] Got ecosystem data:', data);
+          const viCore = data.services ? data.services['vi-core'] : undefined;
+          state.viOnline = viCore ? viCore.status === 'running' : false;
+          state.viLastError = (viCore && viCore.lastError) || '';
+          updateDegradedUI();
+          statusEl.innerHTML = '';
+          
+          // Header
+          const header = document.createElement('div');
+          header.style.marginBottom = '8px';
+          header.style.fontWeight = 'bold';
+          const healthyText = data.healthy ? '[HEALTHY]' : '[DEGRADED]';
+          const healthColor = data.healthy ? '#2ecc71' : '#e74c3c';
+          header.innerHTML = `<span style="color: ${healthColor};">${healthyText}</span> | ${new Date(data.timestamp).toLocaleTimeString()}`;
+          statusEl.appendChild(header);
+          
+          // Services
+          if (data.services) {
+            for (const [id, svc] of Object.entries(data.services)) {
+              const line = document.createElement('div');
+              const statusColor = svc.status === 'running' ? '#2ecc71' : svc.status === 'crashed' ? '#e74c3c' : '#d4af37';
+              const critical = svc.critical ? ' [CRITICAL]' : '';
+              line.innerHTML = `<span style="color: ${statusColor};">${id}</span>: ${svc.status}${critical} | PID: ${svc.pid || 'none'}`;
+              line.style.lineHeight = '1.5';
+              statusEl.appendChild(line);
+            }
+          }
+        })
+        .catch(err => {
+          console.error('[POPULATE] Ecosystem error:', err);
+          statusEl.innerHTML = `<span style="color: #e74c3c;">Error: ${err.message}</span>`;
+        });
+    }
+
+    function populateAuditLog() {
+      const auditEl = document.getElementById('auditLog');
+      if (!auditEl) {
+        console.warn('auditLog element not found');
+        return;
+      }
+      
+      console.log('[POPULATE] Fetching audit log from:', state.overseerUrl + '/audit/log?days=1');
+      fetch(state.overseerUrl + '/audit/log?days=1')
+        .then(r => {
+          console.log('[POPULATE] Audit response status:', r.status);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+        .then(data => {
+          console.log('[POPULATE] Got audit data:', data);
+          auditEl.innerHTML = '';
+          
+          const entries = (data.entries || []).filter((e) => e.action !== 'ecosystem.status');
+          if (entries.length === 0) {
+            auditEl.textContent = '(No audit entries yet)';
+            return;
+          }
+          
+          for (const entry of entries.slice(0, 20)) {
+            const line = document.createElement('div');
+            const time = new Date(entry.timestamp).toLocaleTimeString();
+            const resultColor = entry.result === 'success' ? '#2ecc71' : '#e74c3c';
+            const service = entry.service ? `[${entry.service}]` : '';
+            line.innerHTML = `<span style="color: #d4af37;">${time}</span> | <span style="color: ${resultColor};">${entry.action}</span> ${service}`;
+            line.style.lineHeight = '1.4';
+            auditEl.appendChild(line);
+          }
+        })
+        .catch(err => {
+          console.error('[POPULATE] Audit error:', err);
+          auditEl.innerHTML = `<span style="color: #e74c3c;">Error: ${err.message}</span>`;
+        });
+    }
+
+    // Refresh status every 10 seconds (always keep Vi status fresh; audit only on Control)
+    setInterval(function() {
+      console.log('[GOD-CONSOLE] Polling...');
+      populateEcosystemStatus();
+      if (currentView === 'control') {
+        populateAuditLog();
+      }
+    }, 10000);
+
+    // DEBUG: Test if JavaScript is running
+    console.log('[GOD-CONSOLE] Script starting...');
+    console.log('[GOD-CONSOLE] typeof initializeCrownBar:', typeof initializeCrownBar);
+    console.log('[GOD-CONSOLE] state.overseerUrl:', state.overseerUrl);
+    
+    // Quick direct DOM update to verify JS is running
+    const testEl = document.getElementById('viVersion');
+    console.log('[GOD-CONSOLE] Found viVersion element:', testEl);
+    if (testEl) {
+      testEl.textContent = 'God-1';
+      console.log('[GOD-CONSOLE] Set viVersion to God-1');
+    }
+    
+    // Initial load - run immediately with direct function calls
+    try {
+      console.log('[GOD-CONSOLE] Calling initializeCrownBar()...');
+      initializeCrownBar();
+      console.log('[GOD-CONSOLE] initializeCrownBar() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] initializeCrownBar() error:', e);
+    }
+    
+    try {
+      console.log('[GOD-CONSOLE] Calling populateEcosystemStatus()...');
+      populateEcosystemStatus();
+      console.log('[GOD-CONSOLE] populateEcosystemStatus() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] populateEcosystemStatus() error:', e);
+    }
+    
+    try {
+      console.log('[GOD-CONSOLE] Calling populateAuditLog()...');
+      populateAuditLog();
+      console.log('[GOD-CONSOLE] populateAuditLog() completed');
+    } catch (e) {
+      console.error('[GOD-CONSOLE] populateAuditLog() error:', e);
+    }
+    
+    console.log('[GOD-CONSOLE] Script complete!');
+
+    // Chat functionality
+    const chatHistory = document.getElementById('chatHistory');
+    const chatInput = document.getElementById('chatInput');
+    const sendMessageBtn = document.getElementById('sendMessage');
+
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+
+      if (!userId || !sessionId) {
+        showError('User ID and Session ID are required to chat.');
+        return;
+      }
+
+      // Activate hologram during chat
+      updateViPresence('active', 3000);
+
+      // Add user Vi presence during chat
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = `<div class="role">USER</div><div class="content">${message}</div>`;
+      chatHistory.appendChild(userMsg);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      chatInput.value = '';
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (state.testMode) headers['x-vi-test-mode'] = 'true';
+        // Use guest fallback if not authenticated
+        if (!authState.accessToken) headers['x-guest-user-id'] = userId;
+        
+        if (!state.viOnline) {
+          showError('Vi offline: cannot chat');
+          return;
+        }
+        const res = await authenticatedFetch('/api/chat', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ message, sessionId, includeTrace: false }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Chat failed: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Add assistant message to chat
+        const assistantMsg = document.createElement('div');
+        assistantMsg.className = 'chat-message assistant';
+        assistantMsg.innerHTML = `<div class="role">VI</div><div class="content">${data.output || 'No response'}</div>`;
+        chatHistory.appendChild(assistantMsg);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Deactivate Vi presence after response
+        updateViPresence('idle');
+
+        // Refresh evidence to see new telemetry
+        setTimeout(() => loadEvidence(), 500);
+      } catch (err) {
+        updateViPresence('idle');
+        showError(err.message || 'Failed to send message');
+      }
+    }
+
+    sendMessageBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Auto-load evidence on page load if IDs are present
+    window.addEventListener('load', async () => {
+      const userId = (document.getElementById('userInput').value || '').trim();
+      const sessionId = (document.getElementById('sessionInput').value || '').trim();
+      
+      console.debug('Page loaded, checking auth state');
+      console.debug('authState.accessToken stored:', !!authState.accessToken);
+      console.debug('authState.refreshToken stored:', !!authState.refreshToken);
+      
+      // Check Vi health and update auth UI
+      await checkViHealth();
+      // Hydrate user from stored tokens
+      let hydrated = false;
+      if (authState.accessToken) {
+        console.debug('Attempting to hydrate from stored accessToken');
+        hydrated = !!setCurrentUserFromToken(authState.accessToken);
+        console.debug('Hydration result:', hydrated);
+      }
+      if (!hydrated && authState.refreshToken) {
+        console.debug('Attempting to refresh tokens');
+        const refreshed = await refreshAccessToken();
+        console.debug('Refresh result:', refreshed);
+        hydrated = !!authState.currentUser;
+      }
+      updateAuthUI();
+      
+      // Auto-load evidence if authenticated and IDs present
+      if (userId && sessionId && authState.currentUser) {
+        loadEvidence();
+      }
+    });
+
+    document.getElementById('topLogoutBtn').addEventListener('click', logout);
+
+    // Initialize premium auth UX
+    initAuthUX();
+
+    // Periodic health check (every 10 seconds)
+    setInterval(async () => {
+      await checkViHealth();
+      updateAuthUI();
+    }, 10000);
+  </script>
+</body>
+</html>

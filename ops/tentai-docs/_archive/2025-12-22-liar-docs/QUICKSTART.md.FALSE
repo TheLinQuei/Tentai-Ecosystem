@@ -1,0 +1,103 @@
+# Tentai VI - Quickstart Guide
+
+## Prerequisites
+- Node.js 18+ 
+- npm 9+
+
+## 5-Minute Setup
+
+### 1. Navigate to project
+```bash
+cd core/vi
+```
+
+### 2. Clean install (first time or after major changes)
+```bash
+rm -r node_modules dist package-lock.json  # macOS/Linux
+# OR
+rmdir /s node_modules dist package-lock.json  # Windows
+```
+
+### 3. Install dependencies
+```bash
+npm install
+```
+
+### 4. Type-check
+```bash
+npm run type-check
+```
+
+### 5. Build
+```bash
+npm run build
+```
+
+### 6. Start server
+```bash
+npm start
+```
+Server runs on `http://localhost:3001`
+
+### 7. Use CLI (new terminal)
+```bash
+npm run cli -- --version
+npm run cli -- help
+```
+
+## Common Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run type-check` | TypeScript type checking |
+| `npm run build` | Compile TypeScript → JavaScript |
+| `npm start` | Start development server |
+| `npm run cli -- <args>` | Run CLI tool |
+| `npm run dev` | Start with auto-reload |
+
+## Troubleshooting
+
+### Server fails to start
+- Check port 3001 is available
+- Clear `dist/` and rebuild: `npm run build`
+
+### CLI not working
+- Run `npm run build` first
+- Try `node dist/cli.js --version`
+
+### Type errors
+- Run `npm run type-check` to see all issues
+- Update tsconfig.json if needed
+
+## Project Structure
+```
+core/vi/
+├── src/
+│   ├── main.ts       # Server entry point
+│   ├── cli.ts        # CLI entry point
+│   └── handlers/     # API request handlers
+├── dist/             # Compiled output
+├── package.json
+└── tsconfig.json
+```
+
+## Milestone Status
+
+### ✅ Milestone 1: Foundation Setup (STABLE)
+- TypeScript project + build system
+- Express server + health/interact endpoints
+- CLI tool with version and help
+- **Status:** Reproducible from clean checkout
+
+### 🔵 Milestone 2: Data Persistence & Validation (PLANNED)
+- PostgreSQL integration
+- Request/response schemas (validation)
+- Structured logging with telemetry
+- Repository pattern for domain separation
+- **See:** [MILESTONE-2-PLAN.md](MILESTONE-2-PLAN.md)
+
+## Next Steps
+1. For **current development:** Check [Architecture Overview](../10-architecture/README.md)
+2. For **API usage:** Review [API Documentation](../20-api/README.md)
+3. For **next milestone:** Read [MILESTONE-2-PLAN.md](MILESTONE-2-PLAN.md)
+4. **Contributing:** Follow [copilot-rules](../../ops/tentai-docs/playbooks/copilot-rules.md)

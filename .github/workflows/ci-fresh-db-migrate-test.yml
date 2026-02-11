@@ -1,0 +1,104 @@
+name: Fresh Database Migration Test
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'core/vi/src/db/migrations.ts'
+      - '.github/workflows/ci-fresh-db-migrate-test.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'core/vi/src/db/migrations.ts'
+
+jobs:
+  fresh-db-migrate-test:
+    runs-on: ubuntu-latest
+    name: Test fresh DB migration sequence
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: vi_test_fresh
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: 'core/vi/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: |
+          cd core/vi
+          pnpm install --frozen-lockfile
+
+      - name: Run migrations on fresh database
+        env:
+          TEST_DATABASE_URL: postgresql://test_user:test_password@localhost:5432/vi_test_fresh
+          NODE_ENV: test
+        run: |
+          cd core/vi
+          pnpm exec ts-node -e "
+            import { Pool } from 'pg';
+            import { runMigrations } from './src/db/migrations.js';
+            
+            const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+            await runMigrations(pool);
+            console.log('✓ All migrations applied successfully');
+            await pool.end();
+          "
+
+      - name: Run schema contract tests
+        env:
+          TEST_DATABASE_URL: postgresql://test_user:test_password@localhost:5432/vi_test_fresh
+          NODE_ENV: test
+        run: |
+          cd core/vi
+          pnpm vitest tests/schema-contract.test.ts --run
+
+      - name: Run focused integration tests on fresh schema
+        env:
+          TEST_DATABASE_URL: postgresql://test_user:test_password@localhost:5432/vi_test_fresh
+          NODE_ENV: test
+        run: |
+          cd core/vi
+          pnpm vitest \
+            tests/preferences.persist.cross-session.e2e.test.ts \
+            tests/MemoryOrchestrator.test.ts \
+            tests/integration/chat.e2e.test.ts \
+            tests/integration/citations.persist.e2e.test.ts \
+            tests/relationship.owner-vs-public.e2e.test.ts \
+            --run
+
+      - name: Report migration sequence
+        if: always()
+        env:
+          TEST_DATABASE_URL: postgresql://test_user:test_password@localhost:5432/vi_test_fresh
+        run: |
+          cd core/vi
+          pnpm exec ts-node -e "
+            import { Pool } from 'pg';
+            
+            const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+            const res = await pool.query('SELECT id, applied_at FROM applied_migrations ORDER BY applied_at');
+            console.log('Applied migrations in order:');
+            res.rows.forEach((r, i) => console.log(\`  \${i + 1}. \${r.id} @ \${r.applied_at}\`));
+            await pool.end();
+          "
