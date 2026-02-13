@@ -2182,14 +2182,61 @@ export async function createServer(
       const utcDate = new Date(now.utc);
       let output = '';
 
+      // Try to use user's saved timezone if available
+      let userTimezone: string | undefined;
+      try {
+        const tzResult = await deps.pool.query('SELECT timezone FROM user_profiles WHERE user_id = $1', [userId]);
+        if (tzResult.rows.length > 0 && tzResult.rows[0].timezone && tzResult.rows[0].timezone !== 'UTC') {
+          userTimezone = tzResult.rows[0].timezone;
+        }
+      } catch {}
+
       if (simpleIntent === 'time' || simpleIntent === 'datetime') {
-        output = `Current time (UTC): ${utcDate.toUTCString()}. If you prefer local time, share your timezone.`;
+        if (userTimezone) {
+          try {
+            const formatter = new Intl.DateTimeFormat('en-US', { 
+              timeZone: userTimezone,
+              hour: 'numeric',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: true
+            });
+            const localTime = formatter.format(utcDate);
+            output = `Current time (${userTimezone}): ${localTime}`;
+          } catch {
+            output = `Current time (UTC): ${utcDate.toUTCString()}`;
+          }
+        } else {
+          output = `Current time (UTC): ${utcDate.toUTCString()}. If you prefer local time, share your timezone.`;
+        }
       }
       if (simpleIntent === 'date' || simpleIntent === 'datetime') {
-        const dateOnly = utcDate.toISOString().split('T')[0];
-        output = simpleIntent === 'date'
-          ? `Today is ${dateOnly} (UTC). If your local date differs, tell me your timezone.`
-          : `${output} Date: ${dateOnly} (UTC).`;
+        let localDate = utcDate.toISOString().split('T')[0];
+        if (userTimezone) {
+          try {
+            const formatter = new Intl.DateTimeFormat('en-US', { 
+              timeZone: userTimezone,
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            });
+            const parts = formatter.formatToParts(utcDate);
+            const year = parts.find(p => p.type === 'year')?.value;
+            const month = parts.find(p => p.type === 'month')?.value;
+            const day = parts.find(p => p.type === 'day')?.value;
+            if (year && month && day) {
+              localDate = `${year}-${month}-${day}`;
+            }
+          } catch {}
+        }
+        const dateStr = simpleIntent === 'date'
+          ? userTimezone 
+            ? `Today is ${localDate} (${userTimezone} time).`
+            : `Today is ${localDate} (UTC). If your local date differs, tell me your timezone.`
+          : userTimezone
+            ? `${output} Date: ${localDate} (${userTimezone} time).`
+            : `${output} Date: ${localDate} (UTC).`;
+        output = dateStr;
       }
       if (simpleIntent === 'name' || simpleIntent === 'who') {
         let displayName: string | undefined;
@@ -2777,6 +2824,57 @@ export async function createServer(
         });
       } catch (memErr) {
         logger.warn({ err: memErr }, 'Failed to store memories');
+      }
+
+      // Layer 8.5: Detect and persist user preferences from conversation
+      try {
+        // Timezone detection - look for patterns like "I'm Central", "I'm in EST", "Central Time", etc.
+        const tzPatterns = [
+          /\b(I'm|I am|I'm in|in|timezone|time zone|local time)\s+(central|cst|cdt|ct)/i,
+          /\b(I'm|I am|I'm in|in|timezone|time zone|local time)\s+(eastern|est|edt|et)/i,
+          /\b(I'm|I am|I'm in|in|timezone|time zone|local time)\s+(pacific|pst|pdt|pt)/i,
+          /\b(I'm|I am|I'm in|in|timezone|time zone|local time)\s+(mountain|mst|mdt|mt)/i,
+          /\b(I'm|I am|I'm in|in|timezone|time zone|local time)\s+(gmt|utc|uk|london|paris|tokyo|aest?|ist|ist)/i,
+        ];
+        
+        const tzMap: Record<string, string> = {
+          central: 'America/Chicago', cst: 'America/Chicago', cdt: 'America/Chicago', ct: 'America/Chicago',
+          eastern: 'America/New_York', est: 'America/New_York', edt: 'America/New_York', et: 'America/New_York',
+          pacific: 'America/Los_Angeles', pst: 'America/Los_Angeles', pdt: 'America/Los_Angeles', pt: 'America/Los_Angeles',
+          mountain: 'America/Denver', mst: 'America/Denver', mdt: 'America/Denver', mt: 'America/Denver',
+          gmt: 'UTC', utc: 'UTC', uk: 'Europe/London', london: 'Europe/London',
+          paris: 'Europe/Paris', tokyo: 'Asia/Tokyo', aest: 'Australia/Sydney', ist: 'Asia/Kolkata',
+        };
+
+        let detectedTz: string | undefined;
+        for (const pattern of tzPatterns) {
+          const match = message.match(pattern);
+          if (match) {
+            const tzAbbr = match[2].toLowerCase();
+            detectedTz = tzMap[tzAbbr];
+            if (detectedTz) break;
+          }
+        }
+
+        if (detectedTz) {
+          // Update user_profiles with detected timezone
+          await deps.pool.query(
+            'UPDATE user_profiles SET timezone = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
+            [detectedTz, userId]
+          );
+          logger.info({ userId, timezone: detectedTz }, 'User timezone detected and persisted from message');
+          await observabilityRepo.emit({
+            layer: 8,
+            type: 'preference_detected',
+            level: 'info',
+            userId,
+            sessionId: activeSessionId,
+            message: `Timezone detected: ${detectedTz}`,
+            data: { preference_type: 'timezone', value: detectedTz }
+          }).catch(() => {});
+        }
+      } catch (prefErr) {
+        logger.warn({ err: prefErr }, 'Failed to detect/store user preferences');
       }
 
       // Layer 9: update session arc with mood + summary
