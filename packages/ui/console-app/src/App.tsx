@@ -103,7 +103,7 @@ const resolveApiBase = () => {
       return 'http://localhost:3000';
     }
     // When deployed to production, use Render backend
-    return 'https://vi-backend.onrender.com';
+    return 'https://tentai-ecosystem.onrender.com';
   }
 
   return 'http://localhost:3000';
@@ -111,6 +111,12 @@ const resolveApiBase = () => {
 
 export default function App() {
   const apiBase = useMemo(() => resolveApiBase(), []);
+  
+  // Debug: log the resolved API base
+  if (typeof window !== 'undefined') {
+    console.log('🔌 API Base Resolved:', apiBase);
+    console.log('🌐 Hostname:', window.location.hostname);
+  }
   const [workspace, setWorkspace] = useState(workspaces[3]);
   const [userId, setUserId] = useState('');
   const [auditLimit, setAuditLimit] = useState(10);
@@ -139,6 +145,20 @@ export default function App() {
   const [showApiConfig, setShowApiConfig] = useState<boolean>(false);
 
   const canQuery = userId.trim().length > 0;
+
+  // Generate a UUID for userId on mount
+  useEffect(() => {
+    if (!userId) {
+      // Simple UUID v4 generation
+      const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+      setUserId(uuid);
+      console.log('🆔 Generated userId:', uuid);
+    }
+  }, []);
 
   // Health check effect - polls every 5 seconds
   useEffect(() => {
@@ -177,13 +197,18 @@ export default function App() {
       const url = `${apiBase}/v1/transparency/audit?userId=${encodeURIComponent(userId)}&limit=${auditLimit}`;
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch audit traces.');
+        console.warn('Audit endpoint unavailable:', response.status);
+        setAuditTraces([]);
+        setStatus('Audit not available (debug feature)');
+        return;
       }
       const data = await response.json();
       setAuditTraces(data.traces || []);
       setStatus('Audit traces loaded.');
     } catch (err) {
-      handleError(err instanceof Error ? err.message : 'Unknown error.');
+      console.warn('Audit fetch error:', err);
+      setAuditTraces([]);
+      setStatus('Audit not available (debug feature)');
     }
   };
 
@@ -199,13 +224,18 @@ export default function App() {
     try {
       const response = await fetch(`${apiBase}/v1/safety/profile/${encodeURIComponent(userId)}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch safety profile.');
+        console.warn('Safety profile endpoint unavailable:', response.status);
+        setSafetyProfile(defaultSafety);
+        setStatus('Using default safety settings');
+        return;
       }
       const data = (await response.json()) as SafetyProfile;
       setSafetyProfile({ ...defaultSafety, ...data });
       setStatus('Safety profile loaded.');
     } catch (err) {
-      handleError(err instanceof Error ? err.message : 'Unknown error.');
+      console.warn('Safety profile fetch error:', err);
+      setSafetyProfile(defaultSafety);
+      setStatus('Using default safety settings');
     }
   };
 
@@ -258,13 +288,18 @@ export default function App() {
     try {
       const response = await fetch(`${apiBase}/v1/loyalty/contract/${encodeURIComponent(userId)}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch loyalty contract.');
+        console.warn('Loyalty contract endpoint unavailable:', response.status);
+        setContract(defaultContract);
+        setStatus('Using default contract settings');
+        return;
       }
       const data = (await response.json()) as LoyaltyContract;
       setContract({ ...defaultContract, ...data });
       setStatus('Loyalty contract loaded.');
     } catch (err) {
-      handleError(err instanceof Error ? err.message : 'Unknown error.');
+      console.warn('Loyalty contract fetch error:', err);
+      setContract(defaultContract);
+      setStatus('Using default contract settings');
     }
   };
 
@@ -375,18 +410,23 @@ export default function App() {
     setError('');
 
     try {
+      const requestBody: any = {
+        message: messageText,
+        context: {
+          recentHistory: chatMessages.slice(-5).map(m => m.message),
+        },
+        includeTrace: false,
+      };
+
+      // Only include sessionId if userId is not empty (backend expects valid UUID or omitted)
+      if (userId && userId.trim()) {
+        requestBody.sessionId = userId;
+      }
+
       const response = await fetch(`${apiBase}/v1/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: messageText,
-          sessionId: userId,
-          context: {
-            userId: userId,
-            recentHistory: chatMessages.slice(-5).map(m => m.message),
-          },
-          includeTrace: false,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -622,8 +662,9 @@ export default function App() {
           <div className="panel-body">
             <div className="form-grid">
               <div className="field">
-                <label>Safety Level</label>
+                <label htmlFor="safety-level-select">Safety Level</label>
                 <select
+                  id="safety-level-select"
                   value={safetyProfile.safety_level}
                   onChange={(event) =>
                     setSafetyProfile((prev) => ({
@@ -638,8 +679,9 @@ export default function App() {
                 </select>
               </div>
               <div className="field">
-                <label>Refusal Explanation</label>
+                <label htmlFor="refusal-explanation-select">Refusal Explanation</label>
                 <select
+                  id="refusal-explanation-select"
                   value={safetyProfile.refusal_explanation}
                   onChange={(event) =>
                     setSafetyProfile((prev) => ({
@@ -653,8 +695,9 @@ export default function App() {
                 </select>
               </div>
               <div className="field toggle">
-                <label>
+                <label htmlFor="context-sensitivity-checkbox">
                   <input
+                    id="context-sensitivity-checkbox"
                     type="checkbox"
                     checked={safetyProfile.context_sensitivity}
                     onChange={(event) =>
@@ -668,8 +711,9 @@ export default function App() {
                 </label>
               </div>
               <div className="field toggle">
-                <label>
+                <label htmlFor="appeal-process-checkbox">
                   <input
+                    id="appeal-process-checkbox"
                     type="checkbox"
                     checked={safetyProfile.appeal_process}
                     onChange={(event) =>
@@ -752,8 +796,9 @@ export default function App() {
                 />
               </div>
               <div className="field">
-                <label>Verification Frequency</label>
+                <label htmlFor="verification-frequency-select">Verification Frequency</label>
                 <select
+                  id="verification-frequency-select"
                   value={contract.verification_frequency}
                   onChange={(event) =>
                     setContract((prev) => ({
@@ -831,8 +876,11 @@ export default function App() {
                 </div>
               )}
             </div>
-            <div className="chat-input-group">
+            <form className="chat-input-group" onSubmit={(e) => { e.preventDefault(); sendChatMessage(); }}>
+              <label htmlFor="chat-message-input" className="sr-only">Message</label>
               <input
+                id="chat-message-input"
+                name="message"
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
@@ -840,15 +888,16 @@ export default function App() {
                 placeholder="Ask Vi something..."
                 disabled={chatLoading}
                 className="chat-input"
+                autoComplete="off"
               />
               <button
-                onClick={sendChatMessage}
+                type="submit"
                 disabled={chatLoading || !chatInput.trim()}
                 className="action"
               >
                 {chatLoading ? 'Sending...' : 'Send'}
               </button>
-            </div>
+            </form>
           </div>
         </section>
 

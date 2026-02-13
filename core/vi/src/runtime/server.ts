@@ -2131,6 +2131,22 @@ export async function createServer(
       logger.warn({ dbError, userId }, 'Failed to ensure user exists in users table');
     }
 
+    // Ensure user profile exists (auto-create for new guests)
+    try {
+      const profileExists = await deps.pool.query('SELECT 1 FROM user_profiles WHERE user_id = $1 LIMIT 1', [userId]);
+      if (profileExists.rows.length === 0) {
+        // Create minimal profile for new user
+        await deps.pool.query(
+          `INSERT INTO user_profiles (user_id, timezone, communication_style, profile_completeness, created_at, updated_at)
+           VALUES ($1, 'UTC', 'adaptive', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+           ON CONFLICT (user_id) DO NOTHING`,
+          [userId]
+        );
+      }
+    } catch (dbError) {
+      logger.warn({ dbError, userId }, 'Failed to ensure user_profile exists');
+    }
+
     // PHASE 1: Rate limiting now handled by middleware
     // Generate or resume sessionId
     const activeSessionId = sessionId || randomUUID();
