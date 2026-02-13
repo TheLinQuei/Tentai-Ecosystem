@@ -128,10 +128,16 @@ function sanitizeOutput(output: string): string {
   return sanitized;
 }
 
-type SimpleIntent = 'time' | 'date' | 'datetime' | 'name' | 'who';
+type SimpleIntent = 'time' | 'date' | 'datetime' | 'name' | 'who' | 'greeting';
 
 function detectSimpleIntent(message: string): SimpleIntent | null {
-  const msg = message.toLowerCase();
+  const msg = message.toLowerCase().trim();
+  
+  // Greeting intents - recognize when user addresses Vi or greets
+  if (msg === 'vi' || msg === 'hey vi' || msg === 'hi vi' || msg === 'hello vi') return 'greeting';
+  if (msg === 'hello' || msg === 'hi' || msg === 'hey') return 'greeting';
+  
+  // Factual intents
   if (msg.includes('time is it') || msg.includes('current time') || msg.includes('what time')) return 'time';
   if (msg.includes('date is it') || msg.includes('what day') || msg.includes('today')) return 'date';
   if (msg.includes('day and time') || msg.includes('date and time')) return 'datetime';
@@ -2187,6 +2193,10 @@ export async function createServer(
         output = displayName
           ? `You told me to refer to you as ${displayName}.`
           : 'I do not have a saved name for you yet. Tell me what you want to be called.';
+      }
+
+      if (simpleIntent === 'greeting') {
+        output = `I'm Vi, your conversational AI. I'm here and ready to help. What's on your mind?`;
       }
 
       const response: ChatResponse = {
