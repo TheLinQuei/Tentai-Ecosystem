@@ -1,0 +1,24 @@
+/**
+ * Vi Configuration for Sovereign
+ */
+
+export const resolveApiBase = () => {
+  const userOverride = localStorage.getItem('vi-api-base');
+  if (userOverride) return userOverride;
+
+  const configured = import.meta.env.VITE_API_BASE as string | undefined;
+  if (configured && configured.trim().length > 0) return configured;
+
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost') return 'http://localhost:3000';
+    return 'https://tentai-ecosystem.onrender.com';
+  }
+  return 'http://localhost:3000';
+};
+
+export const VI_CONFIG = {
+  apiBase: resolveApiBase(),
+  healthCheckInterval: 5000, // 5 seconds
+  chatTimeout: 30000, // 30 seconds
+  defaultLocale: 'en-US',
+};
