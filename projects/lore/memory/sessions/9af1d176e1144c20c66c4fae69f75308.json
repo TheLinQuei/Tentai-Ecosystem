@@ -1,0 +1,16 @@
+{
+  "id": "9af1d176e1144c20c66c4fae69f75308",
+  "turns": [
+    {
+      "role": "user",
+      "content": "You are a creative writing assistant for a fantasy/sci-fi RPG system. Generate detailed character suggestions.\n\nGiven Context:\n- No specific details provided - be creative!\n\nGenerate a COMPLETE character concept as a JSON object with these exact fields:\n{\n  \"personality\": \"A vivid 2-3 sentence personality description\",\n  \"background\": \"An engaging 2-3 sentence background story\",\n  \"abilities\": [\"ability1\", \"ability2\", \"ability3\", \"ability4\", \"ability5\"]\n}\n\nMake the character interesting and unique. Return ONLY the JSON object, no markdown code blocks, no extra text.",
+      "timestamp": "2025-11-29T00:40:26.011Z"
+    },
+    {
+      "role": "assistant",
+      "content": "{\n  \"personality\": \"A soft-spoken observer who prefers to let actions speak louder than words. Despite a calm exterior, a fierce determination burns within, driving them to constantly improve.\",\n  \"background\": \"Once a member of the Test race, they were banished after a failed experiment left them with extraordinary abilities. They now wander the cosmos, seeking answers and a way to control their newfound powers.\",\n  \"abilities\": [\"Test 1\", \"Test 2\", \"Test 3\", \"Test 3\", \"Test 1\"]\n}",
+      "timestamp": "2025-11-29T00:40:26.012Z"
+    }
+  ],
+  "summaries": []
+}

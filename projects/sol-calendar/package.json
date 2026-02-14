@@ -1,0 +1,63 @@
+{
+  "name": "sol-calendar",
+  "version": "2.0.0",
+  "description": "Sol Calendar (77EZ) - A 13×28 solar calendar with cloud sync and sharing",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "http-server -p 8000 -c-1",
+    "start": "http-server -p 8000",
+    "build": "echo 'No build step - static files only'",
+    
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:start": "electron .",
+    "electron:build": "electron-forge make",
+    "electron:package": "electron-forge package",
+    
+    "mobile:prepare": "node -e \"require('fs').cpSync('.', 'www', {recursive: true, filter: (src) => !src.includes('node_modules') && !src.includes('.git') && !src.includes('www') && !src.includes('electron') && !src.includes('android') && !src.includes('ios')})\" && node -e \"require('fs').copyFileSync('index.html', 'www/index.html')\"",
+    "mobile:sync": "npm run mobile:prepare && cap sync",
+    "mobile:android": "npm run mobile:sync && cap open android",
+    "mobile:ios": "npm run mobile:sync && cap open ios",
+    "mobile:build:android": "npm run mobile:sync && cd android && ./gradlew assembleRelease",
+    "mobile:build:ios": "npm run mobile:sync && cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App -configuration Release"
+  },
+  "keywords": [
+    "calendar",
+    "solar",
+    "77ez",
+    "luxury",
+    "offline",
+    "sync",
+    "supabase",
+    "electron",
+    "capacitor",
+    "desktop",
+    "mobile"
+  ],
+  "author": "Sol Calendar Contributors",
+  "license": "Open Source",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@capacitor/core": "^5.5.1",
+    "@capacitor/app": "^5.0.6",
+    "@capacitor/status-bar": "^5.0.6",
+    "@capacitor/splash-screen": "^5.0.6",
+    "@capacitor/filesystem": "^5.1.4",
+    "@capacitor/share": "^5.0.6"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "electron": "^28.1.0",
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.2.0",
+    "@electron-forge/maker-dmg": "^7.2.0",
+    "@capacitor/cli": "^5.5.1",
+    "@capacitor/android": "^5.5.1",
+    "@capacitor/ios": "^5.5.1",
+    "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

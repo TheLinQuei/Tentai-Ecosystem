@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - packages/*
+
+ignoreScripts: false
+
+ignoredBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
+
+onlyBuiltDependencies:
+  - msgpackr-extract
+  - onnxruntime-node

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Generate PWA Icons</title>
+</head>
+<body>
+    <h1>PWA Icon Generator</h1>
+    <p>Generating icons for Sol Calendar...</p>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Gradient sun
+            const gradient = ctx.createRadialGradient(size/2, size/2.5, 0, size/2, size/2.5, size/2);
+            gradient.addColorStop(0, '#E7C26A');
+            gradient.addColorStop(0.6, '#A88CFF');
+            gradient.addColorStop(1, '#6c5ce7');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${size/6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('SOL', size/2, size - size/8);
+            
+            // Download
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Generate all sizes
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < sizes.length) {
+                generateIcon(sizes[index]);
+                document.querySelector('p').textContent = `Generated icon-${sizes[index]}.png`;
+                index++;
+            } else {
+                clearInterval(interval);
+                document.querySelector('p').textContent = 'All icons generated! Save them to the assets folder.';
+            }
+        }, 500);
+    </script>
+</body>
+</html>

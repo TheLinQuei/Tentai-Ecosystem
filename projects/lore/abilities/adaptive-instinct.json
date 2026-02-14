@@ -1,0 +1,12 @@
+{
+  "id": "adaptive-instinct",
+  "name": "Adaptive Instinct",
+  "type": "ability",
+  "tags": [],
+  "summary": "Heightened pattern-recognition that lets her quickly understand behavior, speech, and emotional cues.",
+  "createdAt": "2025-11-29T03:27:16.687Z",
+  "updatedAt": "2025-11-29T03:27:16.687Z",
+  "abilityType": "support",
+  "scale": 1,
+  "rules": {}
+}

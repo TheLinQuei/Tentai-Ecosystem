@@ -1,0 +1,53 @@
+# Fly.io configuration for ViMemory storage service
+# Deploy: fly deploy --config apps/memory/fly.toml
+# Logs: fly logs --app vibot-memory
+
+app = "vibot-memory"
+primary_region = "ord" # Chicago
+
+[build]
+  dockerfile = "apps/memory/Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3002"
+
+[http_service]
+  internal_port = 3002
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "10s"
+    grace_period = "15s"
+    method = "GET"
+    path = "/health"
+
+[[vm]]
+  memory = "1gb" # Vector/graph databases need memory
+  cpu_kind = "shared"
+  cpus = 1
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3002
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "requests"
+    hard_limit = 100
+    soft_limit = 80
+
+# Connect to bot and brain via private network
+# Bot calls: http://vibot-memory.internal:3002
+# Brain calls: http://vibot-memory.internal:3002

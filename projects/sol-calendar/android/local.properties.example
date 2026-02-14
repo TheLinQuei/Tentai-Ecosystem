@@ -1,0 +1,11 @@
+# Android SDK Configuration for Sol Calendar
+# Copy this file to local.properties and update the path to your Android SDK
+
+# Windows
+sdk.dir=C:\\Users\\YOUR_USERNAME\\AppData\\Local\\Android\\sdk
+
+# macOS
+# sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+
+# Linux
+# sdk.dir=/home/YOUR_USERNAME/Android/sdk

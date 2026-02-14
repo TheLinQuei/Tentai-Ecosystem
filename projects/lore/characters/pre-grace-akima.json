@@ -1,0 +1,21 @@
+{
+  "id": "pre-grace-akima",
+  "name": "Pre-Grace Akima",
+  "type": "character",
+  "tags": [],
+  "summary": "",
+  "createdAt": "2025-11-29T03:32:37.062Z",
+  "updatedAt": "2025-11-29T03:32:37.064Z",
+  "raceId": "tenkai",
+  "affiliations": [],
+  "arcs": [],
+  "metadata": {
+    "sex": "Female",
+    "height": "6'1\"",
+    "age": "19",
+    "alignment": "Lawful Good",
+    "role": "Protagonist",
+    "owner": "TheLinQuei",
+    "forms": []
+  }
+}

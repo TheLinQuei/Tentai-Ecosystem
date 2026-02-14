@@ -1,0 +1,10 @@
+$env:POSTGRES_URL="postgres://vibot:vibot@localhost:5434/vibot"
+$env:QDRANT_URL="http://localhost:6333"
+$env:REDIS_URL="redis://localhost:6380"
+$env:NEO4J_URL="bolt://localhost:7687"
+$env:NEO4J_USER="neo4j"
+$env:NEO4J_PASS="vibot123"
+$env:EMBED_PROVIDER="fastembed"
+$env:EMBED_DIM="384"
+
+& "c:\Users\Shyke\vi-discord-bot\node_modules\.bin\tsx.cmd" "c:\Users\Shyke\vi-discord-bot\apps\memory\src\index.ts"
