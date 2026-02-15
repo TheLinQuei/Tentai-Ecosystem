@@ -38,10 +38,11 @@ Tentai Ecosystem/
 │   ├── vi-protocol/           Shared contracts
 │   └── vi-sdk/                Client SDK
 │
-├── clients/                   User-facing applications
-│   ├── command/sovereign/     Web client
-│   ├── discord/vigil/         Discord bot
-│   └── lore/astralis-codex/   Lore tracker
+├── projects/                  Active applications
+│   ├── sovereign/             Web console
+│   ├── sol-calendar/          Calendar app
+│   ├── vigil/                 Discord bot
+│   └── lore/                  Lore system
 │
 ├── packages/                  Shared code
 │   ├── tokens/                Design system
@@ -53,9 +54,14 @@ Tentai Ecosystem/
 │   ├── aegis/                 Identity + auth
 │   └── sereph/                Hardware bridge
 │
-└── ops/                       Operations & infrastructure
-    ├── tentai-docs/           Governance
-    └── tentai-infra/          Deployment
+├── ops/                       Operations & infrastructure
+│   ├── tentai-docs/           Governance
+│   └── tentai-infra/          Deployment
+│
+└── clients/                   Legacy (kept for reference)
+    ├── command/sovereign/     Old web client
+    ├── discord/vigil/         Old Discord bot
+    └── lore/astralis-codex/   Old lore tracker
 ```
 
 ---

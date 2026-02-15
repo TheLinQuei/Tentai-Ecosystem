@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "public"."PollPreset" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

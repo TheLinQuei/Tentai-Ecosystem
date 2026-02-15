@@ -1,9 +1,0 @@
-{
-  "id": "test-5",
-  "type": "message",
-  "content": "Testing Vi Brain pipeline",
-  "authorId": "user-999",
-  "channelId": "channel-111",
-  "guildId": "guild-222",
-  "timestamp": "2025-11-04T07:00:00Z"
-}
